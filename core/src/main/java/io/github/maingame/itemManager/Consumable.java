@@ -6,4 +6,8 @@ public abstract class Consumable extends Item {
         super(name, value);
         this.timeDuration = timeDuration;
     }
+
+    private float getTimeDuration(){
+        return timeDuration;
+    }
 }

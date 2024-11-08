@@ -6,4 +6,8 @@ public class Sword extends Gear{
         super(name,gold);
         this.attackIncrease = attackIncrease;
     }
+
+    public int getAttackIncrease() {
+        return attackIncrease;
+    }
 }

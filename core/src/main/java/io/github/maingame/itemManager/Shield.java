@@ -6,4 +6,8 @@ public class Shield extends Gear{
         super(name,gold);
         this.reductionDamage = reductionDamage;
     }
+
+    public int getReductionDamage() {
+        return reductionDamage;
+    }
 }
