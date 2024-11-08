@@ -1,4 +1,4 @@
-package io.github.maingame.CharacterManager;
+package io.github.maingame.characterManager;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
