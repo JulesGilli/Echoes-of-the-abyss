@@ -7,7 +7,11 @@ public abstract class Consumable extends Item {
         this.timeDuration = timeDuration;
     }
 
-    private float getTimeDuration(){
+    protected float getTimeDuration(){
         return timeDuration;
+    }
+
+    public void setTimeDuration(float delta) {
+        timeDuration -= delta;
     }
 }
