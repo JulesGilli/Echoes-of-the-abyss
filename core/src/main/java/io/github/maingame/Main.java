@@ -13,7 +13,7 @@ public class Main extends Game {
     public void create() {
         batch = new SpriteBatch();
         camera = new OrthographicCamera();
-        camera.setToOrtho(false, 1024, 768);
+        camera.setToOrtho(false, 1920, 1080);
 
         setScreen(new GameScreen(this));
     }
@@ -30,4 +30,6 @@ public class Main extends Game {
             getScreen().dispose();
         }
     }
+
+
 }

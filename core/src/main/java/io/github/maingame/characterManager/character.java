@@ -6,7 +6,7 @@ import io.github.maingame.utilsManager.lifeCycle;
 import io.github.maingame.design2dManager.AnimationManager;
 
 public abstract class character implements lifeCycle{
-    protected Vector2 position;
+    public Vector2 position;
     protected Vector2 velocity;
     protected AnimationManager animation;
     protected boolean isJumping = false;
