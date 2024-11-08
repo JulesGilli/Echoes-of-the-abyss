@@ -4,7 +4,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import io.github.maingame.design2dManager.AnimationManager;
 
-public class Enemy extends character {
+public class Enemy extends Entity {
     private int health;
     private int damage;
     public Enemy(Vector2 position, AnimationManager animationManager) {

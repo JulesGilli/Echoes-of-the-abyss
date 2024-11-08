@@ -5,8 +5,8 @@ import com.badlogic.gdx.math.Vector2;
 import io.github.maingame.utilsManager.lifeCycle;
 import io.github.maingame.design2dManager.AnimationManager;
 
-public abstract class character implements lifeCycle{
-    public Vector2 position;
+public abstract class Entity implements lifeCycle{
+    protected Vector2 position;
     protected Vector2 velocity;
     protected AnimationManager animation;
     protected boolean isJumping = false;
@@ -20,7 +20,7 @@ public abstract class character implements lifeCycle{
     protected int health;
     protected int attack;
 
-    public character(Vector2 position, AnimationManager animation, int health, int gold) {
+    public Entity(Vector2 position, AnimationManager animation, int health, int gold) {
         this.position = position;
         this.velocity = new Vector2(0, 0);
         this.animation = animation;
@@ -44,6 +44,16 @@ public abstract class character implements lifeCycle{
 
     public int getAttack() {
         return attack;
+    }
+
+    public void setAttack(int attack) {
+        this.attack = attack;
+    }
+
+    public void attack(Character target){};
+
+    public void receiveDamage(int damage){
+        this.health -= damage;
     }
 
     public void setGold(int gold) {
