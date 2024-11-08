@@ -16,8 +16,11 @@ public abstract class character implements lifeCycle{
     protected float JUMP_VELOCITY;
     protected float GRAVITY;
     protected float animationTime;
+    protected int gold;
+    protected int health;
+    protected int attack;
 
-    public character(Vector2 position, AnimationManager animation) {
+    public character(Vector2 position, AnimationManager animation, int health, int gold) {
         this.position = position;
         this.velocity = new Vector2(0, 0);
         this.animation = animation;
@@ -31,4 +34,19 @@ public abstract class character implements lifeCycle{
         }
     }
 
+    public int getGold() {
+        return gold;
+    }
+
+    public int getHealth() {
+        return health;
+    }
+
+    public int getAttack() {
+        return attack;
+    }
+
+    public void setGold(int gold) {
+        this.gold = gold;
+    }
 }

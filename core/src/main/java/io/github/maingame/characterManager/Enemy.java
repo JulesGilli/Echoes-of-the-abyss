@@ -8,9 +8,7 @@ public class Enemy extends character {
     private int health;
     private int damage;
     public Enemy(Vector2 position, AnimationManager animationManager) {
-        super(position , animationManager);
-        this.health = 50;
-        this.damage = 10;
+        super(position , animationManager,50,10);
     }
 
     @Override

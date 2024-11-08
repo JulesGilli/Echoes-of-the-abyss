@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import io.github.maingame.Platform;
 import io.github.maingame.design2dManager.AnimationManager;
+import io.github.maingame.itemManager.Inventory;
 
 import java.util.List;
 
@@ -18,15 +19,14 @@ public class Player extends character {
     private int gold;
     public static final int RENDER_WIDTH = 300;
     public static final int RENDER_HEIGHT = 200;
+    private Inventory inventory;
 
     public Player(Vector2 position, List<Platform> platforms) {
-        super(position, new AnimationManager("_Run.png","_Idle.png","_Jump.png","_Attack.png"));
-        this.health = 100;
-        this.gold = 0;
+        super(position, new AnimationManager("_Run.png","_Idle.png","_Jump.png","_Attack.png"),100,0);
         this.SIZE = 50;
         this.SPEED = 350;
         this.JUMP_VELOCITY = 1200;
-        this.GRAVITY = -25;
+        this.GRAVITY = -50;
         this.platforms = platforms;
     }
 
