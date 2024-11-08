@@ -20,9 +20,10 @@ public class Shop {
     }
 
     public boolean buyItem(Player player, Item item) {
-        int price = priceList.getOrDefault(item, 0);
+        int price = priceList.get(item);
         if (player.getGold() >= price) {
             player.getGold() -= price;
+
             return true;
         }
         return false;
