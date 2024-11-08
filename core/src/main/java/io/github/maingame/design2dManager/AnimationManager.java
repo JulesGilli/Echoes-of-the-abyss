@@ -18,7 +18,7 @@ public class AnimationManager {
         Texture idleSteps= new Texture(Gdx.files.internal(idleAsset));
         Texture jumpSteps = new Texture(Gdx.files.internal(jumpAsset));
         Texture attackSteps = new Texture(Gdx.files.internal(attachAsset));
-        walkCase= createAnimation(walkSteps, 120, 80, 0.15f);
+        walkCase= createAnimation(walkSteps, 120, 80, 0.1f);
         idleCase = createAnimation(idleSteps, 120, 80, 0.1f);
         jumpCase = createAnimation(jumpSteps, 120, 80, 0.15f);
         attackCase = createAnimation(attackSteps, 120, 80, 0.1f);
