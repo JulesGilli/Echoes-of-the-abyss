@@ -18,6 +18,7 @@ public abstract class Entity implements lifeCycle{
     protected float animationTime;
     protected int gold;
     protected int health;
+    protected int maxHealth;
     protected int attack;
 
     public Entity(Vector2 position, AnimationManager animation, int health, int gold) {
@@ -46,6 +47,10 @@ public abstract class Entity implements lifeCycle{
         return attack;
     }
 
+    public  int getMaxHealth() {
+        return maxHealth;
+    }
+
     public void setAttack(int attack) {
         this.attack = attack;
     }
@@ -58,5 +63,9 @@ public abstract class Entity implements lifeCycle{
 
     public void setGold(int gold) {
         this.gold = gold;
+    }
+
+    public Vector2 getPosition() {
+        return position;
     }
 }
