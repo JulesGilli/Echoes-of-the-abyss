@@ -1,11 +1,11 @@
 package io.github.maingame.itemManager;
 
 public abstract class Item {
-    public String name;
-    public int value;
+    protected String name;
+    protected int gold;
 
     public Item(String name, int value) {
         this.name = name;
-        this.value = value;
+        this.gold = value;
     }
 }

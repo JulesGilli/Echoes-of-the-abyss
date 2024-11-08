@@ -1,8 +1,9 @@
 package io.github.maingame.itemManager;
-import io.github.maingame.characterManager.Player;
 
 public abstract class Consumable extends Item {
-    public Consumable(String name, int value) {
+    private float timeDuration;
+    public Consumable(String name, int value , float timeDuration) {
         super(name, value);
+        this.timeDuration = timeDuration;
     }
 }
