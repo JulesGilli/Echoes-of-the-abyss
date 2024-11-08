@@ -7,11 +7,16 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import io.github.maingame.characterManager.Player;
 
+import java.util.List;
+
 public class GameScreen extends ScreenAdapter {
     private final Main game;
     private final SpriteBatch batch;
-    private Texture background1, background2, background3, background4a, background4b;
-    private Player player;
+    private final Texture background1, background2, background3, background4a, background4b;
+    private final Player player;
+
+    private List<Platform> platforms;
+
 
     public GameScreen(Main game) {
         this.game = game;
