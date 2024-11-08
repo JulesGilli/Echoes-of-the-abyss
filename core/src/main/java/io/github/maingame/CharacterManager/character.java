@@ -1,6 +1,5 @@
-package io.github.maingame.EntitiesManager;
+package io.github.maingame.CharacterManager;
 
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import io.github.maingame.utilsManager.lifeCycle;

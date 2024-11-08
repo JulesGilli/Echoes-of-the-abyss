@@ -4,7 +4,7 @@ import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
-import io.github.maingame.EntitiesManager.Player;
+import io.github.maingame.CharacterManager.Player;
 
 public class GameScreen extends ScreenAdapter {
     private final Main game;

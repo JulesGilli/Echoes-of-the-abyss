@@ -1,4 +1,4 @@
-package io.github.maingame.EntitiesManager;
+package io.github.maingame.CharacterManager;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
