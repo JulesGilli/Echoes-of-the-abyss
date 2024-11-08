@@ -17,7 +17,7 @@ public class Player extends Entity {
 
 
     public Player(Vector2 position, List<Platform> platforms) {
-        super(position, new AnimationManager("_Run.png","_Idle.png","_Jump.png","_Attack.png"),100,0);
+        super(position, new AnimationManager("_Run.png","_Idle.png","_Jump.png","_Attack.png", 120, 80, 0.1f),100,0);
         this.SIZE = 50;
         this.SPEED = 350;
         this.JUMP_VELOCITY = 1200;
@@ -29,7 +29,6 @@ public class Player extends Entity {
     public void update(float delta) {
         Input(delta);
         animationTime += delta;
-
         if (isAttacking) {
             if (animation.getAttackCase().isAnimationFinished(animationTime)) {
                 isAttacking = false;
@@ -91,7 +90,7 @@ public class Player extends Entity {
             isJumping = true;
         }
 
-        if (Gdx.input.isKeyJustPressed(Input.Keys.A) && !isAttacking) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.A) && !isAttacking && !isJumping) {
             isAttacking = true;
             animationTime = 0f;
         }

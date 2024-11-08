@@ -13,25 +13,26 @@ public class AnimationManager {
     private Animation<TextureRegion> jumpCase;
     private Animation<TextureRegion> attackCase;
 
-    public AnimationManager(String walkAsset, String idleAsset, String jumpAsset, String attachAsset) {
+    public AnimationManager(String walkAsset, String idleAsset, String jumpAsset, String attachAsset, int frameWidth, int frameHight, float frameDuration) {
         Texture walkSteps = new Texture(Gdx.files.internal(walkAsset));
         Texture idleSteps= new Texture(Gdx.files.internal(idleAsset));
         Texture jumpSteps = new Texture(Gdx.files.internal(jumpAsset));
         Texture attackSteps = new Texture(Gdx.files.internal(attachAsset));
-        walkCase= createAnimation(walkSteps, 120, 80, 0.1f);
-        idleCase = createAnimation(idleSteps, 120, 80, 0.1f);
-        jumpCase = createAnimation(jumpSteps, 120, 80, 0.15f);
-        attackCase = createAnimation(attackSteps, 120, 80, 0.1f);
+        walkCase= createAnimation(walkSteps, frameWidth, frameHight, frameDuration);
+        idleCase = createAnimation(idleSteps, frameWidth, frameHight, frameDuration);
+        jumpCase = createAnimation(jumpSteps, frameWidth, frameHight, frameDuration);
+        attackCase = createAnimation(attackSteps, frameWidth, frameHight, frameDuration);
     }
 
     private Animation<TextureRegion> createAnimation(Texture allSteps, int stepWidth, int stepHeight, float stepDuration) {
         TextureRegion[][] tmpSteps = TextureRegion.split(allSteps, stepWidth, stepHeight);
+
         int totalFrames = tmpSteps.length * tmpSteps[0].length;
         TextureRegion[] frames = new TextureRegion[totalFrames];
         int indexFrame = 0;
-        for (int i = 0; i < tmpSteps.length; i++) {
-            for (int j = 0; j < tmpSteps[i].length; j++) {
-                frames[indexFrame++] = tmpSteps[i][j];
+        for (TextureRegion[] tmpStep : tmpSteps) {
+            for (TextureRegion textureRegion : tmpStep) {
+                frames[indexFrame++] = textureRegion;
             }
         }
         return new Animation<>(stepDuration, frames);
