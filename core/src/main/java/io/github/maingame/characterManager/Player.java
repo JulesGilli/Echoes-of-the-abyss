@@ -5,15 +5,21 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
+import io.github.maingame.Platform;
 import io.github.maingame.design2dManager.AnimationManager;
 
+import java.util.List;
+
+import static io.github.maingame.Platform.platforms;
+
 public class Player extends character {
+    private final List<Platform> platforms;
     private int health;
     private int gold;
     public static final int RENDER_WIDTH = 300;
     public static final int RENDER_HEIGHT = 200;
 
-    public Player(Vector2 position) {
+    public Player(Vector2 position, List<Platform> platforms) {
         super(position, new AnimationManager("_Run.png","_Idle.png","_Jump.png","_Attack.png"));
         this.health = 100;
         this.gold = 0;
@@ -21,21 +27,46 @@ public class Player extends character {
         this.SPEED = 350;
         this.JUMP_VELOCITY = 1200;
         this.GRAVITY = -25;
+        this.platforms = platforms;
     }
 
     @Override
     public void update(float delta) {
         Input(delta);
         animationTime += delta;
+
         if (isJumping) {
             velocity.y += GRAVITY;
+
         }
+
+
+        for (Platform platform : platforms) {
+            if (isOnPlatform(platform) && velocity.y <= 0) {
+                position.y = platform.getBounds().y + platform.getBounds().height;
+                velocity.y = 0;
+                isJumping = false;
+                break;
+            }
+        }
+
+
+
         position.add(velocity.cpy().scl(delta));
+
         if (position.y <= 0) {
             position.y = 0;
             isJumping = false;
         }
     }
+
+    private boolean isOnPlatform(Platform platform) {
+        return position.y <= platform.getBounds().y + platform.getBounds().height &&
+            position.y >= platform.getBounds().y &&
+            position.x + SIZE > platform.getBounds().x &&
+            position.x < platform.getBounds().x + platform.getBounds().width;
+    }
+
 
     private void Input(float delta) {
         if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
@@ -49,7 +80,7 @@ public class Player extends character {
         }
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE) && !isJumping) {
-            velocity.y =  JUMP_VELOCITY;
+            velocity.y = JUMP_VELOCITY;
             isJumping = true;
         }
     }

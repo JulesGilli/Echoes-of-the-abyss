@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import io.github.maingame.characterManager.Player;
+import io.github.maingame.design2dManager.TextureManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,16 +17,11 @@ public class GameScreen extends ScreenAdapter {
     private final Texture background1, background2, background3, background4a, background4b;
     private final Player player;
 
-    private final List<Platform> platforms;
-    private final Texture platformTexture;
-
-
     public GameScreen(Main game) {
         this.game = game;
         this.batch = game.batch;
-        this.player = new Player(new Vector2(100, 100));
+        this.player = new Player(new Vector2(100, 100), Platform.getPlatforms());
 
-        this.platformTexture = new Texture(Gdx.files.internal("platform.png"));
 
         background1 = new Texture(Gdx.files.internal("background1.png"));
         background2 = new Texture(Gdx.files.internal("background2.png"));
@@ -33,12 +29,7 @@ public class GameScreen extends ScreenAdapter {
         background4a = new Texture(Gdx.files.internal("background4a.png"));
         background4b = new Texture(Gdx.files.internal("background4b.png"));
 
-        platforms = new ArrayList<>();
-        createPlatforms();
-    }
-
-    private void createPlatforms() {
-        platforms.add(new Platform(0, 0, 1024, 100, platformTexture));
+        Platform.createPlatforms();
     }
 
     @Override
@@ -56,7 +47,7 @@ public class GameScreen extends ScreenAdapter {
         batch.draw(background4a, 0, 0, screenWidth, screenHeight);
         batch.draw(background4b, 0, 0, screenWidth, screenHeight);
 
-        for (Platform platform : platforms) {
+        for (Platform platform : Platform.getPlatforms()) {
             platform.render(batch);
         }
 
@@ -88,5 +79,12 @@ public class GameScreen extends ScreenAdapter {
 
     @Override
     public void dispose() {
+        batch.dispose();
+        background1.dispose();
+        background2.dispose();
+        background3.dispose();
+        background4a.dispose();
+        background4b.dispose();
+        TextureManager.dispose();
     }
 }
