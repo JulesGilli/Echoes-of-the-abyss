@@ -19,8 +19,8 @@ public class Player extends character {
         this.gold = 0;
         this.SIZE = 50;
         this.SPEED = 350;
-        this.JUMP_VELOCITY = 1000;
-        this.GRAVITY = -50;
+        this.JUMP_VELOCITY = 1200;
+        this.GRAVITY = -25;
     }
 
     @Override
