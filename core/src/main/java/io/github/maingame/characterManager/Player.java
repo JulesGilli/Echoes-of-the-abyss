@@ -12,8 +12,6 @@ import java.util.List;
 
 public class Player extends Entity {
     private final List<Platform> platforms;
-    private int health;
-    private int gold;
     public static final int RENDER_WIDTH = 300;
     public static final int RENDER_HEIGHT = 200;
 

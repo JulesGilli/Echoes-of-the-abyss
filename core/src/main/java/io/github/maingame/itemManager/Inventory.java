@@ -19,9 +19,18 @@ public class Inventory {
     public void applyGear(Entity target) {
         for (Item item : items) {
             if (item instanceof Sword){
-                target.setAttack(target.getAttack() + ((Sword) item).attackIncrease);
+                target.setAttackIncrease(((Sword) item).getAttackIncrease());
             }
             if (item instanceof Shield){
+                target.setArmor(((Shield) item).reductionDamage);
+            }
+        }
+    }
+
+    public void applyConsumable(Entity target , float delta) {
+        for (Item item : items) {
+            if (item instanceof SpeedPotion){
+                target.setSpeedIncrease(((SpeedPotion) item).getSpeedIncrease());
             }
         }
     }

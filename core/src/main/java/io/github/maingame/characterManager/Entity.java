@@ -20,11 +20,17 @@ public abstract class Entity implements lifeCycle{
     protected int health;
     protected int maxHealth;
     protected int attack;
+    protected int armor = 0;
+    protected int attackIncrease = 0;
+    protected float speedIncrease = 0;
 
     public Entity(Vector2 position, AnimationManager animation, int health, int gold) {
         this.position = position;
         this.velocity = new Vector2(0, 0);
         this.animation = animation;
+        this.health = health;
+        this.maxHealth = health;
+        this.gold = gold;
     }
 
     public void flipAnimation(TextureRegion currentFrame) {
@@ -43,22 +49,8 @@ public abstract class Entity implements lifeCycle{
         return health;
     }
 
-    public int getAttack() {
-        return attack;
-    }
-
     public  int getMaxHealth() {
         return maxHealth;
-    }
-
-    public void setAttack(int attack) {
-        this.attack = attack;
-    }
-
-    public void attack(Character target){};
-
-    public void receiveDamage(int damage){
-        this.health -= damage;
     }
 
     public void setGold(int gold) {
@@ -68,4 +60,32 @@ public abstract class Entity implements lifeCycle{
     public Vector2 getPosition() {
         return position;
     }
+
+    public int getAttack() {
+        return attack + attackIncrease;
+    }
+
+    public void receiveDamage(int damage){
+        this.health -= damage - armor;
+    }
+
+    public float getSpeed(float SPEED) {
+        return SPEED + speedIncrease;
+    }
+
+    public void setAttackIncrease(int attackIncrease) {
+        this.attackIncrease = attackIncrease;
+    }
+
+    public void setSpeedIncrease(float speedIncrease) {
+        this.speedIncrease = speedIncrease;
+    }
+
+    public void setArmor(int armor) {
+        this.armor = armor;
+    }
+
+
+
 }
+
