@@ -7,13 +7,10 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import io.github.maingame.Platform;
 import io.github.maingame.design2dManager.AnimationManager;
-import io.github.maingame.itemManager.Inventory;
 
 import java.util.List;
 
-import static io.github.maingame.Platform.platforms;
-
-public class Player extends character {
+public class Player extends Entity {
     private final List<Platform> platforms;
     private int health;
     private int gold;
