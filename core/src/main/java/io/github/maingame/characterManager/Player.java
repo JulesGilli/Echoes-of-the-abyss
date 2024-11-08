@@ -12,8 +12,8 @@ import java.util.List;
 
 public class Player extends Entity {
     private final List<Platform> platforms;
-    public static final int RENDER_WIDTH = 300;
-    public static final int RENDER_HEIGHT = 200;
+    public static final int RENDER_WIDTH = 450;
+    public static final int RENDER_HEIGHT = 300;
 
     public Player(Vector2 position, List<Platform> platforms) {
         super(position, new AnimationManager("_Run.png","_Idle.png","_Jump.png","_Attack.png"),100,0);
