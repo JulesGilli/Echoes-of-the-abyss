@@ -1,5 +1,7 @@
 package io.github.maingame.itemManager;
 
+import io.github.maingame.characterManager.Entity;
+
 public class SpeedPotion extends Consumable {
     private float SpeedIncrease;
 
@@ -7,7 +9,13 @@ public class SpeedPotion extends Consumable {
         super("SpeedPotion",50, speedIncrease );
     }
 
-    public float getSpeedIncrease() {
-        return SpeedIncrease;
+    @Override
+    public  void effectApply(Entity targeEntity){
+        targeEntity.setSpeedIncrease(SpeedIncrease);
+    }
+
+    @Override
+    public void resetEffect(Entity targetEntity){
+        targetEntity.setSpeedIncrease(0);
     }
 }

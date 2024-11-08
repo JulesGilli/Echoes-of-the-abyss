@@ -16,22 +16,29 @@ public class Inventory {
         items.remove(item);
     }
 
-    public void applyGear(Entity target) {
+    public void applyGears(Entity entity) {
         for (Item item : items) {
-            if (item instanceof Sword){
-                target.setAttackIncrease(((Sword) item).getAttackIncrease());
-            }
-            if (item instanceof Shield){
-                target.setArmor(((Shield) item).reductionDamage);
+            if (item instanceof Gear){
+                ((Gear) item).applyItem(entity);
             }
         }
     }
 
-    public void applyConsumable(Entity target , float delta) {
+    public void applyConsumable(Entity target) {
         for (Item item : items) {
-            if (item instanceof SpeedPotion){
-                target.setSpeedIncrease(((SpeedPotion) item).getSpeedIncrease());
+            if (item instanceof Consumable){
+                Consumable consumable = (Consumable) item;
+                consumable.effectApply(target);
+                new Thread(() -> {
+                    try {
+                        Thread.sleep(consumable.getTimeDuration()* 1000L);
+                        consumable.resetEffect(target);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }).start();
             }
+
         }
     }
 }

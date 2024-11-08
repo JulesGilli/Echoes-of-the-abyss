@@ -1,17 +1,13 @@
 package io.github.maingame.itemManager;
 
-public abstract class Consumable extends Item {
-    private float timeDuration;
-    public Consumable(String name, int value , float timeDuration) {
+public abstract class Consumable extends Item implements PotionManager {
+    private int timeDuration;
+    public Consumable(String name, int value , int timeDuration) {
         super(name, value);
         this.timeDuration = timeDuration;
     }
 
-    protected float getTimeDuration(){
+    protected int getTimeDuration(){
         return timeDuration;
-    }
-
-    public void setTimeDuration(float delta) {
-        timeDuration -= delta;
     }
 }
