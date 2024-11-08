@@ -9,6 +9,7 @@ public abstract class Entity implements lifeCycle{
     protected Vector2 position;
     protected Vector2 velocity;
     protected AnimationManager animation;
+    protected boolean isAttacking = false;
     protected boolean isJumping = false;
     protected boolean isLookingRight;
     protected int SIZE;

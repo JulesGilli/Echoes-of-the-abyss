@@ -15,12 +15,13 @@ public class Player extends Entity {
     public static final int RENDER_WIDTH = 450;
     public static final int RENDER_HEIGHT = 300;
 
+
     public Player(Vector2 position, List<Platform> platforms) {
-        super(position, new AnimationManager("_Run.png","_Idle.png","_Jump.png","_Attack.png"),100,0);
+        super(position, new AnimationManager("_Run.png","_Idle.png","_Jump.png","_Attack.png", 120, 80, 0.1f),100,0);
         this.SIZE = 50;
         this.SPEED = 350;
         this.JUMP_VELOCITY = 1200;
-        this.GRAVITY = -50;
+        this.GRAVITY = -25;
         this.platforms = platforms;
     }
 
@@ -28,29 +29,36 @@ public class Player extends Entity {
     public void update(float delta) {
         Input(delta);
         animationTime += delta;
-
-        if (isJumping) {
-            velocity.y += GRAVITY;
-
-        }
-
-
-        for (Platform platform : platforms) {
-            if (isOnPlatform(platform) && velocity.y <= 0) {
-                position.y = platform.getBounds().y + platform.getBounds().height;
-                velocity.y = 0;
-                isJumping = false;
-                break;
+        if (isAttacking) {
+            if (animation.getAttackCase().isAnimationFinished(animationTime)) {
+                isAttacking = false;
+                animationTime = 0f;
             }
         }
+        else {
+
+            if (isJumping) {
+                velocity.y += GRAVITY;
+
+            }
 
 
+            for (Platform platform : platforms) {
+                if (isOnPlatform(platform) && velocity.y <= 0) {
+                    position.y = platform.getBounds().y + platform.getBounds().height;
+                    velocity.y = 0;
+                    isJumping = false;
+                    break;
+                }
+            }
 
-        position.add(velocity.cpy().scl(delta));
 
-        if (position.y <= 0) {
-            position.y = 0;
-            isJumping = false;
+            position.add(velocity.cpy().scl(delta));
+
+            if (position.y <= 0) {
+                position.y = 0;
+                isJumping = false;
+            }
         }
     }
 
@@ -63,6 +71,10 @@ public class Player extends Entity {
 
 
     private void Input(float delta) {
+        if (isAttacking) {
+            return;
+        }
+
         if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
             velocity.x = -SPEED;
             isLookingRight = false;
@@ -77,6 +89,11 @@ public class Player extends Entity {
             velocity.y = JUMP_VELOCITY;
             isJumping = true;
         }
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.A) && !isAttacking && !isJumping) {
+            isAttacking = true;
+            animationTime = 0f;
+        }
     }
 
     @Override
@@ -89,8 +106,13 @@ public class Player extends Entity {
         } else {
             currentFrame = animation.getIdleCase().getKeyFrame(animationTime, true);
         }
+
+        if (isAttacking) {
+            currentFrame = animation.getAttackCase().getKeyFrame(animationTime, true);
+        }
         flipAnimation(currentFrame);
         batch.draw(currentFrame, position.x, position.y,RENDER_WIDTH, RENDER_HEIGHT);
+
     }
 
     public void dispose(){
