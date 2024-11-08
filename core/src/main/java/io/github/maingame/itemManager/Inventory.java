@@ -13,4 +13,12 @@ public class Inventory {
     public void removeItem(Item item) {
         items.remove(item);
     }
+
+    public void applyGear(Character target){
+        for (Item item : items) {
+            if (item instanceof Sword){
+
+            }
+        }
+    }
 }

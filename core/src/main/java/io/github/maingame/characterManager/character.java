@@ -46,6 +46,16 @@ public abstract class character implements lifeCycle{
         return attack;
     }
 
+    public void setAttack(int attack) {
+        this.attack = attack;
+    }
+
+    public void attack(Character target){};
+
+    public void receiveDamage(int damage){
+        this.health -= damage;
+    }
+
     public void setGold(int gold) {
         this.gold = gold;
     }

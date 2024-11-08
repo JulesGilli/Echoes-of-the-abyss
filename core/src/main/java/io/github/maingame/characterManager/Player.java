@@ -19,7 +19,6 @@ public class Player extends character {
     private int gold;
     public static final int RENDER_WIDTH = 300;
     public static final int RENDER_HEIGHT = 200;
-    private Inventory inventory;
 
     public Player(Vector2 position, List<Platform> platforms) {
         super(position, new AnimationManager("_Run.png","_Idle.png","_Jump.png","_Attack.png"),100,0);
