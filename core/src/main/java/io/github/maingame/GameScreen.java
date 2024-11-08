@@ -17,8 +17,8 @@ public class GameScreen extends ScreenAdapter {
     private final Texture background1, background2, background3, background4a, background4b;
     private final Player player;
 
-    private Texture healthFrame;
-    private Texture healthBar;
+    private final Texture healthFrame;
+    private final Texture healthBar;
 
     public GameScreen(Main game) {
         this.game = game;
@@ -46,13 +46,8 @@ public class GameScreen extends ScreenAdapter {
 
         batch.begin();
 
-        float frameX = player.position.x - 10;
-        float frameY = player.position.y + Player.RENDER_HEIGHT + 20;
-        batch.draw(healthFrame, frameX, frameY);
 
-        float healthPercentage = player.getHealth() / (float) player.maxHealth;
-        float healthBarWidth = healthBar.getWidth() * healthPercentage;
-        batch.draw(healthBar, frameX + 5, frameY + 5, healthBarWidth, healthBar.getHeight());
+
 
 
         batch.draw(background1, 0, 0, screenWidth, screenHeight);
@@ -67,6 +62,17 @@ public class GameScreen extends ScreenAdapter {
 
         player.render(batch);
         player.update(delta);
+
+        float offset = 100;
+
+        float sizeHealthBar = 4;
+        batch.draw(healthFrame, offset, screenHeight - offset,healthFrame.getWidth() * sizeHealthBar,healthFrame.getHeight() * sizeHealthBar);
+
+
+        float healthPercentage = player.getHealth() / (float) player.getMaxHealth();
+        float healthBarWidth = healthBar.getWidth() * healthPercentage;
+
+        batch.draw(healthBar, offset, screenHeight - offset, healthBarWidth * sizeHealthBar, healthBar.getHeight() * sizeHealthBar);
 
         batch.end();
     }
