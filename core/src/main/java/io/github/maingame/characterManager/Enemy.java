@@ -25,10 +25,8 @@ public class Enemy extends character {
     }
 
     private void move() {
-        // Logique de mouvement de l'ennemi
     }
 
     public void attack(Player player) {
-        // Logique d'attaque de l'ennemi
     }
 }

@@ -12,7 +12,6 @@ public class AnimationManager {
     private Animation<TextureRegion> idleCase;
     private Animation<TextureRegion> jumpCase;
     private Animation<TextureRegion> attackCase;
-    private float timeOfCase = 0f;
 
     public AnimationManager(String walkAsset, String idleAsset, String jumpAsset, String attachAsset) {
         Texture walkSteps = new Texture(Gdx.files.internal(walkAsset));
