@@ -8,28 +8,41 @@ import com.badlogic.gdx.math.Vector2;
 import io.github.maingame.Platform;
 import io.github.maingame.design2dManager.AnimationManager;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Player extends Entity {
+    private boolean hasHitEnemy = false;
 
     public Player(Vector2 position, List<Platform> platforms) {
-        super(position, new AnimationManager("_Run.png","_Idle.png","_Jump.png","_Attack.png", 120, 80, 0.1f),100,0);
+        super(position, new AnimationManager("_Run.png","_Idle.png","_Jump.png","_Attack.png", 120, 80, 0.1f),100,0, 10);
         this.SPEED = 500;
         this.JUMP_VELOCITY = 1000;
         this.GRAVITY = -50;
         this.platforms = platforms;
         this.RENDER_WIDTH = 450;
         this.RENDER_HEIGHT = 300;
+        this.attackRange = 200;
     }
 
-    @Override
-    public void update(float delta) {
+    public void update(float delta, List<Enemy> enemies) {
         Input(delta);
         animationTime += delta;
+
         if (isAttacking) {
+            if (!hasHitEnemy) {
+                for (Enemy enemy : enemies) {
+                    if (isCollidingWith(enemy, attackRange)) {
+                        enemy.receiveDamage(getAttack());
+                        hasHitEnemy = true;
+                        break;
+                    }
+                }
+            }
             checkAttackFinish();
         }
         else {
+            hasHitEnemy = false;
             applyGravity();
             for (Platform platform : platforms) {
                 if (isOnPlatform(platform) && velocity.y <= 0) {
@@ -69,6 +82,11 @@ public class Player extends Entity {
             isAttacking = true;
             animationTime = 0f;
         }
+    }
+
+    @Override
+    public void update(float delta) {
+
     }
 
     @Override

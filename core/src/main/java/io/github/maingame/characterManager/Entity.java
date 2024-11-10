@@ -23,20 +23,22 @@ public abstract class Entity implements lifeCycle{
     protected int gold;
     protected int health;
     protected int maxHealth;
-    protected int attack;
+    protected float attack;
     protected int armor = 0;
-    protected int attackIncrease = 0;
+    protected float attackIncrease = 0;
     protected float speedIncrease = 0;
-    protected int RENDER_WIDTH;
-    protected int RENDER_HEIGHT;
+    protected int RENDER_WIDTH = 100;
+    protected int RENDER_HEIGHT = 100;
+    protected float attackRange;
 
-    public Entity(Vector2 position, AnimationManager animation, int health, int gold) {
+    public Entity(Vector2 position, AnimationManager animation, int health, int gold, float attack) {
         this.position = position;
         this.velocity = new Vector2(0, 0);
         this.animation = animation;
         this.health = health;
         this.maxHealth = health;
         this.gold = gold;
+        this.attack = attack;
     }
 
     protected Vector2 getCenterPosition()
@@ -123,7 +125,6 @@ public abstract class Entity implements lifeCycle{
     public void attack(){
         isAttacking = true;
         animationTime = 0f;
-        System.out.println("ATTACK");
     }
 
     public void lateralMove(float SPEED){
@@ -132,11 +133,22 @@ public abstract class Entity implements lifeCycle{
         isWalking = true;
     }
 
-    public boolean isCollidingWith(Entity other) {
-        return position.x < other.position.x + other.RENDER_WIDTH &&
-            position.x + RENDER_WIDTH > other.position.x &&
-            position.y < other.position.y + other.RENDER_HEIGHT &&
-            position.y + RENDER_HEIGHT > other.position.y;
+    public boolean isCollidingWith(Entity other, float attackRange) {
+
+
+
+        Vector2 thisCenter = getCenterPosition();
+        Vector2 otherCenter = other.getCenterPosition();
+
+        float distance = thisCenter.dst(otherCenter);
+
+
+        System.out.println(distance <= attackRange);
+        return distance <= attackRange;
+    }
+
+    public boolean isAlive() {
+        return health > 0;
     }
 
 
@@ -160,11 +172,11 @@ public abstract class Entity implements lifeCycle{
         return position;
     }
 
-    public int getAttack() {
+    public float getAttack() {
         return attack + attackIncrease;
     }
 
-    public void receiveDamage(int damage){
+    public void receiveDamage(float damage){
         this.health -= damage - armor;
     }
 

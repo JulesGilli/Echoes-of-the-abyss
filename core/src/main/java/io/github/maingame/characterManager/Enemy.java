@@ -10,18 +10,18 @@ import java.util.List;
 import java.lang.Math.*;
 
 public class Enemy extends Entity {
-    private int health;
-    private int damage;
     private Player target;
     private float range;
     public Enemy(Vector2 position, List<Platform> platforms, Player player) {
-        super(position, new AnimationManager("_RunEnemy.png","_Idle.png","_Jump.png","_AttackEnemy.png", 120, 80, 0.1f), 50, 10);
+        super(position, new AnimationManager("_RunEnemy.png","_Idle.png","_Jump.png","_AttackEnemy.png", 120, 80, 0.1f), 50, 10, 10);
         this.target = player;
         this.SPEED = 300;
         this.JUMP_VELOCITY = 1200;
         this.GRAVITY = -25;
         this.platforms = platforms;
         this.range = 200;
+        this.RENDER_WIDTH = 450;
+        this.RENDER_HEIGHT = 300;
     }
 
     public boolean inRange() {
@@ -52,6 +52,14 @@ public class Enemy extends Entity {
     }
 
     @Override
+    public void receiveDamage(float damage) {
+        health -= damage;
+        System.out.println("Enemy took " + damage + " damage! Health remaining: " + health);
+    }
+
+
+
+    @Override
     public void update(float delta) {
         makeAction();
         animationTime += delta;
@@ -66,6 +74,8 @@ public class Enemy extends Entity {
             checkOnFloor();
         }
     }
+
+
 
 
     @Override

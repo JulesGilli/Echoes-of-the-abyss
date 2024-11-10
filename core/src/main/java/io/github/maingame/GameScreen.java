@@ -10,6 +10,7 @@ import io.github.maingame.characterManager.Player;
 import io.github.maingame.design2dManager.TextureManager;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class GameScreen extends ScreenAdapter {
@@ -64,11 +65,16 @@ public class GameScreen extends ScreenAdapter {
         }
 
         player.render(batch);
-        player.update(delta);
+        player.update(delta, enemies);
 
-        for (Enemy enemy : enemies) {
+        for (Iterator<Enemy> iterator = enemies.iterator(); iterator.hasNext();) {
+            Enemy enemy = iterator.next();
             enemy.render(batch);
             enemy.update(delta);
+
+            if (!enemy.isAlive()) {
+                iterator.remove();
+            }
         }
 
         float offset = 100;
