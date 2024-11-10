@@ -16,7 +16,7 @@ public class Player extends Entity {
     private boolean isDead = false;
 
     public Player(Vector2 position, List<Platform> platforms) {
-        super(position, new AnimationManager("_Run.png","_Idle.png","_Jump.png","_Attack.png","_Death.png", 120, 80, 0.1f),100,0, 10);
+        super(position, new AnimationManager("_Run.png","_Idle.png","_Jump.png","_Attack.png","_Death.png", 120, 80, 0.1f),300,0, 25);
         this.SPEED = 500;
         this.JUMP_VELOCITY = 1000;
         this.GRAVITY = -50;
