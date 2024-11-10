@@ -95,7 +95,7 @@ public class GameScreen extends ScreenAdapter {
     }
 
     private void spawnEnemy() {
-        float spawnX = MathUtils.randomBoolean() ? -50 : Gdx.graphics.getWidth() + 50;
+        float spawnX = MathUtils.randomBoolean() ? -200 : Gdx.graphics.getWidth();
 
         Enemy newEnemy = new Enemy(new Vector2(spawnX, 100), Platform.getPlatforms(), player);
         enemies.add(newEnemy);

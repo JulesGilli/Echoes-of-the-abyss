@@ -13,9 +13,10 @@ import java.util.List;
 
 public class Player extends Entity {
     private boolean hasHitEnemy = false;
+    private boolean isDead = false;
 
     public Player(Vector2 position, List<Platform> platforms) {
-        super(position, new AnimationManager("_Run.png","_Idle.png","_Jump.png","_Attack.png", 120, 80, 0.1f),100,0, 10);
+        super(position, new AnimationManager("_Run.png","_Idle.png","_Jump.png","_Attack.png","_Death.png", 120, 80, 0.1f),100,0, 10);
         this.SPEED = 500;
         this.JUMP_VELOCITY = 1000;
         this.GRAVITY = -50;
@@ -26,6 +27,18 @@ public class Player extends Entity {
     }
 
     public void update(float delta, List<Enemy> enemies) {
+        if (health <= 0 && !isDead) {
+            isDead = true;
+            isAttacking = false;
+            animationTime = 0f;
+        }
+
+        if (isDead) {
+            if (animation.getDeathCase().isAnimationFinished(animationTime)) {
+            }
+            animationTime += delta;
+        } else {
+
         Input(delta);
         animationTime += delta;
 
@@ -55,13 +68,12 @@ public class Player extends Entity {
             position.add(velocity.cpy().scl(delta));
             checkOnFloor();
         }
+        }
     }
 
 
     private void Input(float delta) {
-        if (isAttacking) {
-            return;
-        }
+        if (isAttacking || isDead) return;
 
         if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
             velocity.x = -SPEED;
@@ -85,6 +97,15 @@ public class Player extends Entity {
     }
 
     @Override
+    public TextureRegion getCurrentFrame() {
+        if (isDead) {
+            return animation.getDeathCase().getKeyFrame(animationTime, false);
+        }
+        return super.getCurrentFrame();
+    }
+
+
+    @Override
     public void update(float delta) {
 
     }
@@ -100,5 +121,6 @@ public class Player extends Entity {
         animation.getAttackCase().getKeyFrames()[0].getTexture().dispose();
         animation.getJumpCase().getKeyFrames()[0].getTexture().dispose();
         animation.getWalkCase().getKeyFrames()[0].getTexture().dispose();
+        animation.getDeathCase().getKeyFrames()[0].getTexture().dispose();
     }
 }

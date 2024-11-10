@@ -12,8 +12,12 @@ import java.lang.Math.*;
 public class Enemy extends Entity {
     private Player target;
     private float range;
+    private boolean isDead = false;
+    private boolean isDying = false;
+
+
     public Enemy(Vector2 position, List<Platform> platforms, Player player) {
-        super(position, new AnimationManager("_RunEnemy.png","_Idle.png","_Jump.png","_AttackEnemy.png", 120, 80, 0.1f), 50, 10, 10);
+        super(position, new AnimationManager("_RunEnemy.png","_Idle.png","_Jump.png","_AttackEnemy.png","_DeathEnemy.png", 120, 80, 0.1f), 50, 10, 10);
         this.target = player;
         this.SPEED = 300;
         this.JUMP_VELOCITY = 1200;
@@ -30,9 +34,7 @@ public class Enemy extends Entity {
     }
 
     public void makeAction(){
-        if (isAttacking){
-            return;
-        }
+        if (isDead || isAttacking) return;
 
         if (inRange()){
             attack();
@@ -54,29 +56,44 @@ public class Enemy extends Entity {
     @Override
     public void receiveDamage(float damage) {
         health -= damage;
-        System.out.println("Enemy took " + damage + " damage! Health remaining: " + health);
+        System.out.println("Enemy prend " + damage + " damage, vie restante : " + health);
+
+        if (health <= 0 && !isDead) {
+            isDead = true;
+            animationTime = 0f;
+        }
     }
 
 
 
     @Override
     public void update(float delta) {
-        makeAction();
-        animationTime += delta;
+        if (isDead) {
+            if (animation.getDeathCase().isAnimationFinished(animationTime)) {
+            }
+            animationTime += delta;
+        } else {
+            makeAction();
+            animationTime += delta;
 
-        if (isAttacking) {
-            checkAttackFinish();
-        }
-        else {
-            applyGravity();
-            checkOnPlatform();
-            position.add(velocity.cpy().scl(delta));
-            checkOnFloor();
+            if (isAttacking) {
+                checkAttackFinish();
+            } else {
+                applyGravity();
+                checkOnPlatform();
+                position.add(velocity.cpy().scl(delta));
+                checkOnFloor();
+            }
         }
     }
 
-
-
+    @Override
+    public TextureRegion getCurrentFrame() {
+        if (isDead) {
+            return animation.getDeathCase().getKeyFrame(animationTime, false);
+        }
+        return super.getCurrentFrame();
+    }
 
     @Override
     public void render(SpriteBatch batch) {
@@ -89,5 +106,6 @@ public class Enemy extends Entity {
         animation.getAttackCase().getKeyFrames()[0].getTexture().dispose();
         animation.getJumpCase().getKeyFrames()[0].getTexture().dispose();
         animation.getWalkCase().getKeyFrames()[0].getTexture().dispose();
+        animation.getDeathCase().getKeyFrames()[0].getTexture().dispose();
     }
 }
