@@ -15,30 +15,17 @@ public class Enemy extends Entity {
     private Player target;
     private float range;
     public Enemy(Vector2 position, List<Platform> platforms, Player player) {
-        super(position, new AnimationManager("_Run.png","_Idle.png","_Jump.png","_Attack.png", 120, 80, 0.1f), 50, 10);
+        super(position, new AnimationManager("_RunEnemy.png","_Idle.png","_Jump.png","_AttackEnemy.png", 120, 80, 0.1f), 50, 10);
         this.target = player;
         this.SPEED = 300;
         this.JUMP_VELOCITY = 1200;
         this.GRAVITY = -25;
         this.platforms = platforms;
-        this.range = 400;
+        this.range = 200;
     }
 
-    public void walk(){
-        if (inRange())
-        {
-            idle();
-        }
-        else if (position.x > target.position.x){
-            lateralMove(-SPEED);
-        }
-        else {
-            lateralMove(SPEED);
-        }
-    }
-
-    public boolean inRange(){
-        float distance = target.position.dst(position);
+    public boolean inRange() {
+        float distance = Math.abs(target.getPosition().x - position.x);
         return distance <= range;
     }
 
@@ -47,11 +34,20 @@ public class Enemy extends Entity {
             return;
         }
 
-        else if (inRange()){
+        if (inRange()){
             attack();
         }
         else{
-            idle();
+            walk();
+        }
+    }
+
+    public void walk(){
+        if (position.x > target.position.x){
+            lateralMove(-SPEED);
+        }
+        else {
+            lateralMove(SPEED);
         }
     }
 
@@ -59,19 +55,13 @@ public class Enemy extends Entity {
     public void update(float delta) {
         makeAction();
         animationTime += delta;
+
         if (isAttacking) {
             checkAttackFinish();
         }
         else {
             applyGravity();
-            for (Platform platform : platforms) {
-                if (isOnPlatform(platform) && velocity.y <= 0) {
-                    position.y = platform.getBounds().y + platform.getBounds().height;
-                    velocity.y = 0;
-                    isJumping = false;
-                    break;
-                }
-            }
+            checkOnPlatform();
             position.add(velocity.cpy().scl(delta));
             checkOnFloor();
         }
@@ -81,7 +71,7 @@ public class Enemy extends Entity {
     @Override
     public void render(SpriteBatch batch) {
         TextureRegion currentFrame = getCurrentFrame();
-        batch.draw(currentFrame, position.x, position.y, 400, 350);
+        batch.draw(currentFrame, position.x, position.y, 450, 300);
     }
 
     public void dispose(){

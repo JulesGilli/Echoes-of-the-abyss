@@ -98,13 +98,12 @@ public abstract class Entity implements lifeCycle{
     }
 
     public TextureRegion getCurrentFrame() {
-        if (isJumping) {
+        if (isAttacking) {
+            return flipAnimationCheck(animation.getAttackCase().getKeyFrame(animationTime, true));
+        } else if (isJumping) {
             return flipAnimationCheck(animation.getJumpCase().getKeyFrame(animationTime, true));
         } else if (velocity.x != 0) {
             return flipAnimationCheck(animation.getWalkCase().getKeyFrame(animationTime, true));
-        }
-        else if(isAttacking) {
-            return flipAnimationCheck(animation.getAttackCase().getKeyFrame(animationTime, true));
         } else {
             return flipAnimationCheck(animation.getIdleCase().getKeyFrame(animationTime, true));
         }
@@ -124,6 +123,7 @@ public abstract class Entity implements lifeCycle{
     public void attack(){
         isAttacking = true;
         animationTime = 0f;
+        System.out.println("ATTACK");
     }
 
     public void lateralMove(float SPEED){
