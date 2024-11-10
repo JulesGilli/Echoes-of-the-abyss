@@ -11,18 +11,15 @@ import io.github.maingame.design2dManager.AnimationManager;
 import java.util.List;
 
 public class Player extends Entity {
-    private final List<Platform> platforms;
-    public static final int RENDER_WIDTH = 450;
-    public static final int RENDER_HEIGHT = 300;
-
 
     public Player(Vector2 position, List<Platform> platforms) {
         super(position, new AnimationManager("_Run.png","_Idle.png","_Jump.png","_Attack.png", 120, 80, 0.1f),100,0);
-        this.SIZE = 50;
-        this.SPEED = 350;
-        this.JUMP_VELOCITY = 1200;
-        this.GRAVITY = -25;
+        this.SPEED = 500;
+        this.JUMP_VELOCITY = 1000;
+        this.GRAVITY = -50;
         this.platforms = platforms;
+        this.RENDER_WIDTH = 450;
+        this.RENDER_HEIGHT = 300;
     }
 
     @Override
@@ -30,19 +27,10 @@ public class Player extends Entity {
         Input(delta);
         animationTime += delta;
         if (isAttacking) {
-            if (animation.getAttackCase().isAnimationFinished(animationTime)) {
-                isAttacking = false;
-                animationTime = 0f;
-            }
+            checkAttackFinish();
         }
         else {
-
-            if (isJumping) {
-                velocity.y += GRAVITY;
-
-            }
-
-
+            applyGravity();
             for (Platform platform : platforms) {
                 if (isOnPlatform(platform) && velocity.y <= 0) {
                     position.y = platform.getBounds().y + platform.getBounds().height;
@@ -51,22 +39,9 @@ public class Player extends Entity {
                     break;
                 }
             }
-
-
             position.add(velocity.cpy().scl(delta));
-
-            if (position.y <= 0) {
-                position.y = 0;
-                isJumping = false;
-            }
+            checkOnFloor();
         }
-    }
-
-    private boolean isOnPlatform(Platform platform) {
-        return position.y <= platform.getBounds().y + platform.getBounds().height &&
-            position.y >= platform.getBounds().y &&
-            position.x + SIZE > platform.getBounds().x &&
-            position.x < platform.getBounds().x + platform.getBounds().width;
     }
 
 
@@ -82,7 +57,7 @@ public class Player extends Entity {
             velocity.x = SPEED;
             isLookingRight = true;
         } else {
-            velocity.x = 0;
+            idle();
         }
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE) && !isJumping) {
@@ -98,21 +73,8 @@ public class Player extends Entity {
 
     @Override
     public void render(SpriteBatch batch) {
-        TextureRegion currentFrame;
-        if (isJumping) {
-            currentFrame = animation.getJumpCase().getKeyFrame(animationTime, true);
-        } else if (velocity.x != 0) {
-            currentFrame = animation.getWalkCase().getKeyFrame(animationTime, true);
-        } else {
-            currentFrame = animation.getIdleCase().getKeyFrame(animationTime, true);
-        }
-
-        if (isAttacking) {
-            currentFrame = animation.getAttackCase().getKeyFrame(animationTime, true);
-        }
-        flipAnimation(currentFrame);
+        TextureRegion currentFrame = getCurrentFrame();
         batch.draw(currentFrame, position.x, position.y,RENDER_WIDTH, RENDER_HEIGHT);
-
     }
 
     public void dispose(){

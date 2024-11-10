@@ -13,15 +13,15 @@ public class AnimationManager {
     private Animation<TextureRegion> jumpCase;
     private Animation<TextureRegion> attackCase;
 
-    public AnimationManager(String walkAsset, String idleAsset, String jumpAsset, String attachAsset, int frameWidth, int frameHight, float frameDuration) {
+    public AnimationManager(String walkAsset, String idleAsset, String jumpAsset, String attachAsset, int frameWidth, int frameHeight, float frameDuration) {
         Texture walkSteps = new Texture(Gdx.files.internal(walkAsset));
         Texture idleSteps= new Texture(Gdx.files.internal(idleAsset));
         Texture jumpSteps = new Texture(Gdx.files.internal(jumpAsset));
         Texture attackSteps = new Texture(Gdx.files.internal(attachAsset));
-        walkCase= createAnimation(walkSteps, frameWidth, frameHight, frameDuration);
-        idleCase = createAnimation(idleSteps, frameWidth, frameHight, frameDuration);
-        jumpCase = createAnimation(jumpSteps, frameWidth, frameHight, frameDuration);
-        attackCase = createAnimation(attackSteps, frameWidth, frameHight, frameDuration);
+        walkCase= createAnimation(walkSteps, frameWidth, frameHeight, frameDuration);
+        idleCase = createAnimation(idleSteps, frameWidth, frameHeight, frameDuration);
+        jumpCase = createAnimation(jumpSteps, frameWidth, frameHeight, frameDuration);
+        attackCase = createAnimation(attackSteps, frameWidth, frameHeight, frameDuration);
     }
 
     private Animation<TextureRegion> createAnimation(Texture allSteps, int stepWidth, int stepHeight, float stepDuration) {

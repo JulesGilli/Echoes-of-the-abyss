@@ -1,18 +1,21 @@
 package io.github.maingame.characterManager;
-
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
+import io.github.maingame.Platform;
 import io.github.maingame.utilsManager.lifeCycle;
 import io.github.maingame.design2dManager.AnimationManager;
 
+import java.util.List;
+
 public abstract class Entity implements lifeCycle{
+    protected boolean isWalking = false;
+    protected boolean isJumping = false;
+    protected boolean isAttacking = false;
+    protected List<Platform> platforms;
     protected Vector2 position;
     protected Vector2 velocity;
     protected AnimationManager animation;
-    protected boolean isAttacking = false;
-    protected boolean isJumping = false;
     protected boolean isLookingRight;
-    protected int SIZE;
     protected float SPEED;
     protected float JUMP_VELOCITY;
     protected float GRAVITY;
@@ -24,6 +27,8 @@ public abstract class Entity implements lifeCycle{
     protected int armor = 0;
     protected int attackIncrease = 0;
     protected float speedIncrease = 0;
+    protected int RENDER_WIDTH;
+    protected int RENDER_HEIGHT;
 
     public Entity(Vector2 position, AnimationManager animation, int health, int gold) {
         this.position = position;
@@ -34,12 +39,97 @@ public abstract class Entity implements lifeCycle{
         this.gold = gold;
     }
 
-    public void flipAnimation(TextureRegion currentFrame) {
+    protected Vector2 getCenterPosition()
+    {
+        return new Vector2((position.x + (float) RENDER_WIDTH / 2), (position.y + (float) RENDER_HEIGHT / 2));
+    }
+
+    public void applyGravity(){
+        if (isJumping) {
+            velocity.y += GRAVITY;
+        }
+    }
+
+    protected void checkAttackFinish(){
+        if (animation.getAttackCase().isAnimationFinished(animationTime)) {
+            isAttacking = false;
+            animationTime = 0f;
+        }
+    }
+
+    protected boolean isOnPlatform(Platform platform) {
+        return position.y <= platform.getBounds().y + platform.getBounds().height &&
+                position.y >= platform.getBounds().y &&
+                position.x + RENDER_WIDTH > platform.getBounds().x &&
+                position.x < platform.getBounds().x + platform.getBounds().width;
+    }
+
+    protected void applyPlatformPosition(Platform platform){
+        position.y = platform.getBounds().y + platform.getBounds().height;
+        velocity.y = 0;
+        isJumping = false;
+    }
+
+    protected void checkOnPlatform(){
+        for (Platform platform : platforms) {
+            if (isOnPlatform(platform) && velocity.y <= 0) {
+                applyPlatformPosition(platform);
+                break;
+            }
+        }
+    }
+
+    protected void checkOnFloor(){
+        if (position.y <= 0) {
+            position.y = 0;
+            isJumping = false;
+        }
+    }
+
+
+
+    public TextureRegion flipAnimationCheck(TextureRegion currentFrame) {
         if (!isLookingRight && !currentFrame.isFlipX()) {
             currentFrame.flip(true, false);
         }   if (isLookingRight && currentFrame.isFlipX()) {
             currentFrame.flip(true, false);
         }
+        return currentFrame;
+    }
+
+    public TextureRegion getCurrentFrame() {
+        if (isJumping) {
+            return flipAnimationCheck(animation.getJumpCase().getKeyFrame(animationTime, true));
+        } else if (velocity.x != 0) {
+            return flipAnimationCheck(animation.getWalkCase().getKeyFrame(animationTime, true));
+        }
+        else if(isAttacking) {
+            return flipAnimationCheck(animation.getAttackCase().getKeyFrame(animationTime, true));
+        } else {
+            return flipAnimationCheck(animation.getIdleCase().getKeyFrame(animationTime, true));
+        }
+    }
+
+    public void idle(){
+        velocity.x = 0;
+    }
+
+    public void jump(){
+        if (!isJumping) {
+            velocity.y = JUMP_VELOCITY;
+        }
+        isJumping=true;
+    }
+
+    public void attack(){
+        isAttacking = true;
+        animationTime = 0f;
+    }
+
+    public void lateralMove(float SPEED){
+        velocity.x = SPEED;
+        isLookingRight = !(SPEED < 0);
+        isWalking = true;
     }
 
     public int getGold() {

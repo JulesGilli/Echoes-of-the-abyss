@@ -26,9 +26,9 @@ public class GameScreen extends ScreenAdapter {
         this.game = game;
         this.batch = game.batch;
 
-        Enemy enemy = new Enemy(new Vector2(1000, 140), Platform.getPlatforms());
-
         this.player = new Player(new Vector2(100, 100), Platform.getPlatforms());
+        Enemy enemy = new Enemy(new Vector2(1000, 140), Platform.getPlatforms(),player);
+
 
         enemies.add(enemy);
 
