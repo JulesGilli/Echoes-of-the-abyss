@@ -7,6 +7,7 @@ import io.github.maingame.Platform;
 import io.github.maingame.design2dManager.AnimationManager;
 
 import java.util.List;
+import java.lang.Math.*;
 
 public class Enemy extends Entity {
     private int health;
@@ -14,39 +15,76 @@ public class Enemy extends Entity {
     private Player target;
     private float range;
     public Enemy(Vector2 position, List<Platform> platforms, Player player) {
-        super(position, new AnimationManager("SkeletonIdle.png", "SkeletonIdle.png", "SkeletonIdle.png", "SkeletonIdle.png", 150, 101, 0.2f), 50, 10);
+        super(position, new AnimationManager("_Run.png","_Idle.png","_Jump.png","_Attack.png", 120, 80, 0.1f), 50, 10);
         this.target = player;
-        this.SPEED = 1000;
+        this.SPEED = 300;
         this.JUMP_VELOCITY = 1200;
         this.GRAVITY = -25;
         this.platforms = platforms;
-        this.range = 1.0f;
+        this.range = 285;
     }
 
-    public void update(float delta) {
-        moveToPlayer(target);
-        animationTime += delta;
-        if (isJumping){
-            applyGravity();
+    public void walk(){
+        if (inRange())
+        {
+            idle();
         }
-        checkOnPlatform();
-        position.add(velocity.scl(delta));
-        checkOnFloor();
+        else if (position.x > target.position.x){
+            lateralMove(-SPEED);
+        }
+        else {
+            lateralMove(SPEED);
+        }
     }
+
+    public boolean inRange(){
+        Vector2 playerCenter = target.getCenterPosition();
+        Vector2 enemyCenter = getCenterPosition();
+        float distance = playerCenter.dst(enemyCenter);
+        System.out.println(distance);
+        return distance <= range;
+    }
+
+    public void makeAction(){
+        if (isAttacking){
+            return;
+        }
+
+        else if (inRange()){
+            attack();
+        }
+        else{
+            idle();
+        }
+    }
+
+    @Override
+    public void update(float delta) {
+        makeAction();
+        animationTime += delta;
+        if (isAttacking) {
+            checkAttackFinish();
+        }
+        else {
+            applyGravity();
+            for (Platform platform : platforms) {
+                if (isOnPlatform(platform) && velocity.y <= 0) {
+                    position.y = platform.getBounds().y + platform.getBounds().height;
+                    velocity.y = 0;
+                    isJumping = false;
+                    break;
+                }
+            }
+            position.add(velocity.cpy().scl(delta));
+            checkOnFloor();
+        }
+    }
+
 
     @Override
     public void render(SpriteBatch batch) {
         TextureRegion currentFrame = getCurrentFrame();
         batch.draw(currentFrame, position.x, position.y, 400, 350);
-    }
-
-    private void moveToPlayer(Entity target) {
-        Vector2 playerCenter = target.getCenterPosition();
-        Vector2 enemyCenter = getCenterPosition();
-        Vector2 direction = new Vector2(playerCenter.x - enemyCenter.x, playerCenter.y - enemyCenter.y);
-        direction.nor();
-        lateralMove(direction.x * SPEED);
-        System.out.println(velocity.x);
     }
 
     public void dispose(){
