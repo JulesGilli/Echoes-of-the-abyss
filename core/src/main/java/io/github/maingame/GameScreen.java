@@ -78,7 +78,7 @@ public class GameScreen extends ScreenAdapter {
             enemy.render(batch);
             enemy.update(delta);
 
-            if (!enemy.isAlive()) {
+            if (enemy.isDeathAnimationFinished()) {
                 iterator.remove();
             }
         }

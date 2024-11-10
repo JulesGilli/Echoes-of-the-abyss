@@ -55,12 +55,14 @@ public class Enemy extends Entity {
 
     @Override
     public void receiveDamage(float damage) {
-        health -= damage;
-        System.out.println("Enemy prend " + damage + " damage, vie restante : " + health);
+        if (!isDying) {
+            health -= damage;
+            System.out.println("Enemy prend " + damage + " damage, vie restante : " + health);
 
-        if (health <= 0 && !isDead) {
-            isDead = true;
-            animationTime = 0f;
+            if (health <= 0) {
+                isDying = true;
+                animationTime = 0f;
+            }
         }
     }
 
@@ -68,10 +70,11 @@ public class Enemy extends Entity {
 
     @Override
     public void update(float delta) {
-        if (isDead) {
-            if (animation.getDeathCase().isAnimationFinished(animationTime)) {
-            }
+        if (isDying) {
             animationTime += delta;
+            if (animation.getDeathCase().isAnimationFinished(animationTime)) {
+                isDead = true;
+            }
         } else {
             makeAction();
             animationTime += delta;
@@ -87,12 +90,23 @@ public class Enemy extends Entity {
         }
     }
 
+    public boolean isDeathAnimationFinished() {
+        return isDead;
+    }
+
     @Override
     public TextureRegion getCurrentFrame() {
-        if (isDead) {
-            return animation.getDeathCase().getKeyFrame(animationTime, false);
+        if (isDying) {
+            return flipAnimationCheck(animation.getDeathCase().getKeyFrame(animationTime, false));
+        } else if (isAttacking) {
+            return flipAnimationCheck(animation.getAttackCase().getKeyFrame(animationTime, true));
+        } else if (isJumping) {
+            return flipAnimationCheck(animation.getJumpCase().getKeyFrame(animationTime, true));
+        } else if (velocity.x != 0) {
+            return flipAnimationCheck(animation.getWalkCase().getKeyFrame(animationTime, true));
+        } else {
+            return flipAnimationCheck(animation.getIdleCase().getKeyFrame(animationTime, true));
         }
-        return super.getCurrentFrame();
     }
 
     @Override
