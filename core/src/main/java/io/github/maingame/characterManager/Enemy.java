@@ -21,7 +21,7 @@ public class Enemy extends Entity {
         this.JUMP_VELOCITY = 1200;
         this.GRAVITY = -25;
         this.platforms = platforms;
-        this.range = 285;
+        this.range = 400;
     }
 
     public void walk(){
@@ -38,10 +38,7 @@ public class Enemy extends Entity {
     }
 
     public boolean inRange(){
-        Vector2 playerCenter = target.getCenterPosition();
-        Vector2 enemyCenter = getCenterPosition();
-        float distance = playerCenter.dst(enemyCenter);
-        System.out.println(distance);
+        float distance = target.position.dst(position);
         return distance <= range;
     }
 
