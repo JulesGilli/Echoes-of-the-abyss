@@ -21,15 +21,11 @@ public class Enemy extends Entity {
         this.JUMP_VELOCITY = 1200;
         this.GRAVITY = -25;
         this.platforms = platforms;
-        this.range = 400;
+        this.range = 600;
     }
 
     public void walk(){
-        if (inRange())
-        {
-            idle();
-        }
-        else if (position.x > target.position.x){
+        if (position.x > target.position.x){
             lateralMove(-SPEED);
         }
         else {
@@ -38,7 +34,7 @@ public class Enemy extends Entity {
     }
 
     public boolean inRange(){
-        float distance = target.position.dst(position);
+        float distance = position.dst(target.position);
         return distance <= range;
     }
 
@@ -46,12 +42,19 @@ public class Enemy extends Entity {
         if (isAttacking){
             return;
         }
-
-        else if (inRange()){
-            attack();
+        if (position.x > target.position.x){
+            velocity.x = -SPEED;
+            isLookingRight = false;
+        } else if (position.x < target.position.x) {
+            velocity.x = SPEED;
+            isLookingRight = true;
         }
         else{
             idle();
+        }
+        if (inRange() && !isAttacking && ! isJumping){
+            isAttacking = true;
+            animationTime = 0f;
         }
     }
 
