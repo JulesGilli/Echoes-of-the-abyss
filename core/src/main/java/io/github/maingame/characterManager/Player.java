@@ -71,6 +71,21 @@ public class Player extends Entity {
         }
     }
 
+    @Override
+    public void receiveDamage(float damage) {
+        if (isDead) {
+            return;
+        }
+
+        this.health -= damage - armor;
+
+        if (this.health <= 0) {
+            isDead = true;
+            animationTime = 0f;
+        }
+    }
+
+
 
     private void Input(float delta) {
         if (isAttacking || isDead) return;

@@ -15,6 +15,8 @@ public class Enemy extends Entity {
     private boolean isDead = false;
     private boolean isDying = false;
 
+    private boolean hasHitPlayer = false;
+
 
     public Enemy(Vector2 position, List<Platform> platforms, Player player) {
         super(position, new AnimationManager("_RunEnemy.png","_Idle.png","_Jump.png","_AttackEnemy.png","_DeathEnemy.png", 120, 80, 0.1f), 50, 10, 10);
@@ -26,6 +28,8 @@ public class Enemy extends Entity {
         this.range = 200;
         this.RENDER_WIDTH = 450;
         this.RENDER_HEIGHT = 300;
+        this.attackRange = 200;
+
     }
 
     public boolean inRange() {
@@ -37,12 +41,33 @@ public class Enemy extends Entity {
         if (isDead || isAttacking) return;
 
         if (inRange()){
+            System.out.println("Enemy in range of player.");
+
             attack();
+            if (!hasHitPlayer && isCollidingWith(target, attackRange)) {
+                System.out.println("Enemy hit player!");
+
+                target.receiveDamage(attack);
+                hasHitPlayer = true;
+            }
+            else {
+                System.out.println("Enemy attack missed or already hit.");
+            }
         }
         else{
             walk();
         }
     }
+
+    @Override
+    protected void checkAttackFinish() {
+        if (animation.getAttackCase().isAnimationFinished(animationTime)) {
+            isAttacking = false;
+            hasHitPlayer = false;
+            animationTime = 0f;
+        }
+    }
+
 
     public void walk(){
         if (position.x > target.position.x){
