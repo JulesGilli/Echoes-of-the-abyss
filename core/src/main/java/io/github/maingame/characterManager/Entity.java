@@ -132,6 +132,14 @@ public abstract class Entity implements lifeCycle{
         isWalking = true;
     }
 
+    public boolean isCollidingWith(Entity other) {
+        return position.x < other.position.x + other.RENDER_WIDTH &&
+            position.x + RENDER_WIDTH > other.position.x &&
+            position.y < other.position.y + other.RENDER_HEIGHT &&
+            position.y + RENDER_HEIGHT > other.position.y;
+    }
+
+
     public int getGold() {
         return gold;
     }
