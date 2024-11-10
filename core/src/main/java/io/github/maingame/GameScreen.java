@@ -4,6 +4,7 @@ import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import io.github.maingame.characterManager.Enemy;
 import io.github.maingame.characterManager.Player;
@@ -19,6 +20,8 @@ public class GameScreen extends ScreenAdapter {
     private final Texture background1, background2, background3, background4a, background4b;
     private final Player player;
     private final List<Enemy> enemies = new ArrayList<>();
+    private final float spawnDelay = 3.0f;
+    private float timeSinceLastSpawn = 0f;
 
     private final Texture healthFrame;
     private final Texture healthBar;
@@ -28,10 +31,6 @@ public class GameScreen extends ScreenAdapter {
         this.batch = game.batch;
 
         this.player = new Player(new Vector2(100, 100), Platform.getPlatforms());
-        Enemy enemy = new Enemy(new Vector2(1000, 140), Platform.getPlatforms(),player);
-
-
-        enemies.add(enemy);
 
         healthFrame = new Texture(Gdx.files.internal("Health_01.png"));
         healthBar = new Texture(Gdx.files.internal("Health_01_Bar01.png"));
@@ -47,6 +46,13 @@ public class GameScreen extends ScreenAdapter {
 
     @Override
     public void render(float delta) {
+        timeSinceLastSpawn += delta;
+
+        if (timeSinceLastSpawn >= spawnDelay) {
+            spawnEnemy();
+            timeSinceLastSpawn = 0f;
+        }
+
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         float screenWidth = Gdx.graphics.getWidth();
@@ -78,17 +84,21 @@ public class GameScreen extends ScreenAdapter {
         }
 
         float offset = 100;
-
         float sizeHealthBar = 4;
         batch.draw(healthFrame, offset, screenHeight - offset,healthFrame.getWidth() * sizeHealthBar,healthFrame.getHeight() * sizeHealthBar);
 
-
         float healthPercentage = player.getHealth() / (float) player.getMaxHealth();
         float healthBarWidth = healthBar.getWidth() * healthPercentage;
-
         batch.draw(healthBar, offset + 64, screenHeight - offset + 36, healthBarWidth * sizeHealthBar * 1.025f, healthBar.getHeight() * sizeHealthBar);
 
         batch.end();
+    }
+
+    private void spawnEnemy() {
+        float spawnX = MathUtils.randomBoolean() ? -50 : Gdx.graphics.getWidth() + 50;
+
+        Enemy newEnemy = new Enemy(new Vector2(spawnX, 100), Platform.getPlatforms(), player);
+        enemies.add(newEnemy);
     }
 
     @Override
