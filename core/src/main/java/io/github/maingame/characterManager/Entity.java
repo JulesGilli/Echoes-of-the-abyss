@@ -91,10 +91,7 @@ public abstract class Entity implements lifeCycle{
 
 
     public TextureRegion flipAnimationCheck(TextureRegion currentFrame) {
-        if (!lookingRight && !currentFrame.isFlipX()) {
-            currentFrame.flip(true, false);
-        }
-        if (lookingRight && currentFrame.isFlipX()) {
+        if ((lookingRight && currentFrame.isFlipX()) || (!lookingRight && !currentFrame.isFlipX())) {
             currentFrame.flip(true, false);
         }
         return currentFrame;
@@ -177,15 +174,15 @@ public abstract class Entity implements lifeCycle{
         this.health -= damage - armor;
     }
 
-    public float getSpeed(float SPEED) {
+    public float getSpeed() {
         return speed + speedBonus;
     }
 
-    public void setAttackBonus(int attackIncrease) {
+    public void setAttackBonus(int attackBonus) {
         this.attackBonus = attackBonus;
     }
 
-    public void setSpeedBonus(float speedIncrease) {
+    public void setSpeedBonus(float speedBonus) {
         this.speedBonus = speedBonus;
     }
 
