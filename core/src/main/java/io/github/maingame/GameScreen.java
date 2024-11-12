@@ -13,6 +13,10 @@ import com.badlogic.gdx.math.Vector2;
 import io.github.maingame.characterManager.Enemy;
 import io.github.maingame.characterManager.Player;
 import io.github.maingame.design2dManager.TextureManager;
+import io.github.maingame.itemManager.Gear;
+import io.github.maingame.itemManager.Shop;
+import io.github.maingame.itemManager.SpeedPotion;
+import io.github.maingame.utilsManager.GameStat;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -23,6 +27,7 @@ public class GameScreen extends ScreenAdapter {
     private final SpriteBatch batch;
     private final Texture background1, background2, background3, background4a, background4b;
     private final Player player;
+    private final Shop shop;
     private final List<Enemy> enemies = new ArrayList<>();
     private final BitmapFont font;
     private final GlyphLayout layout = new GlyphLayout();
@@ -34,9 +39,8 @@ public class GameScreen extends ScreenAdapter {
     public GameScreen(Main game) {
         this.game = game;
         this.batch = game.batch;
-
         this.player = new Player(new Vector2(100, 100), Platform.getPlatforms());
-
+        this.shop = new Shop(new ArrayList<>(), new GameStat());
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("assets/fonts/Jacquard12-Regular.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
         parameter.size = 64;
@@ -98,6 +102,8 @@ public class GameScreen extends ScreenAdapter {
             }
         }
 
+        shop.render(batch);
+        shop.update(delta);
         float offset = 100;
         float sizeHealthBar = 4;
         batch.draw(healthFrame, offset, screenHeight - offset,healthFrame.getWidth() * sizeHealthBar,healthFrame.getHeight() * sizeHealthBar);

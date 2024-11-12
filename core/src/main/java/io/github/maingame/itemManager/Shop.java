@@ -43,8 +43,8 @@ public class Shop {
     }
 
     public void render(SpriteBatch batch) {
-        float size = 3;
-        batch.draw(shopFont, 100, 100, 42*size, 58*size);
+        float size = 5;
+        batch.draw(shopFont, 600, 600, 42*size, 58*size);
     }
 
     public void dispose(){
