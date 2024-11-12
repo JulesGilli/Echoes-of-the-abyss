@@ -30,16 +30,22 @@ public class GameScreen extends ScreenAdapter {
     private final Shop shop;
     private final GameStat stat;
     private final GameHUD hud;
+    private OptionsScreen optionsScreen;
+
 
     private boolean isGameOver = false;
     private boolean isPaused = false;
 
     public GameScreen(Main game) {
         this.game = game;
+        this.optionsScreen = new OptionsScreen(game);
         this.batch = game.batch;
         this.stat = new GameStat();
         this.shop = new Shop(new ArrayList<>(), stat);
-        this.player = new Player(new Vector2(100, 100), Platform.getPlatforms());
+        this.player = new Player(new Vector2(100, 100), Platform.getPlatforms(),
+            optionsScreen.getLeftKey(), optionsScreen.getRightKey(),
+            optionsScreen.getJumpKey(), optionsScreen.getAttackKey());
+
         this.hud = new GameHUD(game);
 
         background1 = new Texture(Gdx.files.internal("background1.png"));
@@ -48,6 +54,7 @@ public class GameScreen extends ScreenAdapter {
         background4a = new Texture(Gdx.files.internal("background4a.png"));
         background4b = new Texture(Gdx.files.internal("background4b.png"));
 
+        updatePlayerKeys();
         Platform.createPlatforms();
     }
 
@@ -86,6 +93,14 @@ public class GameScreen extends ScreenAdapter {
         }
     }
 
+    public void updatePlayerKeys() {
+        player.setLeftKey(optionsScreen.getLeftKey());
+        player.setRightKey(optionsScreen.getRightKey());
+        player.setJumpKey(optionsScreen.getJumpKey());
+        player.setAttackKey(optionsScreen.getAttackKey());
+    }
+
+
     private void drawBackground(float screenWidth, float screenHeight) {
         batch.draw(background1, 0, 0, screenWidth, screenHeight);
         batch.draw(background2, 0, 0, screenWidth, screenHeight);
@@ -102,6 +117,7 @@ public class GameScreen extends ScreenAdapter {
 
     public void resumeGame() {
         isPaused = false;
+        updatePlayerKeys();
     }
 
     private void spawnEnemies(float delta) {
