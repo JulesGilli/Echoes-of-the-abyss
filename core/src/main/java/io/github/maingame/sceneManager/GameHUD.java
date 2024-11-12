@@ -138,9 +138,9 @@ public class GameHUD {
         batch.draw(buttonMenu, quitButtonBounds.x, quitButtonBounds.y + 5, quitButtonBounds.width, quitButtonBounds.height);
         batch.draw(buttonMenu, shopButtonBounds.x, shopButtonBounds.y + 5, shopButtonBounds.width, shopButtonBounds.height);
 
-        menuFont.draw(batch, "Main Menu", mainMenuButtonBounds.x + 100, mainMenuButtonBounds.y + 100);
-        menuFont.draw(batch, "Quit", quitButtonBounds.x + 160, quitButtonBounds.y + 100);
-        menuFont.draw(batch, "Shop", shopButtonBounds.x + 160, shopButtonBounds.y + 100);
+        menuFont.draw(batch, "Main Menu", mainMenuButtonBounds.x + 100, mainMenuButtonBounds.y + 125);
+        menuFont.draw(batch, "Quit", quitButtonBounds.x + 160, quitButtonBounds.y + 125);
+        menuFont.draw(batch, "Shop", shopButtonBounds.x + 160, shopButtonBounds.y + 125);
 
     }
 
