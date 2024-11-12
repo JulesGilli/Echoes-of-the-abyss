@@ -37,4 +37,12 @@ public class Shop {
         }
         return false;
     }
+
+    public Map<Item, Integer> getPriceList() {
+        return priceList;
+    }
+
+    public List<Item> getItemsAvailable() {
+        return itemsAvailable;
+    }
 }

@@ -4,6 +4,7 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import io.github.maingame.GameScreen;
+import io.github.maingame.utilsManager.GameStat;
 
 public class Main extends Game {
     public SpriteBatch batch;
