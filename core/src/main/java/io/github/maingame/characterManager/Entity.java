@@ -8,27 +8,27 @@ import io.github.maingame.design2dManager.AnimationManager;
 import java.util.List;
 
 public abstract class Entity implements lifeCycle{
-    protected boolean isWalking = false;
-    protected boolean isJumping = false;
-    protected boolean isAttacking = false;
+    protected boolean walking = false;
+    protected boolean jumping = false;
+    protected boolean attacking = false;
     protected List<Platform> platforms;
     protected Vector2 position;
     protected Vector2 velocity;
     protected AnimationManager animation;
-    protected boolean isLookingRight;
-    protected float SPEED;
-    protected float JUMP_VELOCITY;
-    protected float GRAVITY;
+    protected boolean lookingRight ;
+    protected float speed;
+    protected float jumpVelocity;
+    protected float gravity;
     protected float animationTime;
     protected int gold;
     protected int health;
     protected int maxHealth;
-    protected float attack;
+    protected float attackDamage;
     protected int armor = 0;
-    protected float attackIncrease = 0;
-    protected float speedIncrease = 0;
-    protected int RENDER_WIDTH = 100;
-    protected int RENDER_HEIGHT = 100;
+    protected float attackBonus  = 0;
+    protected float speedBonus  = 0;
+    protected int renderWidth  = 100;
+    protected int renderHeight  = 100;
     protected float attackRange;
 
     public Entity(Vector2 position, AnimationManager animation, int health, int gold, float attack) {
@@ -38,23 +38,23 @@ public abstract class Entity implements lifeCycle{
         this.health = health;
         this.maxHealth = health;
         this.gold = gold;
-        this.attack = attack;
+        this.attackDamage = attack;
     }
 
     protected Vector2 getCenterPosition()
     {
-        return new Vector2((position.x + (float) RENDER_WIDTH / 2), (position.y + (float) RENDER_HEIGHT / 2));
+        return new Vector2((position.x + (float) renderWidth / 2), (position.y + (float) renderHeight / 2));
     }
 
     public void applyGravity(){
-        if (isJumping) {
-            velocity.y += GRAVITY;
+        if (jumping) {
+            velocity.y += gravity;
         }
     }
 
     protected void checkAttackFinish(){
         if (animation.getAttackCase().isAnimationFinished(animationTime)) {
-            isAttacking = false;
+            attacking = false;
             animationTime = 0f;
         }
     }
@@ -62,14 +62,14 @@ public abstract class Entity implements lifeCycle{
     protected boolean isOnPlatform(Platform platform) {
         return position.y <= platform.getBounds().y + platform.getBounds().height &&
                 position.y >= platform.getBounds().y &&
-                position.x + RENDER_WIDTH > platform.getBounds().x &&
+                position.x + renderWidth > platform.getBounds().x &&
                 position.x < platform.getBounds().x + platform.getBounds().width;
     }
 
     protected void applyPlatformPosition(Platform platform){
         position.y = platform.getBounds().y + platform.getBounds().height;
         velocity.y = 0;
-        isJumping = false;
+        jumping = false;
     }
 
     protected void checkOnPlatform(){
@@ -84,25 +84,25 @@ public abstract class Entity implements lifeCycle{
     protected void checkOnFloor(){
         if (position.y <= 0) {
             position.y = 0;
-            isJumping = false;
+            jumping = false;
         }
     }
 
 
 
     public TextureRegion flipAnimationCheck(TextureRegion currentFrame) {
-        if (!isLookingRight && !currentFrame.isFlipX()) {
+        if (!lookingRight && !currentFrame.isFlipX()) {
             currentFrame.flip(true, false);
-        }   if (isLookingRight && currentFrame.isFlipX()) {
+        }   if (lookingRight && currentFrame.isFlipX()) {
             currentFrame.flip(true, false);
         }
         return currentFrame;
     }
 
     public TextureRegion getCurrentFrame() {
-        if (isAttacking) {
+        if (attacking) {
             return flipAnimationCheck(animation.getAttackCase().getKeyFrame(animationTime, true));
-        } else if (isJumping) {
+        } else if (jumping) {
             return flipAnimationCheck(animation.getJumpCase().getKeyFrame(animationTime, true));
         } else if (velocity.x != 0) {
             return flipAnimationCheck(animation.getWalkCase().getKeyFrame(animationTime, true));
@@ -116,32 +116,28 @@ public abstract class Entity implements lifeCycle{
     }
 
     public void jump(){
-        if (!isJumping) {
-            velocity.y = JUMP_VELOCITY;
+        if (!jumping) {
+            velocity.y = jumpVelocity;
         }
-        isJumping=true;
+        jumping=true;
     }
 
     public void attack(){
-        isAttacking = true;
+        attacking = true;
         animationTime = 0f;
     }
 
-    public void lateralMove(float SPEED){
+    public void moveLaterally(float SPEED){
         velocity.x = SPEED;
-        isLookingRight = !(SPEED < 0);
-        isWalking = true;
+        lookingRight = !(SPEED < 0);
+        walking = true;
     }
 
     public boolean isCollidingWith(Entity other, float attackRange) {
-
-
-
         Vector2 thisCenter = getCenterPosition();
         Vector2 otherCenter = other.getCenterPosition();
 
         float distance = thisCenter.dst(otherCenter);
-
 
         System.out.println(distance <= attackRange);
         return distance <= attackRange;
@@ -173,7 +169,7 @@ public abstract class Entity implements lifeCycle{
     }
 
     public float getAttack() {
-        return attack + attackIncrease;
+        return attackDamage + attackBonus;
     }
 
     public void receiveDamage(float damage){
@@ -181,15 +177,15 @@ public abstract class Entity implements lifeCycle{
     }
 
     public float getSpeed(float SPEED) {
-        return SPEED + speedIncrease;
+        return speed + speedBonus;
     }
 
-    public void setAttackIncrease(int attackIncrease) {
-        this.attackIncrease = attackIncrease;
+    public void setAttackBonus(int attackIncrease) {
+        this.attackBonus = attackBonus;
     }
 
-    public void setSpeedIncrease(float speedIncrease) {
-        this.speedIncrease = speedIncrease;
+    public void setSpeedBonus(float speedIncrease) {
+        this.speedBonus = speedBonus;
     }
 
     public void setArmor(int armor) {

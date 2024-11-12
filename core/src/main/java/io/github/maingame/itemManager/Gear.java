@@ -10,7 +10,7 @@ public abstract class Gear extends Item {
     public void applyItem(Entity target) {
         {
             if (this instanceof Sword){
-                target.setAttackIncrease(((Sword) this).getAttackIncrease());
+                target.setAttackBonus(((Sword) this).getAttackIncrease());
             }
         }
             if (this instanceof Shield){
