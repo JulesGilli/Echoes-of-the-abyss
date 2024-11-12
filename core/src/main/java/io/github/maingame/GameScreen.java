@@ -1,9 +1,13 @@
 package io.github.maingame;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import io.github.maingame.characterManager.Enemy;
@@ -20,7 +24,8 @@ public class GameScreen extends ScreenAdapter {
     private final Texture background1, background2, background3, background4a, background4b;
     private final Player player;
     private final List<Enemy> enemies = new ArrayList<>();
-    private final float spawnDelay = 3.0f;
+    private final BitmapFont font;
+    private final GlyphLayout layout = new GlyphLayout();
     private float timeSinceLastSpawn = 0f;
 
     private final Texture healthFrame;
@@ -31,6 +36,14 @@ public class GameScreen extends ScreenAdapter {
         this.batch = game.batch;
 
         this.player = new Player(new Vector2(100, 100), Platform.getPlatforms());
+
+        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("assets/fonts/Jacquard12-Regular.ttf"));
+        FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        parameter.size = 64;
+        font = generator.generateFont(parameter);
+        font.setColor(Color.YELLOW);
+
+
 
         healthFrame = new Texture(Gdx.files.internal("Health_01.png"));
         healthBar = new Texture(Gdx.files.internal("Health_01_Bar01.png"));
@@ -48,6 +61,7 @@ public class GameScreen extends ScreenAdapter {
     public void render(float delta) {
         timeSinceLastSpawn += delta;
 
+        float spawnDelay = 3.0f;
         if (timeSinceLastSpawn >= spawnDelay) {
             spawnEnemy();
             timeSinceLastSpawn = 0f;
@@ -79,6 +93,7 @@ public class GameScreen extends ScreenAdapter {
             enemy.update(delta);
 
             if (enemy.isDeathAnimationFinished()) {
+                player.setGold(player.getGold() + enemy.getGold());
                 iterator.remove();
             }
         }
@@ -90,6 +105,10 @@ public class GameScreen extends ScreenAdapter {
         float healthPercentage = player.getHealth() / (float) player.getMaxHealth();
         float healthBarWidth = healthBar.getWidth() * healthPercentage;
         batch.draw(healthBar, offset + 64, screenHeight - offset + 36, healthBarWidth * sizeHealthBar * 1.025f, healthBar.getHeight() * sizeHealthBar);
+
+        String goldText = "Gold: " + player.getGold();
+        layout.setText(font, goldText);
+        font.draw(batch, goldText,screenWidth - 270 , screenHeight - 40);
 
         batch.end();
     }
@@ -124,6 +143,7 @@ public class GameScreen extends ScreenAdapter {
     @Override
     public void dispose() {
         batch.dispose();
+        font.dispose();
         healthFrame.dispose();
         healthBar.dispose();
         background1.dispose();
