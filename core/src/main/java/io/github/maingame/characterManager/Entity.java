@@ -30,6 +30,10 @@ public abstract class Entity implements lifeCycle{
     protected int renderWidth  = 100;
     protected int renderHeight  = 100;
     protected float attackRange;
+    protected Vector2 initialPosition;
+    protected int initialHealth;
+    protected int initialGold;
+    protected float initialAttack;
 
     public Entity(Vector2 position, AnimationManager animation, int health, int gold, float attack) {
         this.position = position;
