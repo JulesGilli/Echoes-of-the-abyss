@@ -1,5 +1,6 @@
 package io.github.maingame;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
@@ -24,12 +25,15 @@ public class GameScreen extends ScreenAdapter {
     private final Texture background1, background2, background3, background4a, background4b;
     private final Player player;
     private final List<Enemy> enemies = new ArrayList<>();
-    private final BitmapFont font;
+    private final BitmapFont goldFont;
+    private final BitmapFont menuFont;
     private final GlyphLayout layout = new GlyphLayout();
     private float timeSinceLastSpawn = 0f;
 
     private final Texture healthFrame;
     private final Texture healthBar;
+
+    private boolean isGameOver = false;
 
     public GameScreen(Main game) {
         this.game = game;
@@ -40,8 +44,10 @@ public class GameScreen extends ScreenAdapter {
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("assets/fonts/Jacquard12-Regular.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
         parameter.size = 64;
-        font = generator.generateFont(parameter);
-        font.setColor(Color.YELLOW);
+        goldFont = generator.generateFont(parameter);
+        goldFont.setColor(Color.YELLOW);
+        menuFont = generator.generateFont(parameter);
+        menuFont.setColor(Color.WHITE);
 
 
 
@@ -59,35 +65,54 @@ public class GameScreen extends ScreenAdapter {
 
     @Override
     public void render(float delta) {
-        timeSinceLastSpawn += delta;
-
-        float spawnDelay = 3.0f;
-        if (timeSinceLastSpawn >= spawnDelay) {
-            spawnEnemy();
-            timeSinceLastSpawn = 0f;
+        if (player.getHealth() <= 0) {
+            isGameOver = true;
         }
 
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        batch.begin();
 
         float screenWidth = Gdx.graphics.getWidth();
         float screenHeight = Gdx.graphics.getHeight();
 
-        batch.begin();
+        drawBackground(screenWidth, screenHeight);
+        drawPlatforms();
+        player.render(batch);
 
+        if (!isGameOver) {
+            player.update(delta, enemies);
+            spawnEnemies(delta);
+            drawHealthBar(screenHeight);
+            drawGold(screenWidth, screenHeight);
+        } else {
+            displayGameOverMenu(screenWidth, screenHeight);
+        }
+
+        batch.end();
+    }
+
+    private void drawBackground(float screenWidth, float screenHeight) {
         batch.draw(background1, 0, 0, screenWidth, screenHeight);
         batch.draw(background2, 0, 0, screenWidth, screenHeight);
         batch.draw(background3, 0, 0, screenWidth, screenHeight);
         batch.draw(background4a, 0, 0, screenWidth, screenHeight);
         batch.draw(background4b, 0, 0, screenWidth, screenHeight);
+    }
 
+    private void drawPlatforms() {
         for (Platform platform : Platform.getPlatforms()) {
             platform.render(batch);
         }
+    }
 
-        player.render(batch);
-        player.update(delta, enemies);
+    private void spawnEnemies(float delta) {
+        timeSinceLastSpawn += delta;
+        if (timeSinceLastSpawn >= 3.0f) {
+            spawnEnemy();
+            timeSinceLastSpawn = 0f;
+        }
 
-        for (Iterator<Enemy> iterator = enemies.iterator(); iterator.hasNext();) {
+        for (Iterator<Enemy> iterator = enemies.iterator(); iterator.hasNext(); ) {
             Enemy enemy = iterator.next();
             enemy.render(batch);
             enemy.update(delta);
@@ -97,20 +122,6 @@ public class GameScreen extends ScreenAdapter {
                 iterator.remove();
             }
         }
-
-        float offset = 100;
-        float sizeHealthBar = 4;
-        batch.draw(healthFrame, offset, screenHeight - offset,healthFrame.getWidth() * sizeHealthBar,healthFrame.getHeight() * sizeHealthBar);
-
-        float healthPercentage = player.getHealth() / (float) player.getMaxHealth();
-        float healthBarWidth = healthBar.getWidth() * healthPercentage;
-        batch.draw(healthBar, offset + 64, screenHeight - offset + 36, healthBarWidth * sizeHealthBar * 1.025f, healthBar.getHeight() * sizeHealthBar);
-
-        String goldText = "Gold: " + player.getGold();
-        layout.setText(font, goldText);
-        font.draw(batch, goldText,screenWidth - 270 , screenHeight - 40);
-
-        batch.end();
     }
 
     private void spawnEnemy() {
@@ -120,30 +131,48 @@ public class GameScreen extends ScreenAdapter {
         enemies.add(newEnemy);
     }
 
-    @Override
-    public void resize(int width, int height) {
+    private void drawHealthBar(float screenHeight) {
+        float offset = 100;
+        float sizeHealthBar = 4;
+        batch.draw(healthFrame, offset, screenHeight - offset, healthFrame.getWidth() * sizeHealthBar, healthFrame.getHeight() * sizeHealthBar);
+
+        float healthPercentage = player.getHealth() / (float) player.getMaxHealth();
+        float healthBarWidth = healthBar.getWidth() * healthPercentage;
+        batch.draw(healthBar, offset + 64, screenHeight - offset + 36, healthBarWidth * sizeHealthBar * 1.025f, healthBar.getHeight() * sizeHealthBar);
     }
 
-    @Override
-    public void show() {
+    private void drawGold(float screenWidth, float screenHeight) {
+        String goldText = "Gold: " + player.getGold();
+        layout.setText(goldFont, goldText);
+        goldFont.draw(batch, goldText, screenWidth - 270, screenHeight - 40);
     }
 
-    @Override
-    public void hide() {
+    private void displayGameOverMenu(float screenWidth, float screenHeight) {
+        String gameOverText = "Game Over";
+        String replayText = "Press R to Replay";
+        layout.setText(menuFont, gameOverText);
+        menuFont.draw(batch, gameOverText, screenWidth / 2f - layout.width / 2, screenHeight / 2f + 50);
+
+        layout.setText(menuFont, replayText);
+        menuFont.draw(batch, replayText, screenWidth / 2f - layout.width / 2, screenHeight / 2f - 50);
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.R)) {
+            resetGame();
+        }
     }
 
-    @Override
-    public void pause() {
-    }
-
-    @Override
-    public void resume() {
+    private void resetGame() {
+        player.reset();
+        enemies.clear();
+        timeSinceLastSpawn = 0f;
+        isGameOver = false;
     }
 
     @Override
     public void dispose() {
         batch.dispose();
-        font.dispose();
+        goldFont.dispose();
+        menuFont.dispose();
         healthFrame.dispose();
         healthBar.dispose();
         background1.dispose();
