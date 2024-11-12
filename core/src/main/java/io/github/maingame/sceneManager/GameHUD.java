@@ -12,6 +12,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import io.github.maingame.Main;
 import io.github.maingame.characterManager.Player;
+import io.github.maingame.utilsManager.GameStat;
 
 public class GameHUD {
     private final Main game;
@@ -22,6 +23,7 @@ public class GameHUD {
     private final Texture buttonMenu;
     private final Texture backgroundGUI;
     private final GlyphLayout layout;
+    private GameStat stat;
 
     private final Rectangle mainMenuButtonBounds;
     private final Rectangle resumeButtonBounds;
@@ -151,7 +153,7 @@ public class GameHUD {
             } else if (quitButtonBounds.contains(clickPosition)) {
                 Gdx.app.exit();
             } else if (shopButtonBounds.contains(clickPosition)) {
-                game.setScreen(new ShopScreen(game));
+                game.setScreen(new ShopScreen(game, stat));
             }
         }
     }

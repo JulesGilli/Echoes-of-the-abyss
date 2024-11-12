@@ -28,8 +28,8 @@ public class ShopScreen extends ScreenAdapter {
     private final Texture buttonTexture;
     private final int shopSize = 25;
     private BitmapFont font;
-    private Shop shop;
-    private GameStat stat;
+    private final Shop shop;
+    private final GameStat stat;
     private final int buttonWidth = 600;
     private final int buttonHeight = 200;
     private final int screenWidth = Gdx.graphics.getWidth();
@@ -37,34 +37,33 @@ public class ShopScreen extends ScreenAdapter {
 
     public ShopScreen(Main game, GameStat stat) {
         this.game = game;
+        this.stat = stat;
         this.batch = new SpriteBatch();
+        this.shop = new Shop(new ArrayList<>(), stat);
+
         backgroundTexture = new Texture(Gdx.files.internal("assets/backGroundMainMenu.png"));
         shopTexture = new Texture(Gdx.files.internal("assets/bookShop.png"));
-        initFonts();
         buttonTexture = new Texture(Gdx.files.internal("assets/buttonMenu.png"));
-        float buttonWidth = 600;
-        float buttonHeight = 200;
-        float screenWidth = Gdx.graphics.getWidth();
-        float screenHeight = Gdx.graphics.getHeight();
+        initFonts();
 
     }
 
 
     public List<Rectangle> createItemContainer(){
         List<Rectangle> listItemContainer = new ArrayList<>();
-        int i = 0;
-        for (Item item: shop.getItemsAvailable()) {
-            createButton(0);
-            i++;
+        int yPosition = screenHeight / 2;
+        int margin = 20;
+
+        for (int i = 0; i < shop.getItemsAvailable().size(); i++) {
+            Rectangle button = createButton(i, yPosition - i * (buttonHeight + margin));
+            listItemContainer.add(button);
         }
         return listItemContainer;
     }
 
-    public Rectangle createButton(int number){
-        int width = (screenWidth - buttonWidth) / 2;
-        int height = (buttonHeight - buttonHeight) / 2;
-        int margin = buttonWidth + 20;
-        return new Rectangle(width - margin * 20, height, buttonWidth, buttonHeight);
+    public Rectangle createButton(int index, int yPosition) {
+        int xPosition = (screenWidth - buttonWidth) / 2;
+        return new Rectangle(xPosition, yPosition, buttonWidth, buttonHeight);
     }
 
 
@@ -82,18 +81,23 @@ public class ShopScreen extends ScreenAdapter {
     public void render(float delta) {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
         float shopWidth = 42 * shopSize;
         float shopHeight = 58 * shopSize;
-        float centerShopWidth = Gdx.graphics.getWidth()/2 - shopWidth/2;
-        float centerShopHeight = Gdx.graphics.getHeight()/2 - shopHeight/2;
+        float centerShopWidth = screenWidth / 2f - shopWidth / 2;
+        float centerShopHeight = screenHeight / 2f - shopHeight / 2;
+
         batch.begin();
-        batch.draw(backgroundTexture, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        batch.draw(shopTexture, centerShopWidth,centerShopHeight, 42 * shopSize, 58 * shopSize);
+        batch.draw(backgroundTexture, 0, 0, screenWidth, screenHeight);
+        batch.draw(shopTexture, centerShopWidth, centerShopHeight, shopWidth, shopHeight);
         batch.end();
     }
 
     public void dispose(){
         batch.dispose();
         shopTexture.dispose();
+        backgroundTexture.dispose();
+        buttonTexture.dispose();
+        font.dispose();
     }
 }
