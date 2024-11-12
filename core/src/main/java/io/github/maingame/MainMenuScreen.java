@@ -88,7 +88,7 @@ public class MainMenuScreen extends ScreenAdapter {
             }
 
             if (optionButtonBounds.contains(clickPosition)) {
-               // game.setScreen(new OptionsScreen(game));
+                game.setScreen(new OptionsScreen(game));
             }
 
             if (quitButtonBounds.contains(clickPosition)) {
