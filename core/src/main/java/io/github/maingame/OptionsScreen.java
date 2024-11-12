@@ -16,10 +16,10 @@ public class OptionsScreen extends ScreenAdapter {
     private final Main game;
     private final SpriteBatch batch;
     private final BitmapFont font;
+    private final BitmapFont titleFont;
     private final Texture backgroundTexture;
     private final Texture buttonTexture;
     private final Rectangle backButtonBounds;
-    private final Rectangle volumeSliderBounds;
 
     public OptionsScreen(Main game) {
         this.game = game;
@@ -30,10 +30,17 @@ public class OptionsScreen extends ScreenAdapter {
 
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("assets/fonts/Jacquard12-Regular.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+
         parameter.size = 56;
         font = generator.generateFont(parameter);
         font.setColor(Color.BROWN);
+
+        parameter.size = 96;
+        titleFont = generator.generateFont(parameter);
+        titleFont.setColor(Color.LIGHT_GRAY);
+
         generator.dispose();
+
 
         float buttonWidth = 450;
         float buttonHeight = 150;
@@ -41,7 +48,6 @@ public class OptionsScreen extends ScreenAdapter {
         float screenHeight = Gdx.graphics.getHeight();
 
         backButtonBounds = new Rectangle((screenWidth - buttonWidth) / 2, 100, buttonWidth, buttonHeight);
-        volumeSliderBounds = new Rectangle((screenWidth - 300) / 2, screenHeight - 200, 300, 50);
     }
 
     @Override
@@ -54,7 +60,7 @@ public class OptionsScreen extends ScreenAdapter {
         batch.draw(backgroundTexture, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         batch.draw(buttonTexture, backButtonBounds.x, backButtonBounds.y, backButtonBounds.width, backButtonBounds.height);
 
-        font.draw(batch, "Options", Gdx.graphics.getWidth() / 2 - 100, Gdx.graphics.getHeight() - 50);
+        titleFont.draw(batch, "Options", Gdx.graphics.getWidth() / 2 - 150, Gdx.graphics.getHeight() - 50);
         font.draw(batch, "Back", backButtonBounds.x + 170, backButtonBounds.y + 90);
 
 
