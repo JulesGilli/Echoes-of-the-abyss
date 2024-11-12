@@ -13,7 +13,6 @@ import java.util.List;
 
 public class Player extends Entity {
     private boolean hasHitEnemy = false;
-    private boolean isDead = false;
 
     public Player(Vector2 position, List<Platform> platforms) {
         super(position, new AnimationManager("_Run.png","_Idle.png","_Jump.png","_Attack.png","_Death.png", 120, 80, 0.1f),300,100, 25);
@@ -129,13 +128,5 @@ public class Player extends Entity {
     public void render(SpriteBatch batch) {
         TextureRegion currentFrame = getCurrentFrame();
         batch.draw(currentFrame, position.x, position.y,RENDER_WIDTH, RENDER_HEIGHT);
-    }
-
-    public void dispose(){
-        animation.getIdleCase().getKeyFrames()[0].getTexture().dispose();
-        animation.getAttackCase().getKeyFrames()[0].getTexture().dispose();
-        animation.getJumpCase().getKeyFrames()[0].getTexture().dispose();
-        animation.getWalkCase().getKeyFrames()[0].getTexture().dispose();
-        animation.getDeathCase().getKeyFrames()[0].getTexture().dispose();
     }
 }

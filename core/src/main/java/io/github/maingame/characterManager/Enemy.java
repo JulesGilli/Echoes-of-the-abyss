@@ -12,7 +12,6 @@ import java.lang.Math.*;
 public class Enemy extends Entity {
     private Player target;
     private float range;
-    private boolean isDead = false;
     private boolean isDying = false;
 
     private boolean hasHitPlayer = false;
@@ -123,28 +122,13 @@ public class Enemy extends Entity {
     public TextureRegion getCurrentFrame() {
         if (isDying) {
             return flipAnimationCheck(animation.getDeathCase().getKeyFrame(animationTime, false));
-        } else if (isAttacking) {
-            return flipAnimationCheck(animation.getAttackCase().getKeyFrame(animationTime, true));
-        } else if (isJumping) {
-            return flipAnimationCheck(animation.getJumpCase().getKeyFrame(animationTime, true));
-        } else if (velocity.x != 0) {
-            return flipAnimationCheck(animation.getWalkCase().getKeyFrame(animationTime, true));
-        } else {
-            return flipAnimationCheck(animation.getIdleCase().getKeyFrame(animationTime, true));
         }
+        return super.getCurrentFrame();
     }
 
     @Override
     public void render(SpriteBatch batch) {
         TextureRegion currentFrame = getCurrentFrame();
         batch.draw(currentFrame, position.x, position.y, 450, 300);
-    }
-
-    public void dispose(){
-        animation.getIdleCase().getKeyFrames()[0].getTexture().dispose();
-        animation.getAttackCase().getKeyFrames()[0].getTexture().dispose();
-        animation.getJumpCase().getKeyFrames()[0].getTexture().dispose();
-        animation.getWalkCase().getKeyFrames()[0].getTexture().dispose();
-        animation.getDeathCase().getKeyFrames()[0].getTexture().dispose();
     }
 }
