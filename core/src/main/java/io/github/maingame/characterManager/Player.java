@@ -17,6 +17,11 @@ public class Player extends Entity {
 
     public Player(Vector2 position, List<Platform> platforms) {
         super(position, new AnimationManager("_Run.png","_Idle.png","_Jump.png","_Attack.png","_Death.png", 120, 80, 0.1f),300,100, 25);
+        this.initialPosition = new Vector2(position);
+        this.initialHealth = health;
+        this.initialGold = gold;
+        this.initialAttack = attackDamage;
+
         this.speed = 500;
         this.jumpVelocity = 1000;
         this.gravity = -25;
@@ -34,9 +39,6 @@ public class Player extends Entity {
         }
 
         if (isDead) {
-            if (animation.getDeathCase().isAnimationFinished(animationTime)) {
-
-            }
             animationTime += delta;
         } else {
             handleInput(delta);
@@ -128,6 +130,18 @@ public class Player extends Entity {
         animation.getJumpCase().getKeyFrames()[0].getTexture().dispose();
         animation.getWalkCase().getKeyFrames()[0].getTexture().dispose();
         animation.getDeathCase().getKeyFrames()[0].getTexture().dispose();
+    }
+
+    public void reset() {
+        position.set(initialPosition); // Réinitialise la position
+        health = initialHealth; // Réinitialise la santé
+        gold = initialGold; // Réinitialise l'or
+        attackDamage = initialAttack; // Réinitialise l'attaque
+        isDead = false;
+        attacking = false;
+        hasHitEnemy = false;
+        velocity.set(0, 0); // Réinitialise la vélocité
+        animationTime = 0f;
     }
 
     @Override
