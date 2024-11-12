@@ -34,9 +34,6 @@ public class Player extends Entity {
         }
 
         if (isDead) {
-            if (animation.getDeathCase().isAnimationFinished(animationTime)) {
-
-            }
             animationTime += delta;
         } else {
             handleInput(delta);

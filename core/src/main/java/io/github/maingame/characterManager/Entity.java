@@ -93,7 +93,8 @@ public abstract class Entity implements lifeCycle{
     public TextureRegion flipAnimationCheck(TextureRegion currentFrame) {
         if (!lookingRight && !currentFrame.isFlipX()) {
             currentFrame.flip(true, false);
-        }   if (lookingRight && currentFrame.isFlipX()) {
+        }
+        if (lookingRight && currentFrame.isFlipX()) {
             currentFrame.flip(true, false);
         }
         return currentFrame;
