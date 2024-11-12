@@ -135,7 +135,7 @@ public class Player extends Entity {
     }
 
     public void reset() {
-        position.set(initialPosition); 
+        position.set(initialPosition);
         health = initialHealth;
         attackDamage = initialAttack;
         isDead = false;

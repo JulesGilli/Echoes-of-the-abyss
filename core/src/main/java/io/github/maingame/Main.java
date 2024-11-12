@@ -15,7 +15,8 @@ public class Main extends Game {
         camera = new OrthographicCamera();
         camera.setToOrtho(false, 1920, 1080);
 
-        setScreen(new GameScreen(this));
+        this.setScreen(new MainMenuScreen(this));
+
     }
 
     @Override
