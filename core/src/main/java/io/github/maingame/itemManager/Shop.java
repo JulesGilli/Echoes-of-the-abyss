@@ -1,12 +1,12 @@
 package io.github.maingame.itemManager;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import io.github.maingame.characterManager.Player;
 import io.github.maingame.utilsManager.GameStat;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,7 +39,10 @@ public class Shop {
     }
 
     public void update(float delta) {
-
+        if (Gdx.input.isKeyJustPressed(Input.Keys.M))
+        {
+            gameStat.setGameState(false);
+        }
     }
 
     public void render(SpriteBatch batch) {
