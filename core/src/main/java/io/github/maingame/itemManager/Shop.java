@@ -1,5 +1,7 @@
 package io.github.maingame.itemManager;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import io.github.maingame.characterManager.Player;
@@ -14,6 +16,7 @@ public class Shop {
     private List<Item> itemsAvailable;
     private Map<Item, Integer> priceList;
     private GameStat gameStat;
+    public Texture shopFont;
 
     public Shop(List<Item> itemsAvailable, GameStat gameStat) {
         this.itemsAvailable = itemsAvailable;
@@ -22,6 +25,8 @@ public class Shop {
         for (Item item : itemsAvailable) {
             priceList.put(item, item.gold);
         }
+        this.shopFont = new Texture(Gdx.files.internal("bookShop.png"));
+
     }
 
     public boolean buyItem(Player player, Item item) {
@@ -33,7 +38,16 @@ public class Shop {
         return false;
     }
 
-    public void render(SpriteBatch batch) {
+    public void update(float delta) {
 
+    }
+
+    public void render(SpriteBatch batch) {
+        float size = 3;
+        batch.draw(shopFont, 100, 100, 42*size, 58*size);
+    }
+
+    public void dispose(){
+        shopFont.dispose();
     }
 }
