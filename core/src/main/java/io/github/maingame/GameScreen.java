@@ -14,6 +14,8 @@ import com.badlogic.gdx.math.Vector2;
 import io.github.maingame.characterManager.Enemy;
 import io.github.maingame.characterManager.Player;
 import io.github.maingame.design2dManager.TextureManager;
+import io.github.maingame.itemManager.Shop;
+import io.github.maingame.utilsManager.GameStat;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -29,6 +31,8 @@ public class GameScreen extends ScreenAdapter {
     private final BitmapFont menuFont;
     private final GlyphLayout layout = new GlyphLayout();
     private float timeSinceLastSpawn = 0f;
+    private final Shop shop;
+    private final GameStat stat;
 
     private final Texture healthFrame;
     private final Texture healthBar;
@@ -38,7 +42,8 @@ public class GameScreen extends ScreenAdapter {
     public GameScreen(Main game) {
         this.game = game;
         this.batch = game.batch;
-
+        this.stat = new GameStat();
+        this.shop = new Shop(new ArrayList<>(), stat);
         this.player = new Player(new Vector2(100, 100), Platform.getPlatforms());
 
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("assets/fonts/Jacquard12-Regular.ttf"));
@@ -48,9 +53,6 @@ public class GameScreen extends ScreenAdapter {
         goldFont.setColor(Color.YELLOW);
         menuFont = generator.generateFont(parameter);
         menuFont.setColor(Color.WHITE);
-
-
-
         healthFrame = new Texture(Gdx.files.internal("Health_01.png"));
         healthBar = new Texture(Gdx.files.internal("Health_01_Bar01.png"));
 
