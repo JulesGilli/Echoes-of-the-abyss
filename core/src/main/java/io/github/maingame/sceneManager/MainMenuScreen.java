@@ -1,4 +1,4 @@
-package io.github.maingame;
+package io.github.maingame.sceneManager;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -11,6 +11,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import io.github.maingame.Main;
 
 public class MainMenuScreen extends ScreenAdapter {
     private final Main game;
@@ -88,7 +89,7 @@ public class MainMenuScreen extends ScreenAdapter {
             }
 
             if (optionButtonBounds.contains(clickPosition)) {
-               // game.setScreen(new OptionsScreen(game));
+                game.setScreen(new OptionsScreen(game));
             }
 
             if (quitButtonBounds.contains(clickPosition)) {

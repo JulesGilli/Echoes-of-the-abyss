@@ -15,10 +15,21 @@ public class Player extends Entity {
     private boolean hasHitEnemy = false;
     private boolean isDead = false;
 
-    public Player(Vector2 position, List<Platform> platforms) {
+    private int leftKey;
+    private int rightKey;
+    private int jumpKey;
+    private int attackKey;
+
+    public Player(Vector2 position, List<Platform> platforms, int leftKey, int rightKey, int jumpKey, int attackKey){
         super(position, new AnimationManager("_Run.png","_Idle.png","_Jump.png",
             "_Attack.png","_Death.png", 120, 80, 0.1f),
             300,100, 25);
+
+        this.leftKey = leftKey;
+        this.rightKey = rightKey;
+        this.jumpKey = jumpKey;
+        this.attackKey = attackKey;
+
         this.initialPosition = new Vector2(position);
         this.initialHealth = health;
         this.initialGold = gold;
@@ -91,26 +102,27 @@ public class Player extends Entity {
     private void handleInput(float delta) {
         if (attacking || isDead) return;
 
-        if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
+        if (Gdx.input.isKeyPressed(leftKey)) {
             velocity.x = -speed;
             lookingRight = false;
-        } else if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+        } else if (Gdx.input.isKeyPressed(rightKey)) {
             velocity.x = speed;
             lookingRight = true;
         } else {
             idle();
         }
 
-        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE) && !jumping) {
+        if (Gdx.input.isKeyJustPressed(jumpKey) && !jumping) {
             velocity.y = jumpVelocity;
             jumping = true;
         }
 
-        if (Gdx.input.isKeyJustPressed(Input.Keys.A) && !attacking && !jumping) {
+        if (Gdx.input.isKeyJustPressed(attackKey) && !attacking && !jumping) {
             attacking = true;
             animationTime = 0f;
         }
     }
+
 
     @Override
     public TextureRegion getCurrentFrame() {
@@ -144,6 +156,23 @@ public class Player extends Entity {
         velocity.set(0, 0);
         animationTime = 0f;
     }
+
+    public void setLeftKey(int leftKey) {
+        this.leftKey = leftKey;
+    }
+
+    public void setRightKey(int rightKey) {
+        this.rightKey = rightKey;
+    }
+
+    public void setJumpKey(int jumpKey) {
+        this.jumpKey = jumpKey;
+    }
+
+    public void setAttackKey(int attackKey) {
+        this.attackKey = attackKey;
+    }
+
 
     @Override
     public void update(float delta) {

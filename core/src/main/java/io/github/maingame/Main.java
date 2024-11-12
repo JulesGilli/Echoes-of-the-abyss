@@ -3,8 +3,7 @@ package io.github.maingame;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import io.github.maingame.GameScreen;
-import io.github.maingame.utilsManager.GameStat;
+import io.github.maingame.sceneManager.MainMenuScreen;
 
 public class Main extends Game {
     public SpriteBatch batch;

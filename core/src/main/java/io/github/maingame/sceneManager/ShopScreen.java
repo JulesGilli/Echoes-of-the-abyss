@@ -1,4 +1,4 @@
-package io.github.maingame;
+package io.github.maingame.sceneManager;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
@@ -12,11 +12,13 @@ import io.github.maingame.itemManager.Item;
 import io.github.maingame.itemManager.Shop;
 import io.github.maingame.itemManager.SpeedPotion;
 import io.github.maingame.utilsManager.GameStat;
+import io.github.maingame.Main;
 
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+
 
 public class ShopScreen extends ScreenAdapter {
     private final Main game;

@@ -1,16 +1,15 @@
-package io.github.maingame;
+package io.github.maingame.sceneManager;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.ScreenAdapter;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import io.github.maingame.Main;
+import io.github.maingame.Platform;
 import io.github.maingame.characterManager.Enemy;
 import io.github.maingame.characterManager.Player;
 import io.github.maingame.design2dManager.TextureManager;
@@ -27,34 +26,27 @@ public class GameScreen extends ScreenAdapter {
     private final Texture background1, background2, background3, background4a, background4b;
     private final Player player;
     private final List<Enemy> enemies = new ArrayList<>();
-    private final BitmapFont goldFont;
-    private final BitmapFont menuFont;
-    private final GlyphLayout layout = new GlyphLayout();
     private float timeSinceLastSpawn = 0f;
     private final Shop shop;
     private final GameStat stat;
+    private final GameHUD hud;
+    private OptionsScreen optionsScreen;
 
-    private final Texture healthFrame;
-    private final Texture healthBar;
 
     private boolean isGameOver = false;
+    private boolean isPaused = false;
 
     public GameScreen(Main game) {
         this.game = game;
+        this.optionsScreen = new OptionsScreen(game);
         this.batch = game.batch;
         this.stat = new GameStat();
         this.shop = new Shop(new ArrayList<>(), stat);
-        this.player = new Player(new Vector2(100, 100), Platform.getPlatforms());
+        this.player = new Player(new Vector2(100, 100), Platform.getPlatforms(),
+            optionsScreen.getLeftKey(), optionsScreen.getRightKey(),
+            optionsScreen.getJumpKey(), optionsScreen.getAttackKey());
 
-        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("assets/fonts/Jacquard12-Regular.ttf"));
-        FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
-        parameter.size = 64;
-        goldFont = generator.generateFont(parameter);
-        goldFont.setColor(Color.YELLOW);
-        menuFont = generator.generateFont(parameter);
-        menuFont.setColor(Color.WHITE);
-        healthFrame = new Texture(Gdx.files.internal("Health_01.png"));
-        healthBar = new Texture(Gdx.files.internal("Health_01_Bar01.png"));
+        this.hud = new GameHUD(game);
 
         background1 = new Texture(Gdx.files.internal("background1.png"));
         background2 = new Texture(Gdx.files.internal("background2.png"));
@@ -62,11 +54,18 @@ public class GameScreen extends ScreenAdapter {
         background4a = new Texture(Gdx.files.internal("background4a.png"));
         background4b = new Texture(Gdx.files.internal("background4b.png"));
 
+        updatePlayerKeys();
         Platform.createPlatforms();
     }
 
     @Override
     public void render(float delta) {
+
+        if (isPaused) {
+            hud.renderPauseMenu(batch);
+            return;
+        }
+
         if (player.getHealth() <= 0) {
             isGameOver = true;
         }
@@ -84,14 +83,23 @@ public class GameScreen extends ScreenAdapter {
         if (!isGameOver) {
             player.update(delta, enemies);
             spawnEnemies(delta);
-            drawHealthBar(screenHeight);
-            drawGold(screenWidth, screenHeight);
-        } else {
-            displayGameOverMenu(screenWidth, screenHeight);
         }
+        hud.render(batch, player, screenWidth, screenHeight, isGameOver);
 
         batch.end();
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+            isPaused = true;
+        }
     }
+
+    public void updatePlayerKeys() {
+        player.setLeftKey(optionsScreen.getLeftKey());
+        player.setRightKey(optionsScreen.getRightKey());
+        player.setJumpKey(optionsScreen.getJumpKey());
+        player.setAttackKey(optionsScreen.getAttackKey());
+    }
+
 
     private void drawBackground(float screenWidth, float screenHeight) {
         batch.draw(background1, 0, 0, screenWidth, screenHeight);
@@ -105,6 +113,11 @@ public class GameScreen extends ScreenAdapter {
         for (Platform platform : Platform.getPlatforms()) {
             platform.render(batch);
         }
+    }
+
+    public void resumeGame() {
+        isPaused = false;
+        updatePlayerKeys();
     }
 
     private void spawnEnemies(float delta) {
@@ -128,39 +141,8 @@ public class GameScreen extends ScreenAdapter {
 
     private void spawnEnemy() {
         float spawnX = MathUtils.randomBoolean() ? -200 : Gdx.graphics.getWidth();
-
         Enemy newEnemy = new Enemy(new Vector2(spawnX, 100), Platform.getPlatforms(), player);
         enemies.add(newEnemy);
-    }
-
-    private void drawHealthBar(float screenHeight) {
-        float offset = 100;
-        float sizeHealthBar = 4;
-        batch.draw(healthFrame, offset, screenHeight - offset, healthFrame.getWidth() * sizeHealthBar, healthFrame.getHeight() * sizeHealthBar);
-
-        float healthPercentage = player.getHealth() / (float) player.getMaxHealth();
-        float healthBarWidth = healthBar.getWidth() * healthPercentage;
-        batch.draw(healthBar, offset + 64, screenHeight - offset + 36, healthBarWidth * sizeHealthBar * 1.025f, healthBar.getHeight() * sizeHealthBar);
-    }
-
-    private void drawGold(float screenWidth, float screenHeight) {
-        String goldText = "Gold: " + player.getGold();
-        layout.setText(goldFont, goldText);
-        goldFont.draw(batch, goldText, screenWidth - 270, screenHeight - 40);
-    }
-
-    private void displayGameOverMenu(float screenWidth, float screenHeight) {
-        String gameOverText = "Game Over";
-        String replayText = "Press R to Replay";
-        layout.setText(menuFont, gameOverText);
-        menuFont.draw(batch, gameOverText, screenWidth / 2f - layout.width / 2, screenHeight / 2f + 50);
-
-        layout.setText(menuFont, replayText);
-        menuFont.draw(batch, replayText, screenWidth / 2f - layout.width / 2, screenHeight / 2f - 50);
-
-        if (Gdx.input.isKeyJustPressed(Input.Keys.R)) {
-            resetGame();
-        }
     }
 
     private void resetGame() {
@@ -173,10 +155,7 @@ public class GameScreen extends ScreenAdapter {
     @Override
     public void dispose() {
         batch.dispose();
-        goldFont.dispose();
-        menuFont.dispose();
-        healthFrame.dispose();
-        healthBar.dispose();
+        hud.dispose();
         background1.dispose();
         background2.dispose();
         background3.dispose();
