@@ -20,6 +20,7 @@ public class GameHUD {
     private final Texture healthFrame;
     private final Texture healthBar;
     private final Texture buttonMenu;
+    private final Texture backgroundGUI;
     private final GlyphLayout layout;
 
     private final Rectangle mainMenuButtonBounds;
@@ -38,19 +39,21 @@ public class GameHUD {
         goldFont.setColor(Color.YELLOW);
 
         menuFont = generator.generateFont(parameter);
-        menuFont.setColor(Color.DARK_GRAY);
+        menuFont.setColor(Color.BROWN);
         generator.dispose();
 
         healthFrame = new Texture(Gdx.files.internal("Health_01.png"));
         healthBar = new Texture(Gdx.files.internal("Health_01_Bar01.png"));
-        buttonMenu = new Texture(Gdx.files.internal("assets/buttonMenu.png"));
+        buttonMenu = new Texture(Gdx.files.internal("buttonMenu.png"));
+        backgroundGUI = new Texture(Gdx.files.internal("BackGroundGUI.png"));
+
 
         layout = new GlyphLayout();
 
         float screenWidth = Gdx.graphics.getWidth();
         float screenHeight = Gdx.graphics.getHeight();
         float buttonWidth = 450;
-        float buttonHeight = 150;
+        float buttonHeight = 200;
 
         resumeButtonBounds = new Rectangle(screenWidth / 2 - buttonWidth / 2, screenHeight / 2 + 100, buttonWidth, buttonHeight);
         mainMenuButtonBounds = new Rectangle(screenWidth / 2 - buttonWidth / 2, screenHeight / 2, buttonWidth, buttonHeight);
@@ -60,13 +63,19 @@ public class GameHUD {
 
     public void renderPauseMenu(SpriteBatch batch) {
         batch.begin();
+
+        float screenWidth = Gdx.graphics.getWidth();
+        float screenHeight = Gdx.graphics.getHeight();
+        batch.draw(backgroundGUI, screenWidth / 2 - backgroundGUI.getWidth() / 1.4f, screenHeight / 2 - backgroundGUI.getHeight() / 1.4f, 600, 800);
+
+
         batch.draw(buttonMenu, resumeButtonBounds.x, resumeButtonBounds.y, resumeButtonBounds.width, resumeButtonBounds.height);
         batch.draw(buttonMenu, mainMenuButtonBounds.x, mainMenuButtonBounds.y, mainMenuButtonBounds.width, mainMenuButtonBounds.height);
         batch.draw(buttonMenu, quitButtonBounds.x, quitButtonBounds.y, quitButtonBounds.width, quitButtonBounds.height);
 
-        menuFont.draw(batch, "Resume", resumeButtonBounds.x + 120, resumeButtonBounds.y + 100);
-        menuFont.draw(batch, "Main Menu", mainMenuButtonBounds.x + 100, mainMenuButtonBounds.y + 100);
-        menuFont.draw(batch, "Quit", quitButtonBounds.x + 160, quitButtonBounds.y + 100);
+        menuFont.draw(batch, "Resume", resumeButtonBounds.x + 120, resumeButtonBounds.y + 120);
+        menuFont.draw(batch, "Main Menu", mainMenuButtonBounds.x + 100, mainMenuButtonBounds.y + 120);
+        menuFont.draw(batch, "Quit", quitButtonBounds.x + 160, quitButtonBounds.y + 120);
 
         batch.end();
 
@@ -114,17 +123,23 @@ public class GameHUD {
     }
 
     private void displayGameOverMenu(SpriteBatch batch, float screenWidth, float screenHeight) {
+        Gdx.app.log("GameHUD", "Entering displayGameOverMenu");
+
+        batch.draw(backgroundGUI, screenWidth / 2 - backgroundGUI.getWidth() / 1.4f, screenHeight / 2 - backgroundGUI.getHeight() / 1.4f, 600, 800);
+
+
         String gameOverText = "Game Over";
         layout.setText(menuFont, gameOverText);
         menuFont.draw(batch, gameOverText, screenWidth / 2f - layout.width / 2, screenHeight / 2f + 250);
 
-        batch.draw(buttonMenu, mainMenuButtonBounds.x, mainMenuButtonBounds.y, mainMenuButtonBounds.width, mainMenuButtonBounds.height);
-        batch.draw(buttonMenu, quitButtonBounds.x, quitButtonBounds.y, quitButtonBounds.width, quitButtonBounds.height);
-        batch.draw(buttonMenu, shopButtonBounds.x, shopButtonBounds.y, shopButtonBounds.width, shopButtonBounds.height);
+        batch.draw(buttonMenu, mainMenuButtonBounds.x, mainMenuButtonBounds.y + 5, mainMenuButtonBounds.width, mainMenuButtonBounds.height);
+        batch.draw(buttonMenu, quitButtonBounds.x, quitButtonBounds.y + 5, quitButtonBounds.width, quitButtonBounds.height);
+        batch.draw(buttonMenu, shopButtonBounds.x, shopButtonBounds.y + 5, shopButtonBounds.width, shopButtonBounds.height);
 
         menuFont.draw(batch, "Main Menu", mainMenuButtonBounds.x + 100, mainMenuButtonBounds.y + 100);
         menuFont.draw(batch, "Quit", quitButtonBounds.x + 160, quitButtonBounds.y + 100);
         menuFont.draw(batch, "Shop", shopButtonBounds.x + 160, shopButtonBounds.y + 100);
+
     }
 
     private void handleGameOverInput() {
@@ -147,5 +162,6 @@ public class GameHUD {
         healthFrame.dispose();
         healthBar.dispose();
         buttonMenu.dispose();
+        backgroundGUI.dispose();
     }
 }

@@ -20,14 +20,17 @@ public class OptionsScreen extends ScreenAdapter {
     private final BitmapFont titleFont;
     private final Texture backgroundTexture;
     private final Texture buttonTexture;
+    private final Texture backgroundGUI;
     private final Rectangle backButtonBounds;
 
     public OptionsScreen(Main game) {
         this.game = game;
         this.batch = new SpriteBatch();
 
-        backgroundTexture = new Texture(Gdx.files.internal("assets/backGroundMainMenu.png"));
-        buttonTexture = new Texture(Gdx.files.internal("assets/buttonMenu.png"));
+        backgroundTexture = new Texture(Gdx.files.internal("backGroundMainMenu.png"));
+        buttonTexture = new Texture(Gdx.files.internal("buttonMenu.png"));
+        backgroundGUI = new Texture(Gdx.files.internal("BackGroundGUI.png"));
+
 
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("assets/fonts/Jacquard12-Regular.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
@@ -38,10 +41,9 @@ public class OptionsScreen extends ScreenAdapter {
 
         parameter.size = 96;
         titleFont = generator.generateFont(parameter);
-        titleFont.setColor(Color.LIGHT_GRAY);
+        titleFont.setColor(Color.BROWN);
 
         generator.dispose();
-
 
         float buttonWidth = 450;
         float buttonHeight = 150;
@@ -56,14 +58,18 @@ public class OptionsScreen extends ScreenAdapter {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+        float screenWidth = Gdx.graphics.getWidth();
+        float screenHeight = Gdx.graphics.getHeight();
+
         batch.begin();
 
-        batch.draw(backgroundTexture, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        batch.draw(backgroundTexture, 0, 0, screenWidth, screenHeight);
+
+        batch.draw(backgroundGUI, screenWidth / 2 - backgroundGUI.getWidth() / 1.4f, screenHeight / 2 - backgroundGUI.getHeight() / 1.4f, 600, 800);
+
         batch.draw(buttonTexture, backButtonBounds.x, backButtonBounds.y, backButtonBounds.width, backButtonBounds.height);
-
-        titleFont.draw(batch, "Options", Gdx.graphics.getWidth() / 2 - 150, Gdx.graphics.getHeight() - 50);
+        titleFont.draw(batch, "Options", screenWidth / 2 - 150, screenHeight - 180);
         font.draw(batch, "Back", backButtonBounds.x + 170, backButtonBounds.y + 90);
-
 
         batch.end();
 
@@ -85,7 +91,9 @@ public class OptionsScreen extends ScreenAdapter {
     public void dispose() {
         batch.dispose();
         font.dispose();
+        titleFont.dispose();
         backgroundTexture.dispose();
         buttonTexture.dispose();
+        backgroundGUI.dispose();
     }
 }
