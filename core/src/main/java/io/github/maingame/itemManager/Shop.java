@@ -37,20 +37,4 @@ public class Shop {
         }
         return false;
     }
-
-    public void update(float delta) {
-        if (Gdx.input.isKeyJustPressed(Input.Keys.M))
-        {
-            gameStat.setGameState(false);
-        }
-    }
-
-    public void render(SpriteBatch batch) {
-        float size = 5;
-        batch.draw(shopFont, 600, 600, 42*size, 58*size);
-    }
-
-    public void dispose(){
-        shopFont.dispose();
-    }
 }
