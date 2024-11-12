@@ -22,6 +22,7 @@ public class GameHUD {
     private final GlyphLayout layout;
 
     private final Rectangle mainMenuButtonBounds;
+    private final Rectangle resumeButtonBounds;
     private final Rectangle quitButtonBounds;
     private final Rectangle shopButtonBounds;
 
@@ -50,9 +51,39 @@ public class GameHUD {
         float buttonWidth = 450;
         float buttonHeight = 150;
 
+        resumeButtonBounds = new Rectangle(screenWidth / 2 - buttonWidth / 2, screenHeight / 2 + 100, buttonWidth, buttonHeight);
         mainMenuButtonBounds = new Rectangle(screenWidth / 2 - buttonWidth / 2, screenHeight / 2, buttonWidth, buttonHeight);
         quitButtonBounds = new Rectangle(screenWidth / 2 - buttonWidth / 2, screenHeight / 2 - 240, buttonWidth, buttonHeight);
         shopButtonBounds = new Rectangle(screenWidth / 2 - buttonWidth / 2, screenHeight / 2 - 120, buttonWidth, buttonHeight);
+    }
+
+    public void renderPauseMenu(SpriteBatch batch) {
+        batch.begin();
+        batch.draw(buttonMenu, resumeButtonBounds.x, resumeButtonBounds.y, resumeButtonBounds.width, resumeButtonBounds.height);
+        batch.draw(buttonMenu, mainMenuButtonBounds.x, mainMenuButtonBounds.y, mainMenuButtonBounds.width, mainMenuButtonBounds.height);
+        batch.draw(buttonMenu, quitButtonBounds.x, quitButtonBounds.y, quitButtonBounds.width, quitButtonBounds.height);
+
+        menuFont.draw(batch, "Resume", resumeButtonBounds.x + 120, resumeButtonBounds.y + 100);
+        menuFont.draw(batch, "Main Menu", mainMenuButtonBounds.x + 100, mainMenuButtonBounds.y + 100);
+        menuFont.draw(batch, "Quit", quitButtonBounds.x + 160, quitButtonBounds.y + 100);
+
+        batch.end();
+
+        handlePauseMenuInput();
+    }
+
+    private void handlePauseMenuInput() {
+        if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
+            Vector2 clickPosition = new Vector2(Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY());
+
+            if (resumeButtonBounds.contains(clickPosition)) {
+                ((GameScreen) game.getScreen()).resumeGame();
+            } else if (mainMenuButtonBounds.contains(clickPosition)) {
+                game.setScreen(new MainMenuScreen(game));
+            } else if (quitButtonBounds.contains(clickPosition)) {
+                Gdx.app.exit();
+            }
+        }
     }
 
     public void render(SpriteBatch batch, Player player, float screenWidth, float screenHeight, boolean isGameOver) {
@@ -104,7 +135,7 @@ public class GameHUD {
             } else if (quitButtonBounds.contains(clickPosition)) {
                 Gdx.app.exit();
             } else if (shopButtonBounds.contains(clickPosition)) {
-                game.setScreen(new ShopScene(game));
+                game.setScreen(new ShopScreen(game));
             }
         }
     }

@@ -30,6 +30,7 @@ public class GameScreen extends ScreenAdapter {
     private final GameHUD hud;
 
     private boolean isGameOver = false;
+    private boolean isPaused = false;
 
     public GameScreen(Main game) {
         this.game = game;
@@ -50,6 +51,12 @@ public class GameScreen extends ScreenAdapter {
 
     @Override
     public void render(float delta) {
+
+        if (isPaused) {
+            hud.renderPauseMenu(batch);
+            return;
+        }
+
         if (player.getHealth() <= 0) {
             isGameOver = true;
         }
@@ -71,6 +78,10 @@ public class GameScreen extends ScreenAdapter {
         hud.render(batch, player, screenWidth, screenHeight, isGameOver);
 
         batch.end();
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+            isPaused = true;
+        }
     }
 
     private void drawBackground(float screenWidth, float screenHeight) {
@@ -85,6 +96,10 @@ public class GameScreen extends ScreenAdapter {
         for (Platform platform : Platform.getPlatforms()) {
             platform.render(batch);
         }
+    }
+
+    public void resumeGame() {
+        isPaused = false;
     }
 
     private void spawnEnemies(float delta) {
