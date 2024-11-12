@@ -34,6 +34,7 @@ public abstract class Entity implements lifeCycle{
     protected int initialHealth;
     protected int initialGold;
     protected float initialAttack;
+    protected boolean isDead = false;
 
     public Entity(Vector2 position, AnimationManager animation, int health, int gold, float attack) {
         this.position = position;
@@ -194,7 +195,13 @@ public abstract class Entity implements lifeCycle{
         this.armor = armor;
     }
 
-
+    public void dispose(){
+        animation.getIdleCase().getKeyFrames()[0].getTexture().dispose();
+        animation.getAttackCase().getKeyFrames()[0].getTexture().dispose();
+        animation.getJumpCase().getKeyFrames()[0].getTexture().dispose();
+        animation.getWalkCase().getKeyFrames()[0].getTexture().dispose();
+        animation.getDeathCase().getKeyFrames()[0].getTexture().dispose();
+    }
 
 }
 
