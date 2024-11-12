@@ -7,6 +7,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import io.github.maingame.characterManager.Player;
 import io.github.maingame.utilsManager.GameStat;
+
+import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,7 +18,6 @@ public class Shop {
     private List<Item> itemsAvailable;
     private Map<Item, Integer> priceList;
     private GameStat gameStat;
-    public Texture shopFont;
 
     public Shop(List<Item> itemsAvailable, GameStat gameStat) {
         this.itemsAvailable = itemsAvailable;
@@ -25,7 +26,6 @@ public class Shop {
         for (Item item : itemsAvailable) {
             priceList.put(item, item.gold);
         }
-        this.shopFont = new Texture(Gdx.files.internal("bookShop.png"));
 
     }
 
