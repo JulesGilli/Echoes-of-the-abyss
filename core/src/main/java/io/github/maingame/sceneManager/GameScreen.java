@@ -1,4 +1,4 @@
-package io.github.maingame;
+package io.github.maingame.sceneManager;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -8,6 +8,8 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import io.github.maingame.Main;
+import io.github.maingame.Platform;
 import io.github.maingame.characterManager.Enemy;
 import io.github.maingame.characterManager.Player;
 import io.github.maingame.design2dManager.TextureManager;
