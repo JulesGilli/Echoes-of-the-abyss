@@ -11,11 +11,11 @@ public class SpeedPotion extends Consumable {
 
     @Override
     public  void effectApply(Entity targeEntity){
-        targeEntity.setSpeedIncrease(SpeedIncrease);
+        targeEntity.setSpeedBonus(SpeedIncrease);
     }
 
     @Override
     public void resetEffect(Entity targetEntity){
-        targetEntity.setSpeedIncrease(0);
+        targetEntity.setSpeedBonus(0);
     }
 }

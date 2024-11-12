@@ -12,6 +12,7 @@ import java.lang.Math.*;
 public class Enemy extends Entity {
     private Player target;
     private float range;
+    private boolean isDead = false;
     private boolean isDying = false;
 
     private boolean hasHitPlayer = false;
@@ -20,13 +21,13 @@ public class Enemy extends Entity {
     public Enemy(Vector2 position, List<Platform> platforms, Player player) {
         super(position, new AnimationManager("_RunEnemy.png","_Idle.png","_Jump.png","_AttackEnemy.png","_DeathEnemy.png", 120, 80, 0.1f), 50, 10, 10);
         this.target = player;
-        this.SPEED = 300;
-        this.JUMP_VELOCITY = 1200;
-        this.GRAVITY = -25;
+        this.speed = 300;
+        this.jumpVelocity = 1200;
+        this.gravity = -25;
         this.platforms = platforms;
         this.range = 200;
-        this.RENDER_WIDTH = 450;
-        this.RENDER_HEIGHT = 300;
+        this.renderWidth = 450;
+        this.renderHeight = 300;
         this.attackRange = 200;
 
     }
@@ -37,7 +38,7 @@ public class Enemy extends Entity {
     }
 
     public void makeAction(){
-        if (isDead || isAttacking) return;
+        if (isDead || attacking) return;
 
         if (inRange()){
             System.out.println("Enemy in range of player.");
@@ -46,7 +47,7 @@ public class Enemy extends Entity {
             if (!hasHitPlayer && isCollidingWith(target, attackRange)) {
                 System.out.println("Enemy hit player!");
 
-                target.receiveDamage(attack);
+                target.receiveDamage(attackDamage);
                 hasHitPlayer = true;
             }
             else {
@@ -61,7 +62,7 @@ public class Enemy extends Entity {
     @Override
     protected void checkAttackFinish() {
         if (animation.getAttackCase().isAnimationFinished(animationTime)) {
-            isAttacking = false;
+            attacking = false;
             hasHitPlayer = false;
             animationTime = 0f;
         }
@@ -70,10 +71,10 @@ public class Enemy extends Entity {
 
     public void walk(){
         if (position.x > target.position.x){
-            lateralMove(-SPEED);
+            moveLaterally(-speed);
         }
         else {
-            lateralMove(SPEED);
+            moveLaterally(speed);
         }
     }
 
@@ -103,7 +104,7 @@ public class Enemy extends Entity {
             makeAction();
             animationTime += delta;
 
-            if (isAttacking) {
+            if (attacking) {
                 checkAttackFinish();
             } else {
                 applyGravity();
@@ -122,13 +123,28 @@ public class Enemy extends Entity {
     public TextureRegion getCurrentFrame() {
         if (isDying) {
             return flipAnimationCheck(animation.getDeathCase().getKeyFrame(animationTime, false));
+        } else if (attacking) {
+            return flipAnimationCheck(animation.getAttackCase().getKeyFrame(animationTime, true));
+        } else if (jumping) {
+            return flipAnimationCheck(animation.getJumpCase().getKeyFrame(animationTime, true));
+        } else if (velocity.x != 0) {
+            return flipAnimationCheck(animation.getWalkCase().getKeyFrame(animationTime, true));
+        } else {
+            return flipAnimationCheck(animation.getIdleCase().getKeyFrame(animationTime, true));
         }
-        return super.getCurrentFrame();
     }
 
     @Override
     public void render(SpriteBatch batch) {
         TextureRegion currentFrame = getCurrentFrame();
         batch.draw(currentFrame, position.x, position.y, 450, 300);
+    }
+
+    public void dispose(){
+        animation.getIdleCase().getKeyFrames()[0].getTexture().dispose();
+        animation.getAttackCase().getKeyFrames()[0].getTexture().dispose();
+        animation.getJumpCase().getKeyFrames()[0].getTexture().dispose();
+        animation.getWalkCase().getKeyFrames()[0].getTexture().dispose();
+        animation.getDeathCase().getKeyFrames()[0].getTexture().dispose();
     }
 }
