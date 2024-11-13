@@ -22,6 +22,7 @@ public class GameHUD {
     private final Texture healthBar;
     private final Texture buttonMenu;
     private final Texture backgroundGUI;
+    private final Texture goldIcon;
     private final GlyphLayout layout;
     private GameStat stat;
 
@@ -48,6 +49,7 @@ public class GameHUD {
         healthBar = new Texture(Gdx.files.internal("Health_01_Bar01.png"));
         buttonMenu = new Texture(Gdx.files.internal("buttonMenu.png"));
         backgroundGUI = new Texture(Gdx.files.internal("BackGroundGUI.png"));
+        goldIcon = new Texture(Gdx.files.internal("gold.png"));
 
 
         layout = new GlyphLayout();
@@ -119,9 +121,11 @@ public class GameHUD {
     }
 
     private void drawGold(SpriteBatch batch, Player player, float screenWidth, float screenHeight) {
-        String goldText = "Gold: " + player.getGold();
+        String goldText = "" + player.getGold();
         layout.setText(goldFont, goldText);
-        goldFont.draw(batch, goldText, screenWidth - 270, screenHeight - 40);
+        goldFont.draw(batch, goldText, screenWidth - 200, screenHeight - 40);
+        batch.draw(goldIcon, screenWidth - 270, screenHeight - 90,goldIcon.getWidth() * 3,goldIcon.getHeight() * 3);
+
     }
 
     private void displayGameOverMenu(SpriteBatch batch, float screenWidth, float screenHeight) {
