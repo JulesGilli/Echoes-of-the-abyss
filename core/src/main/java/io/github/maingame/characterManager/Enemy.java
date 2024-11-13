@@ -12,6 +12,8 @@ import java.lang.Math.*;
 public class Enemy extends Entity {
     private Player target;
     private float range;
+    private float attackCooldown = 1.5f;
+    private float timeSinceLastAttack = 0f;
     private boolean isDead = false;
     private boolean isDying = false;
 
@@ -19,7 +21,7 @@ public class Enemy extends Entity {
 
 
     public Enemy(Vector2 position, List<Platform> platforms, Player player) {
-        super(position, new AnimationManager("_RunEnemy.png","_Idle.png","_Jump.png","_AttackEnemy.png","_DeathEnemy.png","_Roll.png", 120, 80, 0.1f,0.1f), 50, 10, 10);
+        super(position, new AnimationManager("_RunEnemy.png","_IdleEnemy.png","_Jump.png","_AttackEnemy.png","_DeathEnemy.png","_Roll.png", 120, 80, 0.1f,0.1f), 50, 10, 10);
         this.target = player;
         this.speed = 300;
         this.jumpVelocity = 1200;
@@ -40,23 +42,31 @@ public class Enemy extends Entity {
     public void makeAction(){
         if (isDead || attacking) return;
 
-        if (inRange()){
-            System.out.println("Enemy in range of player.");
+        if (inRange()) {
+            if (timeSinceLastAttack >= attackCooldown) {
+                System.out.println("Enemy in range of player.");
 
-            attack();
-            if (!hasHitPlayer && isCollidingWith(target, attackRange)) {
-                System.out.println("Enemy hit player!");
+                attack();
+                timeSinceLastAttack = 0f;
 
-                target.receiveDamage(attackDamage);
-                hasHitPlayer = true;
+                if (!hasHitPlayer && isCollidingWith(target, attackRange)) {
+                    System.out.println("Enemy hit player!");
+
+                    target.receiveDamage(attackDamage);
+                    hasHitPlayer = true;
+                } else {
+                    System.out.println("Enemy attack missed or already hit.");
+                }
+            } else {
+                idle();
             }
-            else {
-                System.out.println("Enemy attack missed or already hit.");
-            }
-        }
-        else{
+        } else {
             walk();
         }
+    }
+
+    public void idle() {
+        velocity.x = 0;
     }
 
     @Override
@@ -95,6 +105,8 @@ public class Enemy extends Entity {
 
     @Override
     public void update(float delta) {
+        timeSinceLastAttack += delta;
+
         if (isDying) {
             animationTime += delta;
             if (animation.getDeathCase().isAnimationFinished(animationTime)) {
