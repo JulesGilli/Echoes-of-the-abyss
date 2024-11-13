@@ -1,6 +1,7 @@
 package io.github.maingame.sceneManager;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
@@ -8,16 +9,13 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
-import io.github.maingame.itemManager.Item;
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 import io.github.maingame.itemManager.Shop;
-import io.github.maingame.itemManager.SpeedPotion;
 import io.github.maingame.utilsManager.GameStat;
 import io.github.maingame.Main;
 
-import java.awt.*;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 
 
 public class ShopScreen extends ScreenAdapter {
@@ -31,10 +29,14 @@ public class ShopScreen extends ScreenAdapter {
     private final GameStat stat;
     private final int buttonWidth = 600;
     private final int buttonHeight = 200;
+    private final int itemCardWidth = 200;
+    private final int itemCardHeight = 200;
     private final float shopWidth;
     private final float shopHeight;
     private final int screenWidth = Gdx.graphics.getWidth();
     private final int screenHeight = Gdx.graphics.getHeight();
+    private final float centerShopWidth;
+    private final float centerShopHeight;
     private final Texture buttonTexture;
     private final com.badlogic.gdx.math.Rectangle playButtonBounds;
     private final com.badlogic.gdx.math.Rectangle quitButtonBounds;
@@ -46,6 +48,8 @@ public class ShopScreen extends ScreenAdapter {
         this.shop = new Shop(new ArrayList<>(), stat);
         shopWidth = 876 * shopSize;
         shopHeight = 641 * shopSize;
+        centerShopWidth = screenWidth / 2f - shopWidth / 2f;
+        centerShopHeight = screenHeight / 2f - shopHeight / 2f;
         backgroundTexture = new Texture(Gdx.files.internal("assets/backGroundMainMenu.png"));
         shopTexture = new Texture(Gdx.files.internal("assets/shop.png"));
         initFonts();
@@ -55,24 +59,35 @@ public class ShopScreen extends ScreenAdapter {
 
     }
 
+    public Vector2 getItemAssetPosition(int number){
+        Vector2 position = new Vector2(centerShopWidth + 180 + number % 4 * 200, centerShopHeight + 728 - number / 4 * 200);
+        System.out.println(position.y);
+        return position;
+    }
 
-    public List<Rectangle> createItemContainer(){
-        List<Rectangle> listItemContainer = new ArrayList<>();
-        int yPosition = screenHeight / 2;
-        int margin = 20;
+    public Vector2 getItemGoldPosition(int number){
+        Vector2 position = new Vector2(centerShopWidth + 180 + number % 4 * 200, centerShopHeight + 628 - number / 4 * 200);
+        return position;
+    }
 
-        for (int i = 0; i < shop.getItemsAvailable().size(); i++) {
-            Rectangle button = createButton(i, yPosition - i * (buttonHeight + margin));
-            listItemContainer.add(button);
+    public void drawItems(){
+        for (int i = 0; i < 12; i++){
+            font.draw(batch, "zbou", getItemAssetPosition(i).x, getItemAssetPosition(i).y);
+            font.draw(batch, "Gold", getItemGoldPosition(i).x, getItemGoldPosition(i).y);
         }
-        return listItemContainer;
     }
 
-    public Rectangle createButton(int index, int yPosition) {
-        int xPosition = (screenWidth - buttonWidth) / 2;
-        return new Rectangle(xPosition, yPosition, buttonWidth, buttonHeight);
+    public void input(){
+        if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
+            Vector2 clickPosition = new Vector2(Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY());
+            if (playButtonBounds.contains(clickPosition)) {
+                game.setScreen(new GameScreen(game));
+            }
+            if (quitButtonBounds.contains(clickPosition)) {
+                Gdx.app.exit();
+            }
+        }
     }
-
 
     private void initFonts() {
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("assets/fonts/Jacquard12-Regular.ttf"));
@@ -88,15 +103,17 @@ public class ShopScreen extends ScreenAdapter {
     public void render(float delta) {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        float centerShopWidth = screenWidth / 2f - shopWidth / 2f;
-        float centerShopHeight = screenHeight / 2f - shopHeight / 2f;
-
         batch.begin();
         batch.draw(backgroundTexture, 0, 0, screenWidth, screenHeight);
         batch.draw(shopTexture, centerShopWidth + 40, centerShopHeight +150 , shopWidth, shopHeight);
         batch.draw(buttonTexture, playButtonBounds.x, playButtonBounds.y, playButtonBounds.width, playButtonBounds.height);
         batch.draw(buttonTexture, quitButtonBounds.x, quitButtonBounds.y, quitButtonBounds.width, quitButtonBounds.height);
+        font.draw(batch, "Play", playButtonBounds.x + 250, playButtonBounds.y + 125);
+        font.draw(batch, "Quit", quitButtonBounds.x + 250 , quitButtonBounds.y + 125);
+        font.draw(batch, "Shop", screenWidth/ 2 - 48, screenHeight - 48);
+        drawItems();
         batch.end();
+        input();
     }
 
     public void dispose(){
