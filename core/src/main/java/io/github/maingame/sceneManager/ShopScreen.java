@@ -31,17 +31,27 @@ public class ShopScreen extends ScreenAdapter {
     private final GameStat stat;
     private final int buttonWidth = 600;
     private final int buttonHeight = 200;
+    private final float shopWidth;
+    private final float shopHeight;
     private final int screenWidth = Gdx.graphics.getWidth();
     private final int screenHeight = Gdx.graphics.getHeight();
+    private final Texture buttonTexture;
+    private final com.badlogic.gdx.math.Rectangle playButtonBounds;
+    private final com.badlogic.gdx.math.Rectangle quitButtonBounds;
 
     public ShopScreen(Main game, GameStat stat) {
         this.game = game;
         this.stat = stat;
         this.batch = new SpriteBatch();
         this.shop = new Shop(new ArrayList<>(), stat);
+        shopWidth = 876 * shopSize;
+        shopHeight = 641 * shopSize;
         backgroundTexture = new Texture(Gdx.files.internal("assets/backGroundMainMenu.png"));
         shopTexture = new Texture(Gdx.files.internal("assets/shop.png"));
         initFonts();
+        buttonTexture = new Texture(Gdx.files.internal("assets/buttonMenu.png"));
+        playButtonBounds = new com.badlogic.gdx.math.Rectangle((screenWidth - buttonWidth ) / 2 - buttonWidth/2, screenHeight - shopHeight  - 250, buttonWidth, buttonHeight);
+        quitButtonBounds = new com.badlogic.gdx.math.Rectangle((screenWidth - buttonWidth) / 2 + buttonWidth/2, screenHeight - shopHeight - 250, buttonWidth, buttonHeight);
 
     }
 
@@ -78,15 +88,14 @@ public class ShopScreen extends ScreenAdapter {
     public void render(float delta) {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-        float shopWidth = 876 * shopSize;
-        float shopHeight = 641 * shopSize;
         float centerShopWidth = screenWidth / 2f - shopWidth / 2f;
         float centerShopHeight = screenHeight / 2f - shopHeight / 2f;
 
         batch.begin();
         batch.draw(backgroundTexture, 0, 0, screenWidth, screenHeight);
         batch.draw(shopTexture, centerShopWidth + 40, centerShopHeight +150 , shopWidth, shopHeight);
+        batch.draw(buttonTexture, playButtonBounds.x, playButtonBounds.y, playButtonBounds.width, playButtonBounds.height);
+        batch.draw(buttonTexture, quitButtonBounds.x, quitButtonBounds.y, quitButtonBounds.width, quitButtonBounds.height);
         batch.end();
     }
 
