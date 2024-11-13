@@ -25,8 +25,7 @@ public class ShopScreen extends ScreenAdapter {
     private final SpriteBatch batch;
     private final Texture backgroundTexture;
     private final Texture shopTexture;
-    private final Texture buttonTexture;
-    private final int shopSize = 25;
+    private final float shopSize = 1.2F;
     private BitmapFont font;
     private final Shop shop;
     private final GameStat stat;
@@ -40,10 +39,8 @@ public class ShopScreen extends ScreenAdapter {
         this.stat = stat;
         this.batch = new SpriteBatch();
         this.shop = new Shop(new ArrayList<>(), stat);
-
         backgroundTexture = new Texture(Gdx.files.internal("assets/backGroundMainMenu.png"));
-        shopTexture = new Texture(Gdx.files.internal("assets/bookShop.png"));
-        buttonTexture = new Texture(Gdx.files.internal("assets/buttonMenu.png"));
+        shopTexture = new Texture(Gdx.files.internal("assets/shop.png"));
         initFonts();
 
     }
@@ -82,14 +79,14 @@ public class ShopScreen extends ScreenAdapter {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        float shopWidth = 42 * shopSize;
-        float shopHeight = 58 * shopSize;
-        float centerShopWidth = screenWidth / 2f - shopWidth / 2;
-        float centerShopHeight = screenHeight / 2f - shopHeight / 2;
+        float shopWidth = 876 * shopSize;
+        float shopHeight = 641 * shopSize;
+        float centerShopWidth = screenWidth / 2f - shopWidth / 2f;
+        float centerShopHeight = screenHeight / 2f - shopHeight / 2f;
 
         batch.begin();
         batch.draw(backgroundTexture, 0, 0, screenWidth, screenHeight);
-        batch.draw(shopTexture, centerShopWidth, centerShopHeight, shopWidth, shopHeight);
+        batch.draw(shopTexture, centerShopWidth + 40, centerShopHeight +150 , shopWidth, shopHeight);
         batch.end();
     }
 
@@ -97,7 +94,6 @@ public class ShopScreen extends ScreenAdapter {
         batch.dispose();
         shopTexture.dispose();
         backgroundTexture.dispose();
-        buttonTexture.dispose();
         font.dispose();
     }
 }
