@@ -13,20 +13,23 @@ public class AnimationManager {
     private Animation<TextureRegion> jumpCase;
     private Animation<TextureRegion> attackCase;
     private Animation<TextureRegion> deathCase;
+    private Animation<TextureRegion> rollCase;
 
-    public AnimationManager(String walkAsset, String idleAsset, String jumpAsset, String attackAsset, String deathAsset, int frameWidth, int frameHeight, float frameDuration) {
+    public AnimationManager(String walkAsset, String idleAsset, String jumpAsset, String attackAsset, String deathAsset, String rollAsset, int frameWidth, int frameHeight, float frameDuration,float rollFrameDuration) {
         Texture walkSteps = new Texture(Gdx.files.internal(walkAsset));
         Texture idleSteps= new Texture(Gdx.files.internal(idleAsset));
         Texture jumpSteps = new Texture(Gdx.files.internal(jumpAsset));
         Texture attackSteps = new Texture(Gdx.files.internal(attackAsset));
         Texture deathSteps = new Texture(Gdx.files.internal(deathAsset));
+        Texture rollSteps = new Texture(Gdx.files.internal(rollAsset));
+
 
         walkCase= createAnimation(walkSteps, frameWidth, frameHeight, frameDuration);
         idleCase = createAnimation(idleSteps, frameWidth, frameHeight, frameDuration);
         jumpCase = createAnimation(jumpSteps, frameWidth, frameHeight, frameDuration);
         attackCase = createAnimation(attackSteps, frameWidth, frameHeight, frameDuration);
-        deathCase = createAnimation(deathSteps, frameWidth, frameHeight, frameDuration);  // Initialisation de l'animation de mort
-
+        deathCase = createAnimation(deathSteps, frameWidth, frameHeight, frameDuration);
+        rollCase = createAnimation(rollSteps, frameWidth, frameHeight, rollFrameDuration);
     }
 
     private Animation<TextureRegion> createAnimation(Texture allSteps, int stepWidth, int stepHeight, float stepDuration) {
@@ -61,4 +64,18 @@ public class AnimationManager {
     public Animation<TextureRegion> getDeathCase() {
         return deathCase;
     }
+
+    public Animation<TextureRegion> getRollCase() {
+        return rollCase;
+    }
+
+    public void dispose() {
+        walkCase.getKeyFrames()[0].getTexture().dispose();
+        idleCase.getKeyFrames()[0].getTexture().dispose();
+        jumpCase.getKeyFrames()[0].getTexture().dispose();
+        attackCase.getKeyFrames()[0].getTexture().dispose();
+        deathCase.getKeyFrames()[0].getTexture().dispose();
+        rollCase.getKeyFrames()[0].getTexture().dispose();
+    }
+
 }

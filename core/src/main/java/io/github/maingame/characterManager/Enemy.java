@@ -19,7 +19,7 @@ public class Enemy extends Entity {
 
 
     public Enemy(Vector2 position, List<Platform> platforms, Player player) {
-        super(position, new AnimationManager("_RunEnemy.png","_Idle.png","_Jump.png","_AttackEnemy.png","_DeathEnemy.png", 120, 80, 0.1f), 50, 10, 10);
+        super(position, new AnimationManager("_RunEnemy.png","_Idle.png","_Jump.png","_AttackEnemy.png","_DeathEnemy.png","_Roll.png", 120, 80, 0.1f,0.1f), 50, 10, 10);
         this.target = player;
         this.speed = 300;
         this.jumpVelocity = 1200;

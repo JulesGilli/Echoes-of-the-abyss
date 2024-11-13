@@ -29,11 +29,13 @@ public class OptionsScreen extends ScreenAdapter {
     private final Rectangle rightKeyBounds;
     private final Rectangle jumpKeyBounds;
     private final Rectangle attackKeyBounds;
+    private final Rectangle rollKeyBounds;
 
     private int leftKey = Input.Keys.A;
     private int rightKey = Input.Keys.D;
     private int jumpKey = Input.Keys.SPACE;
     private int attackKey = Input.Keys.F;
+    private int rollKey = Input.Keys.SHIFT_LEFT;
 
     private boolean waitingForNewKey = false;
     private String keyToRemap = "";
@@ -72,6 +74,7 @@ public class OptionsScreen extends ScreenAdapter {
         rightKeyBounds = new Rectangle(screenWidth / 2 - 100, screenHeight - 500, 200, 100);
         jumpKeyBounds = new Rectangle(screenWidth / 2 - 100, screenHeight - 600, 200, 100);
         attackKeyBounds = new Rectangle(screenWidth / 2 - 100, screenHeight - 700, 200, 100);
+        rollKeyBounds = new Rectangle(screenWidth / 2 - 100, screenHeight - 800, 200, 100);
 
         preferences = Gdx.app.getPreferences("GamePreferences");
         loadKeys();
@@ -98,6 +101,7 @@ public class OptionsScreen extends ScreenAdapter {
         font.draw(batch, "Right: " + Input.Keys.toString(rightKey), rightKeyBounds.x, rightKeyBounds.y + 50);
         font.draw(batch, "Jump: " + Input.Keys.toString(jumpKey), jumpKeyBounds.x, jumpKeyBounds.y + 50);
         font.draw(batch, "Attack: " + Input.Keys.toString(attackKey), attackKeyBounds.x, attackKeyBounds.y + 50);
+        font.draw(batch, "Roll: " + Input.Keys.toString(rollKey), rollKeyBounds.x, rollKeyBounds.y + 50);
 
         batch.end();
 
@@ -109,6 +113,7 @@ public class OptionsScreen extends ScreenAdapter {
         rightKey = preferences.getInteger("rightKey", Input.Keys.D);
         jumpKey = preferences.getInteger("jumpKey", Input.Keys.SPACE);
         attackKey = preferences.getInteger("attackKey", Input.Keys.F);
+        rollKey = preferences.getInteger("rollKey", Input.Keys.SHIFT_LEFT);
     }
 
     private void saveKeys() {
@@ -116,6 +121,7 @@ public class OptionsScreen extends ScreenAdapter {
         preferences.putInteger("rightKey", rightKey);
         preferences.putInteger("jumpKey", jumpKey);
         preferences.putInteger("attackKey", attackKey);
+        preferences.putInteger("rollKey", rollKey);
         preferences.flush();
     }
 
@@ -137,6 +143,9 @@ public class OptionsScreen extends ScreenAdapter {
             } else if (attackKeyBounds.contains(clickPosition)) {
                 waitingForNewKey = true;
                 keyToRemap = "attack";
+            } else if (rollKeyBounds.contains(clickPosition)) {
+                waitingForNewKey = true;
+                keyToRemap = "roll";
             }
 
         }
@@ -164,6 +173,9 @@ public class OptionsScreen extends ScreenAdapter {
                 break;
             case "attack":
                 attackKey = key;
+                break;
+            case "roll":
+                rollKey = key;
                 break;
         }
         keyToRemap = "";
@@ -194,5 +206,8 @@ public class OptionsScreen extends ScreenAdapter {
 
     public int getAttackKey() {
         return attackKey;
+    }
+    public int getRollKey() {
+        return rollKey;
     }
 }

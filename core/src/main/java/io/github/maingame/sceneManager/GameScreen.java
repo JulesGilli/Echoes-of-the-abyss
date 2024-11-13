@@ -44,7 +44,7 @@ public class GameScreen extends ScreenAdapter {
         this.shop = new Shop(new ArrayList<>(), stat);
         this.player = new Player(new Vector2(100, 100), Platform.getPlatforms(),
             optionsScreen.getLeftKey(), optionsScreen.getRightKey(),
-            optionsScreen.getJumpKey(), optionsScreen.getAttackKey());
+            optionsScreen.getJumpKey(), optionsScreen.getAttackKey(), optionsScreen.getRollKey());
 
         this.hud = new GameHUD(game);
 

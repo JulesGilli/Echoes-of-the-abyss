@@ -19,16 +19,23 @@ public class Player extends Entity {
     private int rightKey;
     private int jumpKey;
     private int attackKey;
+    private int rollKey;
 
-    public Player(Vector2 position, List<Platform> platforms, int leftKey, int rightKey, int jumpKey, int attackKey){
+    private boolean isRolling = false;
+    private float rollDuration = 0.7f;
+    private float rollTimer = 0f;
+    private float rollSpeed = 800;
+
+    public Player(Vector2 position, List<Platform> platforms, int leftKey, int rightKey, int jumpKey, int attackKey, int rollKey){
         super(position, new AnimationManager("_Run.png","_Idle.png","_Jump.png",
-            "_Attack.png","_Death.png", 120, 80, 0.1f),
+            "_Attack.png","_Death.png","_Roll.png", 120, 80, 0.1f,0.06f),
             300,100, 25);
 
         this.leftKey = leftKey;
         this.rightKey = rightKey;
         this.jumpKey = jumpKey;
         this.attackKey = attackKey;
+        this.rollKey = rollKey;
 
         this.initialPosition = new Vector2(position);
         this.initialHealth = health;
@@ -47,12 +54,23 @@ public class Player extends Entity {
     public void update(float delta, List<Enemy> enemies) {
         if (health <= 0 && !isDead) {
             isDead = true;
-                attacking = false;
+            attacking = false;
+            isRolling = false;
             animationTime = 0f;
         }
 
         if (isDead) {
             animationTime += delta;
+        } else if (isRolling) {
+            rollTimer += delta;
+            animationTime += delta;
+            if (rollTimer >= rollDuration) {
+                isRolling = false;
+                rollTimer = 0f;
+            } else {
+            velocity.x = lookingRight ? rollSpeed : -rollSpeed;
+            position.add(velocity.cpy().scl(delta));
+        }
         } else {
             handleInput(delta);
             animationTime += delta;
@@ -87,7 +105,7 @@ public class Player extends Entity {
 
     @Override
     public void receiveDamage(float damage) {
-        if (isDead) return;
+        if (isDead || isRolling) return;
 
         this.health -= damage - armor;
 
@@ -100,7 +118,7 @@ public class Player extends Entity {
 
 
     private void handleInput(float delta) {
-        if (attacking || isDead) return;
+        if (attacking || isRolling || isDead) return;
 
         if (Gdx.input.isKeyPressed(leftKey)) {
             velocity.x = -speed;
@@ -119,18 +137,34 @@ public class Player extends Entity {
 
         if (Gdx.input.isKeyJustPressed(attackKey) && !attacking && !jumping) {
             attacking = true;
+            jumping = false;
             animationTime = 0f;
         }
-    }
 
+        if (Gdx.input.isKeyJustPressed(rollKey) && !isRolling) {
+            isRolling = true;
+            animationTime = 0f;
+            rollTimer = 0f;
+        }
+    }
 
     @Override
     public TextureRegion getCurrentFrame() {
         if (isDead) {
-            return animation.getDeathCase().getKeyFrame(animationTime, false);
+            return flipAnimationCheck(animation.getDeathCase().getKeyFrame(animationTime, false));
+        } else if (isRolling) {
+            return flipAnimationCheck(animation.getRollCase().getKeyFrame(animationTime, false));
+        } else if (attacking) {
+            return flipAnimationCheck(animation.getAttackCase().getKeyFrame(animationTime, true));
+        } else if (jumping) {
+            return flipAnimationCheck(animation.getJumpCase().getKeyFrame(animationTime, true));
+        } else if (velocity.x != 0) {
+            return flipAnimationCheck(animation.getWalkCase().getKeyFrame(animationTime, true));
+        } else {
+            return flipAnimationCheck(animation.getIdleCase().getKeyFrame(animationTime, true));
         }
-        return super.getCurrentFrame();
     }
+
 
     @Override
     public void render(SpriteBatch batch) {
@@ -171,6 +205,10 @@ public class Player extends Entity {
 
     public void setAttackKey(int attackKey) {
         this.attackKey = attackKey;
+    }
+
+    public void setRollKey(int rollKey) {
+        this.rollKey = rollKey;
     }
 
 
