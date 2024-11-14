@@ -57,10 +57,10 @@ public class GameScreen extends ScreenAdapter {
         this.game = game;
         this.optionsScreen = new OptionsScreen(game);
         this.batch = game.batch;
+        this.stat = new GameStat();
         this.player = new Player(new Vector2(100, 100), Platform.getPlatforms(),
             optionsScreen.getLeftKey(), optionsScreen.getRightKey(),
             optionsScreen.getJumpKey(), optionsScreen.getAttackKey(), optionsScreen.getRollKey());
-        this.stat = new GameStat(player);
         this.hud = new GameHUD(game, stat);
 
         camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());

@@ -3,25 +3,26 @@ package io.github.maingame.utilsManager;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonWriter;
-import io.github.maingame.characterManager.Player;
 
 public class GameStat {
-    private int golds = 0;
-    private int kills = 0;
-    private int killStreak = 0;
-    private int waves = 0;
-    private int floors = 0;
-    private int maxFloors = 0;
-    private int deaths = 0;
-    private boolean gameOver = false;
-    private final Player player;
+    private int golds;
+    private int kills;
+    private int killStreak;
+    private int waves;
+    private int floors;
+    private int maxFloors;
+    private int deaths;
+    private boolean gameOver;
 
-    public GameStat(Player player){
-        this.player = player;
-    }
-
-    public GameStat() {
-        this.player = null;
+    public GameStat(){
+        this.golds = 0;
+        this.kills = 0;
+        this.killStreak = 0;
+        this.waves = 0;
+        this.maxFloors = 0;
+        this.deaths = 0;
+        this.floors = 0;
+        this.gameOver = false;
     }
 
     public void addGolds(int amount) {
@@ -52,10 +53,6 @@ public class GameStat {
             this.deaths = loadedData.deaths;
             this.gameOver = loadedData.gameOver;
         }
-    }
-
-    public Player getPlayer() {
-        return player;
     }
 
     public int getKillScore() {
