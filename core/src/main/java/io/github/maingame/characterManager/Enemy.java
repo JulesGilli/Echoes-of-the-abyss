@@ -48,16 +48,10 @@ public class Enemy extends Entity {
         if (inRange()) {
             attackDelayTimer += delta;
             if (attackDelayTimer >= attackDelay && timeSinceLastAttack >= attackCooldown) {
-
                 attack();
                 timeSinceLastAttack = 0f;
                 attackDelayTimer = 0f;
-
-                if (!hasHitPlayer && isCollidingWith(target, attackRange)) {
-
-                    target.receiveDamage(attackDamage);
-                    hasHitPlayer = true;
-                }
+                hasHitPlayer = false;
             } else {
                 idle();
             }
@@ -67,16 +61,16 @@ public class Enemy extends Entity {
         }
     }
 
-    public void idle() {
-        velocity.x = 0;
-    }
-
     @Override
     protected void checkAttackFinish() {
         if (animation.getAttackCase().isAnimationFinished(animationTime)) {
             isAttacking = false;
-            hasHitPlayer = false;
             animationTime = 0f;
+
+            if (!hasHitPlayer && isCollidingWith(target, attackRange)) {
+                target.receiveDamage(attackDamage);
+                hasHitPlayer = true;
+            }
         }
     }
 
