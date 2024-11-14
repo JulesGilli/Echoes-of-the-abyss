@@ -70,11 +70,11 @@ public class OptionsScreen extends ScreenAdapter {
 
         backButtonBounds = new Rectangle((screenWidth - buttonWidth) / 2, 100, buttonWidth, buttonHeight);
 
-        leftKeyBounds = new Rectangle(screenWidth / 2 - 100, screenHeight - 400, 200, 100);
-        rightKeyBounds = new Rectangle(screenWidth / 2 - 100, screenHeight - 500, 200, 100);
-        jumpKeyBounds = new Rectangle(screenWidth / 2 - 100, screenHeight - 600, 200, 100);
-        attackKeyBounds = new Rectangle(screenWidth / 2 - 100, screenHeight - 700, 200, 100);
-        rollKeyBounds = new Rectangle(screenWidth / 2 - 100, screenHeight - 800, 200, 100);
+        leftKeyBounds = new Rectangle(screenWidth / 2 - 150, screenHeight - 400, 200, 100);
+        rightKeyBounds = new Rectangle(screenWidth / 2 - 150, screenHeight - 480, 200, 100);
+        jumpKeyBounds = new Rectangle(screenWidth / 2 - 150, screenHeight - 560, 200, 100);
+        attackKeyBounds = new Rectangle(screenWidth / 2 - 150, screenHeight - 640, 200, 100);
+        rollKeyBounds = new Rectangle(screenWidth / 2 - 150, screenHeight - 720, 200, 100);
 
         preferences = Gdx.app.getPreferences("GamePreferences");
         loadKeys();

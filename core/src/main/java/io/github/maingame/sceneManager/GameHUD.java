@@ -148,7 +148,7 @@ public class GameHUD {
     }
 
     private void drawGold(SpriteBatch batch, Player player, float screenWidth, float screenHeight) {
-        String goldText = "" + player.getGold();
+        String goldText = "" + stat.getGolds();
         layout.setText(goldFont, goldText);
         goldFont.draw(batch, goldText, screenWidth - 200, screenHeight - 40);
         batch.draw(goldIcon, screenWidth - 270, screenHeight - 90,goldIcon.getWidth() * 3,goldIcon.getHeight() * 3);

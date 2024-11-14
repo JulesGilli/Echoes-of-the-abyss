@@ -1,15 +1,24 @@
 package io.github.maingame.characterManager;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import io.github.maingame.Platform;
 import io.github.maingame.design2dManager.AnimationManager;
+import io.github.maingame.design2dManager.DamageText;
+import io.github.maingame.design2dManager.GoldText;
+import io.github.maingame.utilsManager.GameStat;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class Enemy extends Entity {
     private Player target;
+
+    private final List<DamageText> damageTexts = new ArrayList<>();
+    private final List<GoldText> goldText = new ArrayList<>();
 
     private float range;
     private float attackCooldown = 1.5f;
@@ -23,8 +32,8 @@ public class Enemy extends Entity {
     private boolean hasHitPlayer = false;
 
 
-    public Enemy(Vector2 position, List<Platform> platforms, Player player) {
-        super(position, new AnimationManager("_RunEnemy.png","_IdleEnemy.png","_Jump.png","_AttackEnemy.png","_DeathEnemy.png","_Roll.png", 120, 80, 0.1f,0.1f), 50, 10, 10);
+    public Enemy(Vector2 position, List<Platform> platforms, Player player, GameStat gameStat) {
+        super(position, new AnimationManager("_RunEnemy.png","_IdleEnemy.png","_Jump.png","_AttackEnemy.png","_DeathEnemy.png","_Roll.png", 120, 80, 0.1f,0.1f), 50 * (1 + (gameStat.getFloors() / 20f)), 10, 10 * (1 + (gameStat.getFloors() / 20f)));
         this.target = player;
         this.speed = 300;
         this.jumpVelocity = 1200;
@@ -90,11 +99,15 @@ public class Enemy extends Entity {
             health -= damage;
             System.out.println("Enemy prend " + damage + " damage, vie restante : " + health);
 
+            damageTexts.add(new DamageText("-" + (int)damage, new Vector2(position.x, position.y)));
+
             if (health <= 0) {
                 isDying = true;
                 animationTime = 0f;
+                goldText.add(new GoldText("+5", new Vector2(position.x, position.y)));
             }
         }
+
     }
 
 
@@ -146,6 +159,26 @@ public class Enemy extends Entity {
     public void render(SpriteBatch batch) {
         TextureRegion currentFrame = getCurrentFrame();
         batch.draw(currentFrame, position.x, position.y, 450, 300);
+
+        for (Iterator<DamageText> iterator = damageTexts.iterator(); iterator.hasNext(); ) {
+            DamageText damageText = iterator.next();
+            damageText.render(batch);
+            damageText.update(Gdx.graphics.getDeltaTime());
+            if (damageText.isExpired()) {
+                damageText.dispose();
+                iterator.remove();
+            }
+        }
+
+        for (Iterator<GoldText> iterator = goldText.iterator(); iterator.hasNext(); ) {
+            GoldText text = iterator.next();
+            text.render(batch);
+            text.update(Gdx.graphics.getDeltaTime());
+            if (text.isExpired()) {
+                text.dispose();
+                iterator.remove();
+            }
+        }
     }
 
     public void dispose(){
