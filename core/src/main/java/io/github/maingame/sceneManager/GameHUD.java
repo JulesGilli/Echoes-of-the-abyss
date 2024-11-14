@@ -18,11 +18,13 @@ public class GameHUD {
     private final Main game;
     private final BitmapFont goldFont;
     private final BitmapFont menuFont;
+    private final BitmapFont headerFont;
     private final Texture healthFrame;
     private final Texture healthBar;
     private final Texture buttonMenu;
     private final Texture backgroundGUI;
     private final Texture goldIcon;
+    private final Texture headerGUI;
     private final GlyphLayout layout;
     private GameStat stat;
 
@@ -31,18 +33,25 @@ public class GameHUD {
     private final Rectangle quitButtonBounds;
     private final Rectangle shopButtonBounds;
 
-    public GameHUD(Main game) {
+    public GameHUD(Main game, GameStat stat) {
         this.game = game;
+        this.stat = stat;
 
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("assets/fonts/Jacquard12-Regular.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
         parameter.size = 64;
 
         goldFont = generator.generateFont(parameter);
-        goldFont.setColor(Color.YELLOW);
+        Color MY_GOLD = new Color(255 / 255f, 204 / 255f, 101 / 255f, 1);
+        goldFont.setColor(MY_GOLD);
 
         menuFont = generator.generateFont(parameter);
         menuFont.setColor(Color.BROWN);
+
+        headerFont = generator.generateFont(parameter);
+        Color LIGHT_GREEN = new Color(0 / 255f, 153 / 255f, 76 / 255f, 1);
+        headerFont.setColor(LIGHT_GREEN);
+
         generator.dispose();
 
         healthFrame = new Texture(Gdx.files.internal("Health_01.png"));
@@ -50,6 +59,7 @@ public class GameHUD {
         buttonMenu = new Texture(Gdx.files.internal("buttonMenu.png"));
         backgroundGUI = new Texture(Gdx.files.internal("BackGroundGUI.png"));
         goldIcon = new Texture(Gdx.files.internal("gold.png"));
+        headerGUI = new Texture(Gdx.files.internal("Header.png"));
 
 
         layout = new GlyphLayout();
@@ -103,12 +113,29 @@ public class GameHUD {
     public void render(SpriteBatch batch, Player player, float screenWidth, float screenHeight, boolean isGameOver) {
         drawHealthBar(batch, player, screenHeight);
         drawGold(batch, player, screenWidth, screenHeight);
+        drawFloor(batch, screenWidth, screenHeight);
+
 
         if (isGameOver) {
             displayGameOverMenu(batch, screenWidth, screenHeight);
             handleGameOverInput();
         }
     }
+
+    private void drawFloor(SpriteBatch batch, float screenWidth, float screenHeight) {
+        if (stat != null) {
+            String floorText = "Floor: " + stat.getFloors();
+            layout.setText(headerFont, floorText);
+            headerFont.draw(batch, floorText, screenWidth / 2 - layout.width / 2, screenHeight - 20);
+            float size = 3;
+            batch.draw(headerGUI,
+                screenWidth / 2 - headerGUI.getWidth() * size / 2f,
+                screenHeight - 80 - headerGUI.getHeight() * size / 2f,
+                headerGUI.getWidth() * size,
+                headerGUI.getHeight() * size);
+        }
+    }
+
 
     private void drawHealthBar(SpriteBatch batch, Player player, float screenHeight) {
         float offset = 100;

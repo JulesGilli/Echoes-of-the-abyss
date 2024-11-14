@@ -46,7 +46,7 @@ public class GameScreen extends ScreenAdapter {
             optionsScreen.getLeftKey(), optionsScreen.getRightKey(),
             optionsScreen.getJumpKey(), optionsScreen.getAttackKey(), optionsScreen.getRollKey());
 
-        this.hud = new GameHUD(game);
+        this.hud = new GameHUD(game, stat);
 
         background1 = new Texture(Gdx.files.internal("background1.png"));
         background2 = new Texture(Gdx.files.internal("background2.png"));
@@ -114,6 +114,11 @@ public class GameScreen extends ScreenAdapter {
             platform.render(batch);
         }
     }
+
+    private void onPlayerReachNewFloor() {
+        stat.setFloors(stat.getFloors() + 1);
+    }
+
 
     public void resumeGame() {
         isPaused = false;

@@ -1,38 +1,38 @@
 package io.github.maingame.utilsManager;
 
 public class GameStat {
-    private int totalGold;
-    private int killScore;
+    private int golds;
+    private int kills;
     private int killStreak;
-    private int killWave;
-    private int lvlFloor;
-    private int deathNumber;
+    private int waves;
+    private int floors;
+    private int deaths;
     private boolean gameOver;
 
     public GameStat(){
-        this.totalGold = 0;
-        this.killScore = 0;
+        this.golds = 0;
+        this.kills = 0;
         this.killStreak = 0;
-        this.killWave = 0;
-        this.lvlFloor = 0;
-        this.deathNumber = 0;
+        this.waves = 0;
+        this.floors = 0;
+        this.deaths = 0;
         this.gameOver = false;
     }
 
     public int getKillScore() {
-        return killScore;
+        return kills;
     }
 
     public void setKillScore(int killScore) {
-        this.killScore = killScore;
+        this.kills = killScore;
     }
 
     public int getTotalGold() {
-        return totalGold;
+        return golds;
     }
 
     public void setTotalGold(int totalGold) {
-        this.totalGold = totalGold;
+        this.golds = totalGold;
     }
 
     public int getKillStreak() {
@@ -49,5 +49,45 @@ public class GameStat {
 
     public void setGameState(boolean gameOver) {
         this.gameOver = gameOver;
+    }
+
+    public int getDeaths() {
+        return deaths;
+    }
+
+    public void setDeaths(int deaths) {
+        this.deaths = deaths;
+    }
+
+    public int getFloors() {
+        return floors;
+    }
+
+    public void setFloors(int floors) {
+        this.floors = floors;
+    }
+
+    public int getGolds() {
+        return golds;
+    }
+
+    public void setGolds(int golds) {
+        this.golds = golds;
+    }
+
+    public int getKills() {
+        return kills;
+    }
+
+    public void setKills(int kills) {
+        this.kills = kills;
+    }
+
+    public int getWaves() {
+        return waves;
+    }
+
+    public void setWaves(int waves) {
+        this.waves = waves;
     }
 }
