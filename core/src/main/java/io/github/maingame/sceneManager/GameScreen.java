@@ -174,13 +174,11 @@ public class GameScreen extends ScreenAdapter {
         float backgroundWidth4a = screenWidth / parallaxFactor4a;
         float backgroundWidth4b = screenWidth / parallaxFactor4b;
 
-        float backgroundHeight = screenHeight;
-
-        batch.draw(background1, backgroundX * parallaxFactor1, backgroundY, backgroundWidth1, backgroundHeight);
-        batch.draw(background2, backgroundX * parallaxFactor2, backgroundY, backgroundWidth2, backgroundHeight);
-        batch.draw(background3, backgroundX * parallaxFactor3, backgroundY, backgroundWidth3, backgroundHeight);
-        batch.draw(background4a, backgroundX * parallaxFactor4a, backgroundY, backgroundWidth4a, backgroundHeight);
-        batch.draw(background4b, backgroundX * parallaxFactor4b, backgroundY, backgroundWidth4b, backgroundHeight);
+        batch.draw(background1, backgroundX * parallaxFactor1, backgroundY, backgroundWidth1, screenHeight);
+        batch.draw(background2, backgroundX * parallaxFactor2, backgroundY, backgroundWidth2, screenHeight);
+        batch.draw(background3, backgroundX * parallaxFactor3, backgroundY, backgroundWidth3, screenHeight);
+        batch.draw(background4a, backgroundX * parallaxFactor4a, backgroundY, backgroundWidth4a, screenHeight);
+        batch.draw(background4b, backgroundX * parallaxFactor4b, backgroundY, backgroundWidth4b, screenHeight);
     }
 
     private void drawPlatforms() {
