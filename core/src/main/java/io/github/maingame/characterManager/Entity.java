@@ -2,6 +2,7 @@ package io.github.maingame.characterManager;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import io.github.maingame.Platform;
+import io.github.maingame.itemManager.Inventory;
 import io.github.maingame.utilsManager.lifeCycle;
 import io.github.maingame.design2dManager.AnimationManager;
 
@@ -35,6 +36,7 @@ public abstract class Entity implements lifeCycle{
     protected int initialGold;
     protected float initialAttack;
     protected boolean isDead = false;
+    protected Inventory inventory;
 
     public Entity(Vector2 position, AnimationManager animation, float health, int gold, float attack) {
         this.position = position;

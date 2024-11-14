@@ -9,6 +9,37 @@ import java.util.List;
 public class Inventory {
     private List<Item> items = new ArrayList<>();
 
+    public boolean inInventory(Item item) {
+        return items.contains(item);
+    }
+
+    public boolean containWeapon(){
+        for (Item item : items){
+            if (item instanceof Weapon){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean containArmor(){
+        for (Item item : items){
+            if (item instanceof Armor){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean containConsumable(){
+        for (Item item : items){
+            if (item instanceof Consumable){
+                return true;
+            }
+        }
+        return false;
+    }
+
     public void addItem(Item item) {
         items.add(item);
     }
@@ -17,7 +48,7 @@ public class Inventory {
         items.remove(item);
     }
 
-    public void applyGears(Entity entity) {
+    public void applyGears(Player entity) {
         for (Item item : items) {
             if (item instanceof Gear){
                 ((Gear) item).applyItem(entity);
@@ -40,12 +71,6 @@ public class Inventory {
                 }).start();
             }
 
-        }
-    }
-
-    public void resetInventory(Player entity) {
-        for (Item item : items) {
-            removeItem(item);
         }
     }
 }
