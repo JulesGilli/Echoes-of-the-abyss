@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import io.github.maingame.Platform;
 import io.github.maingame.design2dManager.AnimationManager;
+import io.github.maingame.utilsManager.GameStat;
 
 import java.util.List;
 
@@ -23,8 +24,8 @@ public class Enemy extends Entity {
     private boolean hasHitPlayer = false;
 
 
-    public Enemy(Vector2 position, List<Platform> platforms, Player player) {
-        super(position, new AnimationManager("_RunEnemy.png","_IdleEnemy.png","_Jump.png","_AttackEnemy.png","_DeathEnemy.png","_Roll.png", 120, 80, 0.1f,0.1f), 50, 10, 10);
+    public Enemy(Vector2 position, List<Platform> platforms, Player player, GameStat gameStat) {
+        super(position, new AnimationManager("_RunEnemy.png","_IdleEnemy.png","_Jump.png","_AttackEnemy.png","_DeathEnemy.png","_Roll.png", 120, 80, 0.1f,0.1f), 50 * (1 + (gameStat.getFloors() / 20f)), 10, 10 * (1 + (gameStat.getFloors() / 20f)));
         this.target = player;
         this.speed = 300;
         this.jumpVelocity = 1200;

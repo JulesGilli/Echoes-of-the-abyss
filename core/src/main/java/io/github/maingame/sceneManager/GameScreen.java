@@ -67,10 +67,10 @@ public class GameScreen extends ScreenAdapter {
         spawnList.clear();
         int enemyCount = baseEnemyCount + stat.getFloors();
         for (int i = 0; i < enemyCount; i++) {
-            spawnList.add(new Enemy(new Vector2(-200, 100), Platform.getPlatforms(), player));
+            spawnList.add(new Enemy(new Vector2(-200, 100), Platform.getPlatforms(), player, stat));
         }
 
-        spawnDelay = Math.max(1.0f, spawnDelay * 0.9f);
+        spawnDelay = Math.max(1.0f, spawnDelay * 0.95f);
     }
 
     @Override
