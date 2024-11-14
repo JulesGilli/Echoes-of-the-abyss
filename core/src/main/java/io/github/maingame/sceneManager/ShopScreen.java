@@ -65,7 +65,7 @@ public class ShopScreen extends ScreenAdapter {
     }
 
     public Vector2 getItemGoldPosition(int number){
-        return new Vector2(centerShopWidth + 180 + number % 4 * 200, centerShopHeight + 628 - number / 4 * 200);
+        return new Vector2(centerShopWidth + 200 + number % 4 * 200, centerShopHeight + 628 - number / 4 * 200);
     }
 
     public Rectangle drawItem(int number){

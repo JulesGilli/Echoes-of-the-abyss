@@ -1,6 +1,7 @@
 package io.github.maingame.itemManager;
 
 import io.github.maingame.characterManager.Entity;
+import io.github.maingame.characterManager.Player;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +25,7 @@ public class Inventory {
         }
     }
 
-    public void applyConsumable(Entity target) {
+    public void applyConsumable(Player target) {
         for (Item item : items) {
             if (item instanceof Consumable){
                 Consumable consumable = (Consumable) item;
@@ -42,7 +43,7 @@ public class Inventory {
         }
     }
 
-    public void resetInventory(Entity entity) {
+    public void resetInventory(Player entity) {
         for (Item item : items) {
             removeItem(item);
         }
