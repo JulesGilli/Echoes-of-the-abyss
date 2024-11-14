@@ -122,7 +122,7 @@ public class ShopScreen extends ScreenAdapter {
     private void initFonts() {
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("assets/fonts/Jacquard12-Regular.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
-        parameter.size = 64;
+        parameter.size = 50;
         font = generator.generateFont(parameter);
         font.setColor(Color.BROWN);
         parameter.size = 96;
