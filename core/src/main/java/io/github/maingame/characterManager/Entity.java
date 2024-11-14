@@ -175,6 +175,10 @@ public abstract class Entity implements lifeCycle{
         return attackDamage + attackBonus;
     }
 
+    public void setAttackDamage(float attackDamage) {
+        this.attackDamage = attackDamage;
+    }
+
     public void receiveDamage(float damage){
         this.health -= damage - armor;
     }
