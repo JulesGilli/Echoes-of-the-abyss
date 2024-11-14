@@ -11,6 +11,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import io.github.maingame.characterManager.Player;
+import io.github.maingame.itemManager.Inventory;
 import io.github.maingame.itemManager.Item;
 import io.github.maingame.itemManager.Shop;
 import io.github.maingame.utilsManager.GameStat;
@@ -28,6 +30,7 @@ public class ShopScreen extends ScreenAdapter {
     private final float shopSize = 1.2F;
     private BitmapFont font;
     private final Shop shop;
+    private final List<Item> items;
     private final GameStat stat;
     private final int buttonWidth = 600;
     private final int buttonHeight = 200;
@@ -47,7 +50,9 @@ public class ShopScreen extends ScreenAdapter {
         this.game = game;
         this.stat = stat;
         this.batch = new SpriteBatch();
-        this.shop = new Shop(new ArrayList<>(), stat);
+        this.shop = new Shop(new Inventory(), stat);
+        this.items = shop.getItems();
+        stat.setGolds(400);
         shopWidth = 876 * shopSize;
         shopHeight = 641 * shopSize;
         centerShopWidth = screenWidth / 2f - shopWidth / 2f;
@@ -69,9 +74,19 @@ public class ShopScreen extends ScreenAdapter {
     }
 
     public Rectangle drawItem(int number){
-        List<Item> items = shop.getItems();
-        batch.draw(items.get(number).getTextureAvailable(), getItemAssetPosition(number).x + 10, getItemAssetPosition(number).y - 67, 75, 75);
-        font.draw(batch, items.get(number).getStrGold(), getItemGoldPosition(number).x, getItemGoldPosition(number).y);
+        if (shop.isAvailable(items.get(number)))
+        {
+            batch.draw(items.get(number).getTextureAvailable(), getItemAssetPosition(number).x + 10, getItemAssetPosition(number).y - 67, 75, 75);
+
+        } else {
+            batch.draw(items.get(number).getTextureDisabled(), getItemAssetPosition(number).x + 10, getItemAssetPosition(number).y - 67, 75, 75);
+        }
+        if (shop.getInventory().inInventory(items.get(number))){
+            font.draw(batch,"bought", getItemGoldPosition(number).x - 50, getItemGoldPosition(number).y);
+
+        } else{
+            font.draw(batch, items.get(number).getStrGold(), getItemGoldPosition(number).x, getItemGoldPosition(number).y);
+        }
         Rectangle rectangle = new Rectangle(getItemGoldPosition(0).x - 50 + number % 4 * 200, getItemGoldPosition(0).y - 50 - number / 4 * 200 , 200 , 200);
         return rectangle;
     }
@@ -95,7 +110,10 @@ public class ShopScreen extends ScreenAdapter {
             }
             for (int i = 0; i < 12; i++){
                 if (listButtons.get(i).contains(clickPosition)) {
-                    System.out.println(i);
+                    if (shop.buyItem(stat , items.get(i)))
+                    {
+                        System.out.println("buy Item :"+i);
+                    }
                 }
             }
         }
@@ -123,9 +141,10 @@ public class ShopScreen extends ScreenAdapter {
         font.draw(batch, "Play", playButtonBounds.x + 250, playButtonBounds.y + 125);
         font.draw(batch, "Quit", quitButtonBounds.x + 250 , quitButtonBounds.y + 125);
         font.draw(batch, "Shop", screenWidth/ 2 - 48, screenHeight - 48);
+        font.draw(batch, Integer.toString(stat.getGolds()),centerShopWidth + 960, centerShopHeight + 790);
         List<Rectangle> listButtons= createButtons();
-        batch.end();
         input(listButtons);
+        batch.end();
     }
 
     public void dispose(){
