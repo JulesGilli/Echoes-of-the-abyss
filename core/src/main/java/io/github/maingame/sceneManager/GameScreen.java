@@ -14,6 +14,7 @@ import io.github.maingame.Platform;
 import io.github.maingame.characterManager.Enemy;
 import io.github.maingame.characterManager.Player;
 import io.github.maingame.design2dManager.TextureManager;
+import io.github.maingame.itemManager.Inventory;
 import io.github.maingame.itemManager.Shop;
 import io.github.maingame.utilsManager.GameStat;
 
@@ -36,7 +37,6 @@ public class GameScreen extends ScreenAdapter {
 
     private float timeSinceLastSpawn = 0f;
     private float spawnDelay = 3.0f;
-    private final Shop shop;
     private final GameStat stat;
     private final GameHUD hud;
     private OptionsScreen optionsScreen;
@@ -58,11 +58,9 @@ public class GameScreen extends ScreenAdapter {
         this.optionsScreen = new OptionsScreen(game);
         this.batch = game.batch;
         this.stat = new GameStat();
-        this.shop = new Shop(new ArrayList<>(), stat);
         this.player = new Player(new Vector2(100, 100), Platform.getPlatforms(),
             optionsScreen.getLeftKey(), optionsScreen.getRightKey(),
             optionsScreen.getJumpKey(), optionsScreen.getAttackKey(), optionsScreen.getRollKey());
-
         this.hud = new GameHUD(game, stat);
 
         camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
