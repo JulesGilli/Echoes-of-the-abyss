@@ -10,9 +10,13 @@ import java.util.List;
 
 public class Enemy extends Entity {
     private Player target;
+
     private float range;
     private float attackCooldown = 1.5f;
     private float timeSinceLastAttack = 0f;
+    private float attackDelay = 0.3f;
+    private float attackDelayTimer = 0f;
+
     private boolean isDead = false;
     private boolean isDying = false;
 
@@ -38,28 +42,27 @@ public class Enemy extends Entity {
         return distance <= range;
     }
 
-    public void makeAction(){
+    public void makeAction(float delta){
         if (isDead || isAttacking) return;
 
         if (inRange()) {
-            if (timeSinceLastAttack >= attackCooldown) {
-                System.out.println("Enemy in range of player.");
+            attackDelayTimer += delta;
+            if (attackDelayTimer >= attackDelay && timeSinceLastAttack >= attackCooldown) {
 
                 attack();
                 timeSinceLastAttack = 0f;
+                attackDelayTimer = 0f;
 
                 if (!hasHitPlayer && isCollidingWith(target, attackRange)) {
-                    System.out.println("Enemy hit player!");
 
                     target.receiveDamage(attackDamage);
                     hasHitPlayer = true;
-                } else {
-                    System.out.println("Enemy attack missed or already hit.");
                 }
             } else {
                 idle();
             }
         } else {
+            attackDelayTimer = 0f;
             walk();
         }
     }
@@ -112,7 +115,7 @@ public class Enemy extends Entity {
                 isDead = true;
             }
         } else {
-            makeAction();
+            makeAction(delta);
             animationTime += delta;
 
             if (isAttacking) {
