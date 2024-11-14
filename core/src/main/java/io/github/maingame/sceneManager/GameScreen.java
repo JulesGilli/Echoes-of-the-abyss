@@ -78,6 +78,8 @@ public class GameScreen extends ScreenAdapter {
         background4a = new Texture(Gdx.files.internal("background4a.png"));
         background4b = new Texture(Gdx.files.internal("background4b.png"));
 
+        stat.loadGame();
+
         updatePlayerKeys();
         Platform.createPlatforms();
 
@@ -104,6 +106,7 @@ public class GameScreen extends ScreenAdapter {
 
         if (player.getHealth() <= 0) {
             isGameOver = true;
+            stat.saveGame();
         }
 
         float targetCameraX = player.getPosition().x + 300;
@@ -219,9 +222,10 @@ public class GameScreen extends ScreenAdapter {
             enemy.update(delta);
 
             if (enemy.isDeathAnimationFinished()) {
-                player.setGold(player.getGold() + enemy.getGold());
+                stat.addGolds(enemy.getGold());
                 iterator.remove();
             }
+
         }
     }
 
