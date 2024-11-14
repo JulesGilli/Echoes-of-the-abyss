@@ -48,7 +48,12 @@ public class Enemy extends Entity {
 
     public boolean inRange() {
         float distance = Math.abs(target.getPosition().x - position.x);
-        return distance <= range;
+        return distance <= range && isPlayerInFront();
+    }
+
+    private boolean isPlayerInFront() {
+        return (isLookingRight && target.getPosition().x > position.x) ||
+            (!isLookingRight && target.getPosition().x < position.x);
     }
 
     public void makeAction(float delta){
@@ -66,6 +71,10 @@ public class Enemy extends Entity {
             }
         } else {
             attackDelayTimer = 0f;
+
+            if (!isPlayerInFront()) {
+                isLookingRight = target.getPosition().x > position.x;
+            }
             walk();
         }
     }
@@ -76,20 +85,31 @@ public class Enemy extends Entity {
             isAttacking = false;
             animationTime = 0f;
 
-            if (!hasHitPlayer && isCollidingWith(target, attackRange)) {
+            if (!hasHitPlayer && isPlayerInAttackRange()) {
                 target.receiveDamage(attackDamage);
                 hasHitPlayer = true;
             }
         }
     }
 
+    private boolean isPlayerInAttackRange() {
+        float distance = Math.abs(target.getPosition().x - position.x);
+
+        if (distance > attackRange) return false;
+
+        boolean playerIsInFront = (isLookingRight && target.getPosition().x > position.x) ||
+            (!isLookingRight && target.getPosition().x < position.x);
+        return playerIsInFront;
+    }
+
 
     public void walk(){
-        if (position.x > target.position.x){
+        if (position.x > target.position.x) {
             moveLaterally(-speed);
-        }
-        else {
+            isLookingRight = false;
+        } else {
             moveLaterally(speed);
+            isLookingRight = true;
         }
     }
 
