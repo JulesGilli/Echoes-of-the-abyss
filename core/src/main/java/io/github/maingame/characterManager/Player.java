@@ -22,7 +22,7 @@ public class Player extends Entity {
     private boolean isRolling = false;
     private float rollDuration = 0.7f;
     private float rollTimer = 0f;
-    private float rollSpeed = 800;
+    private float rollSpeed = 600;
 
     public Player(Vector2 position, List<Platform> platforms, int leftKey, int rightKey, int jumpKey, int attackKey, int rollKey){
         super(position, new AnimationManager("_Run.png","_Idle.png","_Jump.png",
