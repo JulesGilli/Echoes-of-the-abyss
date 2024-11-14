@@ -77,7 +77,7 @@ public class Player extends Entity {
 
             if (isAttacking) {
                 for (Enemy enemy : enemies) {
-                    if (isCollidingWith(enemy, attackRange)) {
+                    if (isCollidingWith(enemy, attackRange) && isEnemyInFront(enemy)) {
                         enemy.receiveDamage(getAttack());
                     }
                 }
@@ -98,6 +98,13 @@ public class Player extends Entity {
         }
     }
 
+    private boolean isEnemyInFront(Enemy enemy) {
+        if (isLookingRight && enemy.getPosition().x > position.x) {
+            return true;
+        }
+        return !isLookingRight && enemy.getPosition().x < position.x;
+    }
+
     @Override
     public void receiveDamage(float damage) {
         if (isDead || isRolling) return;
@@ -109,8 +116,6 @@ public class Player extends Entity {
             animationTime = 0f;
         }
     }
-
-
 
     private void handleInput(float delta) {
         if (isAttacking || isRolling || isDead) return;
