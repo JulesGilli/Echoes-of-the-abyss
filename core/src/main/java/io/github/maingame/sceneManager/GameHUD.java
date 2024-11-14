@@ -69,8 +69,8 @@ public class GameHUD {
         float buttonWidth = 450;
         float buttonHeight = 200;
 
-        resumeButtonBounds = new Rectangle(screenWidth / 2 - buttonWidth / 2, screenHeight / 2 + 100, buttonWidth, buttonHeight);
-        mainMenuButtonBounds = new Rectangle(screenWidth / 2 - buttonWidth / 2, screenHeight / 2, buttonWidth, buttonHeight);
+        resumeButtonBounds = new Rectangle(screenWidth / 2 - buttonWidth / 2, screenHeight / 2 + 80, buttonWidth, buttonHeight);
+        mainMenuButtonBounds = new Rectangle(screenWidth / 2 - buttonWidth / 2, screenHeight / 2 - 80, buttonWidth, buttonHeight);
         quitButtonBounds = new Rectangle(screenWidth / 2 - buttonWidth / 2, screenHeight / 2 - 240, buttonWidth, buttonHeight);
         shopButtonBounds = new Rectangle(screenWidth / 2 - buttonWidth / 2, screenHeight / 2 - 120, buttonWidth, buttonHeight);
     }
@@ -82,6 +82,7 @@ public class GameHUD {
         float screenHeight = Gdx.graphics.getHeight();
         batch.draw(backgroundGUI, screenWidth / 2 - backgroundGUI.getWidth() / 1.4f, screenHeight / 2 - backgroundGUI.getHeight() / 1.4f, 600, 800);
 
+        menuFont.draw(batch, "Options", screenWidth / 2 - 100, screenHeight - 200);
 
         batch.draw(buttonMenu, resumeButtonBounds.x, resumeButtonBounds.y, resumeButtonBounds.width, resumeButtonBounds.height);
         batch.draw(buttonMenu, mainMenuButtonBounds.x, mainMenuButtonBounds.y, mainMenuButtonBounds.width, mainMenuButtonBounds.height);
