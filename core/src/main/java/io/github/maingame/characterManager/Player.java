@@ -3,6 +3,7 @@ package io.github.maingame.characterManager;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import io.github.maingame.Platform;
 import io.github.maingame.design2dManager.AnimationManager;
@@ -49,7 +50,7 @@ public class Player extends Entity {
         this.attackRange = 200;
     }
 
-    public void update(float delta, List<Enemy> enemies) {
+    public void update(float delta, List<Enemy> enemies, float leftBoundary, float rightBoundary) {
         if (health <= 0 && !isDead) {
             isDead = true;
             isAttacking = false;
@@ -68,10 +69,12 @@ public class Player extends Entity {
             } else {
             velocity.x = isLookingRight ? rollSpeed : -rollSpeed;
             position.add(velocity.cpy().scl(delta));
-        }
+            }
         } else {
             handleInput(delta);
             animationTime += delta;
+
+            position.x = MathUtils.clamp(position.x, leftBoundary, rightBoundary - renderWidth);
 
             if (isAttacking) {
                 if (!hasHitEnemy) {

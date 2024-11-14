@@ -26,8 +26,8 @@ public class Platform implements lifeCycle {
 
     public static void createPlatforms() {
         platforms.clear();
-        platforms.add(new Platform(0, 0, 1400, 140, platformTexture));
-        platforms.add(new Platform(1400, 0, 1400, 140, platformTexture));
+        platforms.add(new Platform(0, 0, 1500, 150, platformTexture));
+        platforms.add(new Platform(1500, 0, 1500, 150, platformTexture));
     }
 
     public static List<Platform> getPlatforms() {
