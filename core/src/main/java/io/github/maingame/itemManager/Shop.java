@@ -2,12 +2,8 @@ package io.github.maingame.itemManager;
 
 import io.github.maingame.characterManager.Player;
 import io.github.maingame.utilsManager.GameStat;
-
-import javax.tools.Tool;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 
 public class Shop {
@@ -22,9 +18,9 @@ public class Shop {
             items.add(new Armor(i));
         }
         items.add(new SpeedPotion(1));
-        for (int i = 1; i < 4; i++){
-            items.add(new Weapon(i));
-        }
+        items.add(new HealPotion(2));
+        items.add(new StrenghtPotion(3));
+        items.add(new ArmorPotion(1));
     }
 
     public boolean isAvailable(Item item){

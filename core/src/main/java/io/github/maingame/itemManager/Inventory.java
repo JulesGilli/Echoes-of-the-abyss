@@ -17,7 +17,7 @@ public class Inventory {
         items.remove(item);
     }
 
-    public void applyGears(Entity entity) {
+    public void applyGears(Player entity) {
         for (Item item : items) {
             if (item instanceof Gear){
                 ((Gear) item).applyItem(entity);
