@@ -199,6 +199,14 @@ public abstract class Entity implements lifeCycle{
         this.armor = armor;
     }
 
+    public void setHealth(float health) {
+        this.health = health;
+    }
+
+    public int getArmor() {
+        return armor;
+    }
+
     public void dispose(){
         animation.getIdleCase().getKeyFrames()[0].getTexture().dispose();
         animation.getAttackCase().getKeyFrames()[0].getTexture().dispose();
