@@ -31,6 +31,9 @@ public class Enemy extends Entity {
 
     private boolean hasHitPlayer = false;
 
+    private float invulnerabilityDuration = 0.5f;
+    private float invulnerabilityTimer = 0f;
+
 
     public Enemy(Vector2 position, List<Platform> platforms, Player player, GameStat gameStat) {
         super(position, new AnimationManager("_RunEnemy.png","_IdleEnemy.png","_Jump.png","_AttackEnemy.png","_DeathEnemy.png","_Roll.png", 120, 80, 0.1f,0.1f), 50 * (1 + (gameStat.getFloors() / 20f)), 10, 10 * (1 + (gameStat.getFloors() / 20f)));
@@ -115,9 +118,8 @@ public class Enemy extends Entity {
 
     @Override
     public void receiveDamage(float damage) {
-        if (!isDying) {
+        if (!isDying && invulnerabilityTimer <= 0) {
             health -= damage;
-            System.out.println("Enemy prend " + damage + " damage, vie restante : " + health);
 
             damageTexts.add(new DamageText("-" + (int)damage, new Vector2(position.x, position.y)));
 
@@ -125,6 +127,8 @@ public class Enemy extends Entity {
                 isDying = true;
                 animationTime = 0f;
                 goldText.add(new GoldText("+5", new Vector2(position.x, position.y)));
+            } else {
+                invulnerabilityTimer = invulnerabilityDuration;
             }
         }
 
@@ -142,6 +146,10 @@ public class Enemy extends Entity {
                 isDead = true;
             }
         } else {
+            if (invulnerabilityTimer > 0) {
+                invulnerabilityTimer -= delta;
+            }
+
             makeAction(delta);
             animationTime += delta;
 

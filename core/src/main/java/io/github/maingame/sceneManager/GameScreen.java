@@ -99,6 +99,10 @@ public class GameScreen extends ScreenAdapter {
     @Override
     public void render(float delta) {
 
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+            isPaused = !isPaused;
+        }
+
         if (isPaused) {
             hud.renderPauseMenu(batch);
             return;
@@ -140,11 +144,6 @@ public class GameScreen extends ScreenAdapter {
         batch.begin();
         hud.render(batch, player, screenWidth, screenHeight, isGameOver);
         batch.end();
-
-
-        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
-            isPaused = true;
-        }
 
         if (spawnList.isEmpty() && enemies.isEmpty()) {
             onPlayerReachNewFloor();

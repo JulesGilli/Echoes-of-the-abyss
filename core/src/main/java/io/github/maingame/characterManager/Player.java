@@ -11,7 +11,6 @@ import io.github.maingame.design2dManager.AnimationManager;
 import java.util.List;
 
 public class Player extends Entity {
-    private boolean hasHitEnemy = false;
     private boolean isDead = false;
 
     private int leftKey;
@@ -21,13 +20,13 @@ public class Player extends Entity {
     private int rollKey;
 
     private boolean isRolling = false;
-    private float rollDuration = 0.7f;
+    private float rollDuration = 0.5f;
     private float rollTimer = 0f;
-    private float rollSpeed = 600;
+    private float rollSpeed = 700;
 
     public Player(Vector2 position, List<Platform> platforms, int leftKey, int rightKey, int jumpKey, int attackKey, int rollKey){
         super(position, new AnimationManager("_Run.png","_Idle.png","_Jump.png",
-            "_Attack.png","_Death.png","_Roll.png", 120, 80, 0.1f,0.06f),
+            "_Attack.png","_Death.png","_Roll.png", 120, 80, 0.1f,0.04f),
             300,100, 25);
 
         this.leftKey = leftKey;
@@ -77,18 +76,13 @@ public class Player extends Entity {
             position.x = MathUtils.clamp(position.x, leftBoundary, rightBoundary - renderWidth);
 
             if (isAttacking) {
-                if (!hasHitEnemy) {
-                    for (Enemy enemy : enemies) {
-                        if (isCollidingWith(enemy, attackRange)) {
-                            enemy.receiveDamage(getAttack());
-                            hasHitEnemy = true;
-                            break;
-                        }
+                for (Enemy enemy : enemies) {
+                    if (isCollidingWith(enemy, attackRange)) {
+                        enemy.receiveDamage(getAttack());
                     }
                 }
                 checkAttackFinish();
             } else {
-                hasHitEnemy = false;
                 applyGravity();
                 for (Platform platform : platforms) {
                     if (isOnPlatform(platform) && velocity.y <= 0) {
@@ -186,7 +180,6 @@ public class Player extends Entity {
         attackDamage = initialAttack;
         isDead = false;
         isAttacking = false;
-        hasHitEnemy = false;
         velocity.set(0, 0);
         animationTime = 0f;
     }
