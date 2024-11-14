@@ -3,8 +3,8 @@ package io.github.maingame.itemManager;
 import io.github.maingame.characterManager.Entity;
 
 public abstract class Gear extends Item {
-    public Gear(String name, int gold, String textureName, String textureBuyName) {
-        super(name, gold, textureName, textureBuyName);
+    public Gear(int gold, String textureName, String textureBuyName) {
+        super( gold, textureName, textureBuyName);
     }
 
     public void applyItem(Entity target) {

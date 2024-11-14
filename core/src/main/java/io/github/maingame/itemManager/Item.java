@@ -8,8 +8,7 @@ public abstract class Item {
     protected Texture textureAvailable;
     protected Texture textureDisabled;
 
-    public Item(String name, int value, String textureName, String textureDisabledName) {
-        this.name = name;
+    public Item(int value, String textureName, String textureDisabledName) {
         this.gold = value;
         this.textureAvailable = new Texture(textureName);
         this.textureDisabled = new Texture(textureDisabledName);
