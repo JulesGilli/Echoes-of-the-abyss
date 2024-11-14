@@ -1,48 +1,40 @@
 package io.github.maingame.itemManager;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import io.github.maingame.characterManager.Player;
 import io.github.maingame.utilsManager.GameStat;
-
-import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 
 public class Shop {
-    private List<Item> itemsAvailable;
-    private Map<Item, Integer> priceList;
+    private final List<Item> items = new ArrayList<>();
     private GameStat gameStat;
 
     public Shop(List<Item> itemsAvailable, GameStat gameStat) {
-        this.itemsAvailable = itemsAvailable;
-        this.priceList = new HashMap<>();
-        this.gameStat = gameStat;
-        for (Item item : itemsAvailable) {
-            priceList.put(item, item.gold);
+        for (int i = 1; i < 6; i++){
+            items.add(new Weapon(i));
         }
+        for (int i = 6; i <= 12; i++){
+            items.add(new Weapon(5));
+        }
+    }
 
+    public boolean isAvailable(Item item){
+        return true;
     }
 
     public boolean buyItem(Player player, Item item) {
-        int price = priceList.get(item);
-        if (player.getGold() >= price) {
-            player.setGold(player.getGold() - price);
-            return true;
+        if (isAvailable(item) && player.getGold() >= item.gold) {
+            player.setGold(player.getGold() - item.gold);
+                return true;
         }
         return false;
     }
 
-    public Map<Item, Integer> getPriceList() {
-        return priceList;
+    public List<Item> getItems() {
+        return items;
     }
 
-    public List<Item> getItemsAvailable() {
-        return itemsAvailable;
-    }
 }
