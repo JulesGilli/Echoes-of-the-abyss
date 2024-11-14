@@ -7,7 +7,6 @@ import io.github.maingame.Platform;
 import io.github.maingame.design2dManager.AnimationManager;
 
 import java.util.List;
-import java.lang.Math.*;
 
 public class Enemy extends Entity {
     private Player target;
@@ -40,7 +39,7 @@ public class Enemy extends Entity {
     }
 
     public void makeAction(){
-        if (isDead || attacking) return;
+        if (isDead || isAttacking) return;
 
         if (inRange()) {
             if (timeSinceLastAttack >= attackCooldown) {
@@ -72,7 +71,7 @@ public class Enemy extends Entity {
     @Override
     protected void checkAttackFinish() {
         if (animation.getAttackCase().isAnimationFinished(animationTime)) {
-            attacking = false;
+            isAttacking = false;
             hasHitPlayer = false;
             animationTime = 0f;
         }
@@ -116,7 +115,7 @@ public class Enemy extends Entity {
             makeAction();
             animationTime += delta;
 
-            if (attacking) {
+            if (isAttacking) {
                 checkAttackFinish();
             } else {
                 applyGravity();
@@ -135,9 +134,9 @@ public class Enemy extends Entity {
     public TextureRegion getCurrentFrame() {
         if (isDying) {
             return flipAnimationCheck(animation.getDeathCase().getKeyFrame(animationTime, false));
-        } else if (attacking) {
+        } else if (isAttacking) {
             return flipAnimationCheck(animation.getAttackCase().getKeyFrame(animationTime, true));
-        } else if (jumping) {
+        } else if (isJumping) {
             return flipAnimationCheck(animation.getJumpCase().getKeyFrame(animationTime, true));
         } else if (velocity.x != 0) {
             return flipAnimationCheck(animation.getWalkCase().getKeyFrame(animationTime, true));

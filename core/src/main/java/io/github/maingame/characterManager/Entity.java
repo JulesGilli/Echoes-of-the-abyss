@@ -8,14 +8,14 @@ import io.github.maingame.design2dManager.AnimationManager;
 import java.util.List;
 
 public abstract class Entity implements lifeCycle{
-    protected boolean walking = false;
-    protected boolean jumping = false;
-    protected boolean attacking = false;
+    protected boolean isWalking = false;
+    protected boolean isJumping = false;
+    protected boolean isAttacking = false;
     protected List<Platform> platforms;
     protected Vector2 position;
     protected Vector2 velocity;
     protected AnimationManager animation;
-    protected boolean lookingRight ;
+    protected boolean isLookingRight;
     protected float speed;
     protected float jumpVelocity;
     protected float gravity;
@@ -52,14 +52,14 @@ public abstract class Entity implements lifeCycle{
     }
 
     public void applyGravity(){
-        if (jumping) {
+        if (isJumping) {
             velocity.y += gravity;
         }
     }
 
     protected void checkAttackFinish(){
         if (animation.getAttackCase().isAnimationFinished(animationTime)) {
-            attacking = false;
+            isAttacking = false;
             animationTime = 0f;
         }
     }
@@ -74,7 +74,7 @@ public abstract class Entity implements lifeCycle{
     protected void applyPlatformPosition(Platform platform){
         position.y = platform.getBounds().y + platform.getBounds().height;
         velocity.y = 0;
-        jumping = false;
+        isJumping = false;
     }
 
     protected void checkOnPlatform(){
@@ -89,23 +89,23 @@ public abstract class Entity implements lifeCycle{
     protected void checkOnFloor(){
         if (position.y <= 0) {
             position.y = 0;
-            jumping = false;
+            isJumping = false;
         }
     }
 
 
 
     public TextureRegion flipAnimationCheck(TextureRegion currentFrame) {
-        if ((lookingRight && currentFrame.isFlipX()) || (!lookingRight && !currentFrame.isFlipX())) {
+        if ((isLookingRight && currentFrame.isFlipX()) || (!isLookingRight && !currentFrame.isFlipX())) {
             currentFrame.flip(true, false);
         }
         return currentFrame;
     }
 
     public TextureRegion getCurrentFrame() {
-        if (attacking) {
+        if (isAttacking) {
             return flipAnimationCheck(animation.getAttackCase().getKeyFrame(animationTime, true));
-        } else if (jumping) {
+        } else if (isJumping) {
             return flipAnimationCheck(animation.getJumpCase().getKeyFrame(animationTime, true));
         } else if (velocity.x != 0) {
             return flipAnimationCheck(animation.getWalkCase().getKeyFrame(animationTime, true));
@@ -119,21 +119,21 @@ public abstract class Entity implements lifeCycle{
     }
 
     public void jump(){
-        if (!jumping) {
+        if (!isJumping) {
             velocity.y = jumpVelocity;
         }
-        jumping=true;
+        isJumping =true;
     }
 
     public void attack(){
-        attacking = true;
+        isAttacking = true;
         animationTime = 0f;
     }
 
     public void moveLaterally(float SPEED){
         velocity.x = SPEED;
-        lookingRight = !(SPEED < 0);
-        walking = true;
+        isLookingRight = !(SPEED < 0);
+        isWalking = true;
     }
 
     public boolean isCollidingWith(Entity other, float attackRange) {

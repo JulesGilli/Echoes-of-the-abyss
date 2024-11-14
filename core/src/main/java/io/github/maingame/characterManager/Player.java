@@ -1,14 +1,12 @@
 package io.github.maingame.characterManager;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import io.github.maingame.Platform;
 import io.github.maingame.design2dManager.AnimationManager;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class Player extends Entity {
@@ -54,7 +52,7 @@ public class Player extends Entity {
     public void update(float delta, List<Enemy> enemies) {
         if (health <= 0 && !isDead) {
             isDead = true;
-            attacking = false;
+            isAttacking = false;
             isRolling = false;
             animationTime = 0f;
         }
@@ -68,14 +66,14 @@ public class Player extends Entity {
                 isRolling = false;
                 rollTimer = 0f;
             } else {
-            velocity.x = lookingRight ? rollSpeed : -rollSpeed;
+            velocity.x = isLookingRight ? rollSpeed : -rollSpeed;
             position.add(velocity.cpy().scl(delta));
         }
         } else {
             handleInput(delta);
             animationTime += delta;
 
-            if (attacking) {
+            if (isAttacking) {
                 if (!hasHitEnemy) {
                     for (Enemy enemy : enemies) {
                         if (isCollidingWith(enemy, attackRange)) {
@@ -93,7 +91,7 @@ public class Player extends Entity {
                     if (isOnPlatform(platform) && velocity.y <= 0) {
                         position.y = platform.getBounds().y + platform.getBounds().height;
                         velocity.y = 0;
-                        jumping = false;
+                        isJumping = false;
                         break;
                     }
                 }
@@ -118,30 +116,29 @@ public class Player extends Entity {
 
 
     private void handleInput(float delta) {
-        if (attacking || isRolling || isDead) return;
+        if (isAttacking || isRolling || isDead) return;
 
         if (Gdx.input.isKeyPressed(leftKey)) {
             velocity.x = -speed;
-            lookingRight = false;
+            isLookingRight = false;
         } else if (Gdx.input.isKeyPressed(rightKey)) {
             velocity.x = speed;
-            lookingRight = true;
+            isLookingRight = true;
         } else {
             idle();
         }
 
-        if (Gdx.input.isKeyJustPressed(jumpKey) && !jumping) {
+        if (Gdx.input.isKeyJustPressed(jumpKey) && !isJumping && !isRolling) {
             velocity.y = jumpVelocity;
-            jumping = true;
+            isJumping = true;
         }
 
-        if (Gdx.input.isKeyJustPressed(attackKey) && !attacking && !jumping) {
-            attacking = true;
-            jumping = false;
+        if (Gdx.input.isKeyJustPressed(attackKey) && !isAttacking && !isJumping) {
+            isAttacking = true;
             animationTime = 0f;
         }
 
-        if (Gdx.input.isKeyJustPressed(rollKey) && !isRolling) {
+        if (Gdx.input.isKeyJustPressed(rollKey) && !isRolling && !isJumping) {
             isRolling = true;
             animationTime = 0f;
             rollTimer = 0f;
@@ -154,9 +151,9 @@ public class Player extends Entity {
             return flipAnimationCheck(animation.getDeathCase().getKeyFrame(animationTime, false));
         } else if (isRolling) {
             return flipAnimationCheck(animation.getRollCase().getKeyFrame(animationTime, false));
-        } else if (attacking) {
+        } else if (isAttacking) {
             return flipAnimationCheck(animation.getAttackCase().getKeyFrame(animationTime, true));
-        } else if (jumping) {
+        } else if (isJumping) {
             return flipAnimationCheck(animation.getJumpCase().getKeyFrame(animationTime, true));
         } else if (velocity.x != 0) {
             return flipAnimationCheck(animation.getWalkCase().getKeyFrame(animationTime, true));
@@ -185,7 +182,7 @@ public class Player extends Entity {
         health = initialHealth;
         attackDamage = initialAttack;
         isDead = false;
-        attacking = false;
+        isAttacking = false;
         hasHitEnemy = false;
         velocity.set(0, 0);
         animationTime = 0f;
