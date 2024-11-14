@@ -9,19 +9,16 @@ import java.util.Map;
 
 
 public class Shop {
-    private List<Item> items = new ArrayList<>(new Weapon( ));
-    private Map<Item, Integer> priceListAvailableItem;
+    private final List<Item> items = new ArrayList<>();
     private GameStat gameStat;
 
     public Shop(List<Item> itemsAvailable, GameStat gameStat) {
-        this.priceList = new HashMap<>();
-        this.gameStat = gameStat;
-        for (Item item : items) {
-            if (isAvailable(item)) {
-                priceList.put(item, item.gold);
-            }
+        for (int i = 1; i < 6; i++){
+            items.add(new Weapon(i));
         }
-
+        for (int i = 6; i <= 12; i++){
+            items.add(new Weapon(5));
+        }
     }
 
     public boolean isAvailable(Item item){
@@ -29,19 +26,15 @@ public class Shop {
     }
 
     public boolean buyItem(Player player, Item item) {
-        int price = priceListAvailableItem.get(item);
-        if (player.getGold() >= price) {
-            player.setGold(player.getGold() - price);
-            return true;
+        if (isAvailable(item) && player.getGold() >= item.gold) {
+            player.setGold(player.getGold() - item.gold);
+                return true;
         }
         return false;
     }
 
-    public Map<Item, Integer> getPriceList() {
-        return priceList;
+    public List<Item> getItems() {
+        return items;
     }
 
-    public List<Item> getItemsAvailable() {
-        return itemsAvailable;
-    }
 }

@@ -13,4 +13,20 @@ public abstract class Item {
         this.textureAvailable = new Texture(textureName);
         this.textureDisabled = new Texture(textureDisabledName);
     }
+
+    public String getStrGold() {
+        return Integer.toString(this.gold);
+    }
+
+    public int getGold(){
+        return this.gold;
+    }
+
+    public Texture getTextureAvailable() {
+        return textureAvailable;
+    }
+
+    public Texture getTextureDisabled() {
+        return textureDisabled;
+    }
 }

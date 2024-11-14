@@ -3,6 +3,7 @@ package io.github.maingame;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import io.github.maingame.itemManager.Shop;
 import io.github.maingame.sceneManager.MainMenuScreen;
 import io.github.maingame.sceneManager.ShopScreen;
 import io.github.maingame.utilsManager.GameStat;
@@ -17,7 +18,7 @@ public class Main extends Game {
         camera = new OrthographicCamera();
         camera.setToOrtho(false, 1920, 1080);
 
-        this.setScreen(new MainMenuScreen(this));
+        this.setScreen(new ShopScreen(this,new GameStat()));
 
     }
 

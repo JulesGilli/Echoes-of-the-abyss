@@ -11,6 +11,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import io.github.maingame.itemManager.Item;
 import io.github.maingame.itemManager.Shop;
 import io.github.maingame.utilsManager.GameStat;
 import io.github.maingame.Main;
@@ -68,8 +69,9 @@ public class ShopScreen extends ScreenAdapter {
     }
 
     public Rectangle drawItem(int number){
-        font.draw(batch, "zbou", getItemAssetPosition(number).x, getItemAssetPosition(number).y);
-        font.draw(batch, "Gold", getItemGoldPosition(number).x, getItemGoldPosition(number).y);
+        List<Item> items = shop.getItems();
+        batch.draw(items.get(number).getTextureAvailable(), getItemAssetPosition(number).x + 10, getItemAssetPosition(number).y - 67, 75, 75);
+        font.draw(batch, items.get(number).getStrGold(), getItemGoldPosition(number).x, getItemGoldPosition(number).y);
         Rectangle rectangle = new Rectangle(getItemGoldPosition(0).x - 50 + number % 4 * 200, getItemGoldPosition(0).y - 50 - number / 4 * 200 , 200 , 200);
         return rectangle;
     }

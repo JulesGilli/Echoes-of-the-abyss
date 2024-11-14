@@ -41,4 +41,10 @@ public class Inventory {
 
         }
     }
+
+    public void resetInventory(Entity entity) {
+        for (Item item : items) {
+            removeItem(item);
+        }
+    }
 }
