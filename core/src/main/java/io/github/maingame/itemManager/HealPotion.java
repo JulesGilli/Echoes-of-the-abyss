@@ -3,16 +3,20 @@ package io.github.maingame.itemManager;
 import io.github.maingame.characterManager.Player;
 
 public class HealPotion extends Consumable{
+    private final int potionBonus;
     public HealPotion(int lvl) {
-        super(50 + 10 * lvl, 50,"assets/SpeedPotion.png","assets/SpeedPotion-1.png" );
+        super(50 + 10 * lvl, 50,"assets/HealPotion.png","assets/HealPotion-1.png" );
+        this.potionBonus = 50 + 5 * lvl;
     }
 
     @Override
-    public  void effectApply(Player targeEntity){
+    public  void effectApply(Player targetEntity){ targetEntity.setHealth(targetEntity.getHealth() + potionBonus );
     }
 
     @Override
     public void resetEffect(Player targetEntity){
-        targetEntity.setSpeedBonus(0);
+        if (targetEntity.getHealth() > targetEntity.getMaxHealth()){
+            targetEntity.setHealth(targetEntity.getMaxHealth());
+        }
     }
 }
