@@ -2,6 +2,8 @@ package io.github.maingame.itemManager;
 
 import io.github.maingame.characterManager.Player;
 import io.github.maingame.utilsManager.GameStat;
+
+import javax.tools.Tool;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -16,8 +18,12 @@ public class Shop {
         for (int i = 1; i < 6; i++){
             items.add(new Weapon(i));
         }
-        for (int i = 6; i <= 12; i++){
-            items.add(new Weapon(5));
+        for (int i = 1; i < 4; i++){
+            items.add(new Armor(i));
+        }
+        items.add(new SpeedPotion(1));
+        for (int i = 1; i < 4; i++){
+            items.add(new Weapon(i));
         }
     }
 
