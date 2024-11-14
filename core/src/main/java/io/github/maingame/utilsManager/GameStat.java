@@ -119,6 +119,10 @@ public class GameStat {
         this.kills = kills;
     }
 
+    public void addKills (int kills) {
+        this.kills += kills;
+    }
+
     public int getWaves() {
         return waves;
     }

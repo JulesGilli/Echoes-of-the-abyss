@@ -117,7 +117,8 @@ public class Player extends Entity {
         }
     }
 
-    private void handleInput(float delta) {
+
+    public void handleInput(float delta) {
         if (isAttacking || isRolling || isDead) return;
 
         if (Gdx.input.isKeyPressed(leftKey)) {
@@ -209,9 +210,29 @@ public class Player extends Entity {
         this.rollKey = rollKey;
     }
 
+    public boolean isDead() {
+        return isDead;
+    }
 
     @Override
     public void update(float delta) {
 
+    }
+
+    public boolean isLookingRight() {
+        return isLookingRight;
+    }
+
+    public double getInitialHealth() {
+        return maxHealth;
+    }
+
+
+    public void setLookingRight(boolean b) {
+        isLookingRight = b;
+    }
+
+    public boolean isJumping() {
+        return isJumping;
     }
 }
