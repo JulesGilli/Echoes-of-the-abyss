@@ -26,12 +26,15 @@ public class GameScreen extends ScreenAdapter {
     private final Texture background1, background2, background3, background4a, background4b;
     private final Player player;
     private final List<Enemy> enemies = new ArrayList<>();
+    private final List<Enemy> spawnList = new ArrayList<>();
+    private int baseEnemyCount = 3;
+
     private float timeSinceLastSpawn = 0f;
+    private float spawnDelay = 3.0f;
     private final Shop shop;
     private final GameStat stat;
     private final GameHUD hud;
     private OptionsScreen optionsScreen;
-
 
     private boolean isGameOver = false;
     private boolean isPaused = false;
@@ -56,6 +59,18 @@ public class GameScreen extends ScreenAdapter {
 
         updatePlayerKeys();
         Platform.createPlatforms();
+
+        setupFloorEnemies();
+    }
+
+    private void setupFloorEnemies() {
+        spawnList.clear();
+        int enemyCount = baseEnemyCount + stat.getFloors();
+        for (int i = 0; i < enemyCount; i++) {
+            spawnList.add(new Enemy(new Vector2(-200, 100), Platform.getPlatforms(), player));
+        }
+
+        spawnDelay = Math.max(1.0f, spawnDelay * 0.9f);
     }
 
     @Override
@@ -91,6 +106,11 @@ public class GameScreen extends ScreenAdapter {
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
             isPaused = true;
         }
+
+        if (spawnList.isEmpty() && enemies.isEmpty()) {
+            onPlayerReachNewFloor();
+            setupFloorEnemies();
+        }
     }
 
     public void updatePlayerKeys() {
@@ -115,11 +135,6 @@ public class GameScreen extends ScreenAdapter {
         }
     }
 
-    private void onPlayerReachNewFloor() {
-        stat.setFloors(stat.getFloors() + 1);
-    }
-
-
     public void resumeGame() {
         isPaused = false;
         updatePlayerKeys();
@@ -127,8 +142,11 @@ public class GameScreen extends ScreenAdapter {
 
     private void spawnEnemies(float delta) {
         timeSinceLastSpawn += delta;
-        if (timeSinceLastSpawn >= 3.0f) {
-            spawnEnemy();
+
+        if (!spawnList.isEmpty() && timeSinceLastSpawn >= spawnDelay) {
+            Enemy enemyToSpawn = spawnList.remove(0);
+            enemyToSpawn.getPosition().x = MathUtils.randomBoolean() ? -200 : Gdx.graphics.getWidth();
+            enemies.add(enemyToSpawn);
             timeSinceLastSpawn = 0f;
         }
 
@@ -144,10 +162,9 @@ public class GameScreen extends ScreenAdapter {
         }
     }
 
-    private void spawnEnemy() {
-        float spawnX = MathUtils.randomBoolean() ? -200 : Gdx.graphics.getWidth();
-        Enemy newEnemy = new Enemy(new Vector2(spawnX, 100), Platform.getPlatforms(), player);
-        enemies.add(newEnemy);
+    private void onPlayerReachNewFloor() {
+        stat.setFloors(stat.getFloors() + 1);
+        baseEnemyCount++;
     }
 
     private void resetGame() {
