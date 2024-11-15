@@ -167,9 +167,7 @@ public class Player extends Entity {
 
     public void equipItem(Item item) {
         if (item instanceof Gear) {
-            ((Gear) item).applyItem(this);
-        } else if (item instanceof Consumable) {
-            ((Consumable) item).effectApply(this);
+            item.applyItem(this);
         }
         inventory.addItem(item);
     }
@@ -230,13 +228,6 @@ public class Player extends Entity {
             if (item instanceof Gear) {
                 ((Gear) item).applyItem(this);
             }
-        }
-    }
-
-    public void useConsumable(Item item) {
-        if (item instanceof Consumable) {
-            ((Consumable) item).effectApply(this);
-            inventory.removeItem(item);
         }
     }
 

@@ -1,6 +1,8 @@
 package io.github.maingame.itemManager;
 
+import com.badlogic.gdx.Game;
 import io.github.maingame.characterManager.Player;
+import io.github.maingame.utilsManager.GameStat;
 
 public class StrenghtPotion extends Consumable{
     private final int strengthBoost;
@@ -10,12 +12,17 @@ public class StrenghtPotion extends Consumable{
     }
 
     @Override
-    public  void effectApply(Player targetEntity){
+    public void applyItem(Player targetEntity) {
         targetEntity.setAttackDamage(targetEntity.getAttack() + strengthBoost);
     }
 
     @Override
-    public void resetEffect(Player targetEntity){
+    public void resetItem(Player targetEntity) {
         targetEntity.setAttackDamage(targetEntity.getAttack() - strengthBoost);
+    }
+
+    @Override
+    public boolean isUnlocked(GameStat stat) {
+        return stat.getMaxFloors() > 4;
     }
 }

@@ -1,6 +1,7 @@
 package io.github.maingame.itemManager;
 
 import io.github.maingame.characterManager.Entity;
+import io.github.maingame.characterManager.Player;
 import io.github.maingame.utilsManager.GameStat;
 
 public class Weapon extends Gear{
@@ -11,13 +12,18 @@ public class Weapon extends Gear{
     }
 
     @Override
-    public void applyItem(Entity target) {
-        target.setAttackBonus((this).getAttackIncrease());
+    public void applyItem(Player targetEntity) {
+        targetEntity.setAttackBonus((this).getAttackIncrease());
     }
 
     @Override
-    public void resetItem(Entity target) {
-        target.setAttackBonus(0);
+    public void resetItem(Player targetEntity) {
+        targetEntity.setAttackBonus(0);
+    }
+
+    @Override
+    public boolean isUnlocked(GameStat stat) {
+        return true;
     }
 
     public int getAttackIncrease() {

@@ -55,6 +55,10 @@ public class GameStat {
         }
     }
 
+    public int getMaxFloors() {
+        return maxFloors;
+    }
+
     public void resetFloor() {
         setFloors(0);
     }

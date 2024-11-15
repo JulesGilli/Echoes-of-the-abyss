@@ -2,7 +2,7 @@ package io.github.maingame.itemManager;
 
 import com.badlogic.gdx.graphics.Texture;
 
-public abstract class Item {
+public abstract class Item implements ItemSolution{
     protected String name;
     protected int gold;
     protected Texture textureAvailable;

@@ -56,7 +56,7 @@ public class Inventory {
         }
     }
 
-    public void clear(Entity entity) {
+    public void clear(Player entity) {
         for (Item item : items) {
             if (item instanceof Gear){
                 ((Gear) item).resetItem(entity);
@@ -69,17 +69,16 @@ public class Inventory {
         for (Item item : items) {
             if (item instanceof Consumable){
                 Consumable consumable = (Consumable) item;
-                consumable.effectApply(target);
+                consumable.applyItem(target);
                 new Thread(() -> {
                     try {
                         Thread.sleep(consumable.getTimeDuration()* 1000L);
-                        consumable.resetEffect(target);
+                        consumable.resetItem(target);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
                 }).start();
             }
-
         }
     }
 

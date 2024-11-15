@@ -1,5 +1,6 @@
 package io.github.maingame.itemManager;
 import io.github.maingame.characterManager.Player;
+import io.github.maingame.utilsManager.GameStat;
 
 public class SpeedPotion extends Consumable {
     private final float SpeedIncrease;
@@ -10,12 +11,17 @@ public class SpeedPotion extends Consumable {
     }
 
     @Override
-    public  void effectApply(Player targetEntity){
+    public  void applyItem(Player targetEntity){
         targetEntity.setSpeedBonus(SpeedIncrease);
     }
 
     @Override
-    public void resetEffect(Player targetEntity){
+    public void resetItem(Player targetEntity){
         targetEntity.setSpeedBonus(0);
+    }
+
+    @Override
+    public boolean isUnlocked(GameStat stat) {
+        return stat.getMaxFloors() > 3;
     }
 }
