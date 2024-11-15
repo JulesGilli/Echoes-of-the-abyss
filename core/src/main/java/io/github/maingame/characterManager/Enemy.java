@@ -14,58 +14,36 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class Enemy extends Entity {
-    private Player target;
+public abstract class Enemy extends Entity {
+    protected Player target;
+    protected float range;
+    protected float attackCooldown = 1.5f;
+    protected float timeSinceLastAttack = 0f;
+    protected float attackDelay = 0.3f;
+    protected float attackDelayTimer = 0f;
 
-    private final List<DamageText> damageTexts = new ArrayList<>();
-    private final List<GoldText> goldText = new ArrayList<>();
+    protected boolean isDead = false;
+    protected boolean isDying = false;
+    protected boolean hasHitPlayer = false;
 
-    private float range;
-    private float attackCooldown = 1.5f;
-    private float timeSinceLastAttack = 0f;
-    private float attackDelay = 0.3f;
-    private float attackDelayTimer = 0f;
+    protected float invulnerabilityDuration = 0.5f;
+    protected float invulnerabilityTimer = 0f;
 
-    private boolean isDead = false;
-    private boolean isDying = false;
+    protected final List<DamageText> damageTexts = new ArrayList<>();
+    protected final List<GoldText> goldTexts = new ArrayList<>();
 
-    private boolean hasHitPlayer = false;
-
-    private float invulnerabilityDuration = 0.5f;
-    private float invulnerabilityTimer = 0f;
-
-
-    public Enemy(Vector2 position, List<Platform> platforms, Player player, GameStat gameStat) {
-
-        super(
-            position,
-            new AnimationManager(
-                "SkeletonWalk.png",
-                "SkeletonIdle.png",
-                "SkeletonWalk.png",
-                "SkeletonAttack.png",
-                "SkeletonDeath.png",
-                "SkeletonWalk.png",
-                150, 101,
-                0.1f, 0.1f
-            ),
-            50 * (1 + (gameStat.getFloors() / 50f)),
-            10,
-            10 * (1 + (gameStat.getFloors() / 50f))
-        );
-
-        TextureRegion firstFrame = animation.getIdleCase().getKeyFrames()[0];
-        this.renderWidth = firstFrame.getRegionWidth();
-        this.renderHeight = firstFrame.getRegionHeight();
-
+    public Enemy(Vector2 position, List<Platform> platforms, Player player, GameStat gameStat, AnimationManager animation, float health, float speed, float attackDamage, float range, float attackCooldown) {
+        super(position, animation, health, 10, attackDamage);
         this.target = player;
-        this.speed = 300;
-        this.jumpVelocity = 1200;
-        this.gravity = -25;
         this.platforms = platforms;
-        this.range = 200;
-        this.attackRange = 200;
+        this.speed = speed;
+        this.range = range;
+        this.attackCooldown = attackCooldown;
+    }
 
+    protected boolean isPlayerInFront() {
+        return (isLookingRight && target.getPosition().x > position.x) ||
+            (!isLookingRight && target.getPosition().x < position.x);
     }
 
     public boolean inRange() {
@@ -73,65 +51,11 @@ public class Enemy extends Entity {
         return distance <= range && isPlayerInFront();
     }
 
-    private boolean isPlayerInFront() {
-        return (isLookingRight && target.getPosition().x > position.x) ||
-            (!isLookingRight && target.getPosition().x < position.x);
-    }
-
-    public void makeAction(float delta){
-        if (isDead || isAttacking) return;
-
-        if (inRange()) {
-            attackDelayTimer += delta;
-            if (attackDelayTimer >= attackDelay && timeSinceLastAttack >= attackCooldown) {
-                attack();
-                timeSinceLastAttack = 0f;
-                attackDelayTimer = 0f;
-                hasHitPlayer = false;
-            } else {
-                idle();
-            }
-        } else {
-            attackDelayTimer = 0f;
-
-            if (!isPlayerInFront()) {
-                isLookingRight = target.getPosition().x > position.x;
-            }
-            walk();
-        }
-    }
-
-    @Override
-    protected void checkAttackFinish() {
-        if (animation.getAttackCase().isAnimationFinished(animationTime)) {
-            isAttacking = false;
-            animationTime = 0f;
-
-            if (!hasHitPlayer && isPlayerInAttackRange()) {
-                target.receiveDamage(attackDamage);
-                hasHitPlayer = true;
-            }
-        }
-    }
-
-    private boolean isPlayerInAttackRange() {
-        float distance = Math.abs(target.getPosition().x - position.x);
-
-        if (distance > attackRange) return false;
-
-        boolean playerIsInFront = (isLookingRight && target.getPosition().x > position.x) ||
-            (!isLookingRight && target.getPosition().x < position.x);
-        return playerIsInFront;
-    }
-
-
-    public void walk(){
-        if (position.x > target.position.x) {
-            moveLaterally(-speed);
-            isLookingRight = false;
-        } else {
+    public void walk() {
+        if (target.getPosition().x > position.x) {
             moveLaterally(speed);
-            isLookingRight = true;
+        } else {
+            moveLaterally(-speed);
         }
     }
 
@@ -140,20 +64,17 @@ public class Enemy extends Entity {
         if (!isDying && invulnerabilityTimer <= 0) {
             health -= damage;
 
-            damageTexts.add(new DamageText("-" + (int)damage, new Vector2(position.x, position.y)));
+            damageTexts.add(new DamageText("-" + (int) damage, new Vector2(position.x, position.y)));
 
             if (health <= 0) {
                 isDying = true;
                 animationTime = 0f;
-                goldText.add(new GoldText("+10", new Vector2(position.x, position.y)));
+                goldTexts.add(new GoldText("+10", new Vector2(position.x, position.y)));
             } else {
                 invulnerabilityTimer = invulnerabilityDuration;
             }
         }
-
     }
-
-
 
     @Override
     public void update(float delta) {
@@ -170,6 +91,7 @@ public class Enemy extends Entity {
             }
 
             makeAction(delta);
+
             animationTime += delta;
 
             if (isAttacking) {
@@ -183,8 +105,40 @@ public class Enemy extends Entity {
         }
     }
 
-    public boolean isDeathAnimationFinished() {
-        return isDead;
+    public abstract void makeAction(float delta);
+
+    @Override
+    public void render(SpriteBatch batch) {
+        super.render(batch);
+
+        TextureRegion currentFrame = getCurrentFrame();
+        batch.draw(
+            currentFrame,
+            position.x,
+            position.y,
+            renderWidth,
+            renderHeight
+        );
+
+        for (Iterator<DamageText> iterator = damageTexts.iterator(); iterator.hasNext(); ) {
+            DamageText damageText = iterator.next();
+            damageText.render(batch);
+            damageText.update(Gdx.graphics.getDeltaTime());
+            if (damageText.isExpired()) {
+                damageText.dispose();
+                iterator.remove();
+            }
+        }
+
+        for (Iterator<GoldText> iterator = goldTexts.iterator(); iterator.hasNext(); ) {
+            GoldText text = iterator.next();
+            text.render(batch);
+            text.update(Gdx.graphics.getDeltaTime());
+            if (text.isExpired()) {
+                text.dispose();
+                iterator.remove();
+            }
+        }
     }
 
     @Override
@@ -202,47 +156,27 @@ public class Enemy extends Entity {
         }
     }
 
+
     @Override
-    public void render(SpriteBatch batch) {
-        TextureRegion currentFrame = getCurrentFrame();
+    protected void checkAttackFinish() {
+        if (animation.getAttackCase().isAnimationFinished(animationTime)) {
+            isAttacking = false;
+            animationTime = 0f;
 
-        float scaleFactor = 3;
-        float aspectRatio = renderWidth / (float) renderHeight;
-
-        batch.draw(
-            currentFrame,
-            position.x,
-            position.y,
-            renderWidth * scaleFactor,
-            renderHeight * scaleFactor
-        );
-
-        for (Iterator<DamageText> iterator = damageTexts.iterator(); iterator.hasNext(); ) {
-            DamageText damageText = iterator.next();
-            damageText.render(batch);
-            damageText.update(Gdx.graphics.getDeltaTime());
-            if (damageText.isExpired()) {
-                damageText.dispose();
-                iterator.remove();
-            }
-        }
-
-        for (Iterator<GoldText> iterator = goldText.iterator(); iterator.hasNext(); ) {
-            GoldText text = iterator.next();
-            text.render(batch);
-            text.update(Gdx.graphics.getDeltaTime());
-            if (text.isExpired()) {
-                text.dispose();
-                iterator.remove();
+            if (!hasHitPlayer && inRange()) {
+                target.receiveDamage(attackDamage);
+                hasHitPlayer = true;
             }
         }
     }
 
-    public void dispose(){
-        animation.getIdleCase().getKeyFrames()[0].getTexture().dispose();
-        animation.getAttackCase().getKeyFrames()[0].getTexture().dispose();
-        animation.getJumpCase().getKeyFrames()[0].getTexture().dispose();
-        animation.getWalkCase().getKeyFrames()[0].getTexture().dispose();
-        animation.getDeathCase().getKeyFrames()[0].getTexture().dispose();
+    public boolean isDeathAnimationFinished() {
+        return isDead;
     }
+
+    public void setScaleFactor(float scaleFactor) {
+        this.renderWidth = (int) (this.animation.getIdleCase().getKeyFrames()[0].getRegionWidth() * scaleFactor);
+        this.renderHeight = (int) (this.animation.getIdleCase().getKeyFrames()[0].getRegionHeight() * scaleFactor);
+    }
+
 }
