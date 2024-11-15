@@ -55,6 +55,22 @@ public class GameStat {
         }
     }
 
+    public void resetFloor() {
+        setFloors(0);
+    }
+
+    public void addGold(int amount) {
+        golds += amount;
+    }
+
+    public void subtractGold(int amount) {
+        golds = Math.max(0, golds - amount);
+    }
+
+    public void resetFloors() {
+        this.floors = 0;
+    }
+
     public int getKillScore() {
         return kills;
     }

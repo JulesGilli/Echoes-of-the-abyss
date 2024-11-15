@@ -56,6 +56,10 @@ public class Inventory {
         }
     }
 
+    public void clear() {
+        items.clear();
+    }
+
     public void applyConsumable(Player target) {
         for (Item item : items) {
             if (item instanceof Consumable){
@@ -73,4 +77,17 @@ public class Inventory {
 
         }
     }
+
+    public void equipItem(Player player, Item item) {
+        if (item instanceof Gear) {
+            ((Gear) item).applyItem(player);
+        }
+        items.add(item);
+    }
+
+    public List<Item> getItems() {
+        return items;
+    }
+
+
 }

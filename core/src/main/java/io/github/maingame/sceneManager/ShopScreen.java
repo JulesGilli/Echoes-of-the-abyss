@@ -46,11 +46,16 @@ public class ShopScreen extends ScreenAdapter {
     private final com.badlogic.gdx.math.Rectangle playButtonBounds;
     private final com.badlogic.gdx.math.Rectangle quitButtonBounds;
 
-    public ShopScreen(Main game, GameStat stat) {
+    private final Player player;
+
+    public static boolean comingFromShop = false; // Flag pour indiquer un retour au jeu
+
+    public ShopScreen(Main game, GameStat stat, Player player) {
         this.game = game;
         this.stat = stat;
+        this.player = player;
         this.batch = new SpriteBatch();
-        this.shop = new Shop(new Inventory(), stat);
+        this.shop = new Shop(new Inventory(), stat, player);
         this.items = shop.getItems();
         stat.setGolds(400);
         shopWidth = 876 * shopSize;
@@ -102,17 +107,20 @@ public class ShopScreen extends ScreenAdapter {
     public void input( List<Rectangle> listButtons){
         if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
             Vector2 clickPosition = new Vector2(Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY());
+
             if (playButtonBounds.contains(clickPosition)) {
-                game.setScreen(new GameScreen(game));
+                comingFromShop = true;
+                game.setScreen(new GameScreen(game, stat, player));
             }
             if (quitButtonBounds.contains(clickPosition)) {
                 Gdx.app.exit();
             }
             for (int i = 0; i < 12; i++){
                 if (listButtons.get(i).contains(clickPosition)) {
-                    if (shop.buyItem(stat , items.get(i)))
-                    {
-                        System.out.println("buy Item :"+i);
+                    if (shop.buyItem(stat, items.get(i))) {
+                        System.out.println("Item acheté : " + items.get(i).getStrGold());
+                    } else {
+                        System.out.println("Achat échoué !");
                     }
                 }
             }

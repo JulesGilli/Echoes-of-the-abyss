@@ -29,7 +29,7 @@ public class GameScreen extends ScreenAdapter {
 
     private OrthographicCamera camera;
     private OrthographicCamera hudCamera;
-    private final Player player;
+    final Player player;
 
     private final List<Enemy> enemies = new ArrayList<>();
     private final List<Enemy> spawnList = new ArrayList<>();
@@ -53,14 +53,14 @@ public class GameScreen extends ScreenAdapter {
     private final float rightBoundary = 3200;
 
 
-    public GameScreen(Main game) {
+    public GameScreen(Main game, GameStat stat, Player player) {
         this.game = game;
+        this.stat = stat;
+        this.player = player;
+
         this.optionsScreen = new OptionsScreen(game);
         this.batch = game.batch;
-        this.stat = new GameStat();
-        this.player = new Player(new Vector2(100, 100), Platform.getPlatforms(),
-            optionsScreen.getLeftKey(), optionsScreen.getRightKey(),
-            optionsScreen.getJumpKey(), optionsScreen.getAttackKey(), optionsScreen.getRollKey());
+
         this.hud = new GameHUD(game, stat);
 
         camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
@@ -106,7 +106,7 @@ public class GameScreen extends ScreenAdapter {
             return;
         }
 
-        if (player.getHealth() <= 0) {
+        if (player.getHealth() <= 0 && player.isDeathAnimationFinished() && !isGameOver) {
             isGameOver = true;
             stat.saveGame();
         }
@@ -148,6 +148,24 @@ public class GameScreen extends ScreenAdapter {
             setupFloorEnemies();
         }
     }
+
+    @Override
+    public void show() {
+        if (ShopScreen.comingFromShop) {
+            player.prepareForNewGame();
+            stat.setFloors(0);
+            ShopScreen.comingFromShop = false;
+            resetGame();
+        }
+    }
+
+
+    public void prepareForNewGame() {
+        player.prepareForNewGame();
+        stat.setFloors(0);
+        resetGame();
+    }
+
 
     public void updatePlayerKeys() {
         player.setLeftKey(optionsScreen.getLeftKey());
@@ -234,7 +252,10 @@ public class GameScreen extends ScreenAdapter {
     private void resetGame() {
         player.reset();
         enemies.clear();
+        spawnList.clear();
         timeSinceLastSpawn = 0f;
+        baseEnemyCount = 3;
+        setupFloorEnemies();
         isGameOver = false;
     }
 

@@ -185,7 +185,7 @@ public class GameHUD {
             } else if (quitButtonBounds.contains(clickPosition)) {
                 Gdx.app.exit();
             } else if (shopButtonBounds.contains(clickPosition)) {
-                game.setScreen(new ShopScreen(game, stat));
+                game.setScreen(new ShopScreen(game, stat, ((GameScreen) game.getScreen()).player)); // Passez le joueur
             }
         }
     }

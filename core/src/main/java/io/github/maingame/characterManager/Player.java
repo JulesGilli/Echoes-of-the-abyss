@@ -7,6 +7,10 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import io.github.maingame.Platform;
 import io.github.maingame.design2dManager.AnimationManager;
+import io.github.maingame.itemManager.Consumable;
+import io.github.maingame.itemManager.Gear;
+import io.github.maingame.itemManager.Inventory;
+import io.github.maingame.itemManager.Item;
 
 import java.util.List;
 
@@ -24,6 +28,8 @@ public class Player extends Entity {
     private float rollTimer = 0f;
     private float rollSpeed = 700;
 
+    private Inventory inventory;
+
     public Player(Vector2 position, List<Platform> platforms, int leftKey, int rightKey, int jumpKey, int attackKey, int rollKey){
         super(position, new AnimationManager("_Run.png","_Idle.png","_Jump.png",
             "_Attack.png","_Death.png","_Roll.png", 120, 80, 0.1f,0.04f),
@@ -34,6 +40,8 @@ public class Player extends Entity {
         this.jumpKey = jumpKey;
         this.attackKey = attackKey;
         this.rollKey = rollKey;
+
+        this.inventory = new Inventory();
 
         this.initialPosition = new Vector2(position);
         this.initialHealth = health;
@@ -55,6 +63,8 @@ public class Player extends Entity {
             isAttacking = false;
             isRolling = false;
             animationTime = 0f;
+            reset();
+
         }
 
         if (isDead) {
@@ -148,6 +158,16 @@ public class Player extends Entity {
         }
     }
 
+    public void equipItem(Item item) {
+        if (item instanceof Gear) {
+            ((Gear) item).applyItem(this);
+        } else if (item instanceof Consumable) {
+            ((Consumable) item).effectApply(this);
+        }
+        inventory.addItem(item);
+    }
+
+
     @Override
     public TextureRegion getCurrentFrame() {
         if (isDead) {
@@ -180,6 +200,16 @@ public class Player extends Entity {
         animation.getDeathCase().getKeyFrames()[0].getTexture().dispose();
     }
 
+    public void prepareForNewGame() {
+        health = maxHealth;
+        position.set(initialPosition);
+        velocity.set(0, 0);
+        isDead = false;
+        inventory.applyGears(this);
+    }
+
+
+
     public void reset() {
         position.set(initialPosition);
         health = initialHealth;
@@ -188,7 +218,32 @@ public class Player extends Entity {
         isAttacking = false;
         velocity.set(0, 0);
         animationTime = 0f;
+
+        for (Item item : inventory.getItems()) {
+            if (item instanceof Gear) {
+                ((Gear) item).applyItem(this);
+            }
+        }
     }
+
+    public void useConsumable(Item item) {
+        if (item instanceof Consumable) {
+            ((Consumable) item).effectApply(this);
+            inventory.removeItem(item);
+        }
+    }
+
+    public void onDeath() {
+        isDead = true;
+        inventory.clear();
+        velocity.set(0, 0);
+        reset();
+    }
+
+    public boolean isDeathAnimationFinished() {
+        return isDead && animationTime >= animation.getDeathCase().getAnimationDuration();
+    }
+
 
     public void setLeftKey(int leftKey) {
         this.leftKey = leftKey;
@@ -234,5 +289,9 @@ public class Player extends Entity {
 
     public boolean isJumping() {
         return isJumping;
+    }
+
+    public Inventory getInventory() {
+        return inventory;
     }
 }

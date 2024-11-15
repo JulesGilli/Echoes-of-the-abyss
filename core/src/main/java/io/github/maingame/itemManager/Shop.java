@@ -1,6 +1,5 @@
 package io.github.maingame.itemManager;
 
-import com.badlogic.gdx.Game;
 import io.github.maingame.characterManager.Player;
 import io.github.maingame.utilsManager.GameStat;
 import java.util.ArrayList;
@@ -11,8 +10,13 @@ public class Shop {
     private final List<Item> items = new ArrayList<>();
     private GameStat gameStat;
     private Inventory inventory;
+    private Player player;
 
-    public Shop(Inventory inventory, GameStat gameStat) {
+    public Shop(Inventory inventory, GameStat gameStat, Player player) {
+        this.player = player;
+        this.inventory = inventory;
+        this.gameStat = gameStat;
+
         for (int i = 1; i < 6; i++){
             items.add(new Weapon(i));
         }
@@ -43,10 +47,13 @@ public class Shop {
     }
 
     public boolean buyItem(GameStat stat, Item item) {
+        if (player == null) {
+            throw new IllegalStateException("Le joueur n'a pas été initialisé correctement.");
+        }
         if (isAvailable(item) && stat.getGolds() >= item.gold) {
             stat.setGolds(stat.getGolds() - item.gold);
-            inventory.addItem(item);
-                return true;
+            player.equipItem(item);
+            return true;
         }
         return false;
     }

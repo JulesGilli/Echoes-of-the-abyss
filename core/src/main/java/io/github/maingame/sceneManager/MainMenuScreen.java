@@ -12,6 +12,9 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import io.github.maingame.Main;
+import io.github.maingame.Platform;
+import io.github.maingame.characterManager.Player;
+import io.github.maingame.utilsManager.GameStat;
 
 public class MainMenuScreen extends ScreenAdapter {
     private final Main game;
@@ -85,8 +88,14 @@ public class MainMenuScreen extends ScreenAdapter {
             Vector2 clickPosition = new Vector2(Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY());
 
             if (playButtonBounds.contains(clickPosition)) {
-                game.setScreen(new GameScreen(game));
+                GameStat stat = new GameStat();
+                Player player = new Player(new Vector2(100, 100), Platform.getPlatforms(),
+                    Input.Keys.A, Input.Keys.D, Input.Keys.SPACE,
+                    Input.Keys.F, Input.Keys.SHIFT_LEFT);
+                stat.loadGame();
+                game.setScreen(new GameScreen(game, stat, player));
             }
+
 
             if (optionButtonBounds.contains(clickPosition)) {
                 game.setScreen(new OptionsScreen(game));
