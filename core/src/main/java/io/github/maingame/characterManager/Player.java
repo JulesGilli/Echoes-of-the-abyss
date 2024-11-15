@@ -119,7 +119,8 @@ public class Player extends Entity {
     public void receiveDamage(float damage) {
         if (isDead || isRolling) return;
 
-        this.health -= damage - armor;
+        float reducedDamage = Math.max(0, damage - armor);
+        this.health -= reducedDamage;
 
         if (this.health <= 0) {
             isDead = true;

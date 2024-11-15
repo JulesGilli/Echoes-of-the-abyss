@@ -6,7 +6,7 @@ public class Weapon extends Gear{
     protected int attackIncrease;
     public Weapon(int lvl) {
         super(50 + 150 * lvl,"assets/Weapon_t"+lvl+".png","assets/Weapon_t"+lvl+"_Buy.png");
-        this.attackIncrease = 15 + 5 * lvl;
+        this.attackIncrease = 5 + 10 * lvl;
     }
 
     public int getAttackIncrease() {
