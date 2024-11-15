@@ -36,7 +36,15 @@ public class Enemy extends Entity {
 
 
     public Enemy(Vector2 position, List<Platform> platforms, Player player, GameStat gameStat) {
-        super(position, new AnimationManager("_RunEnemy.png","_IdleEnemy.png","_Jump.png","_AttackEnemy.png","_DeathEnemy.png","_Roll.png", 120, 80, 0.1f,0.1f), 50 * (1 + (gameStat.getFloors() / 20f)), 10, 10 * (1 + (gameStat.getFloors() / 20f)));
+        super(
+            position,
+            new AnimationManager("_RunEnemy.png", "_IdleEnemy.png", "_Jump.png",
+                "_AttackEnemy.png", "_DeathEnemy.png", "_Roll.png",
+                120, 80, 0.1f, 0.1f),
+            50 * (1 + (gameStat.getFloors() / 50f)),
+            10,
+            10 * (1 + (gameStat.getFloors() / 50f))
+        );
         this.target = player;
         this.speed = 300;
         this.jumpVelocity = 1200;
@@ -126,7 +134,7 @@ public class Enemy extends Entity {
             if (health <= 0) {
                 isDying = true;
                 animationTime = 0f;
-                goldText.add(new GoldText("+5", new Vector2(position.x, position.y)));
+                goldText.add(new GoldText("+10", new Vector2(position.x, position.y)));
             } else {
                 invulnerabilityTimer = invulnerabilityDuration;
             }
