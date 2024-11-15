@@ -45,9 +45,9 @@ public class GameStat {
             GameStat loadedData = json.fromJson(GameStat.class, Gdx.files.local("saveData.json").readString());
             this.golds = loadedData.golds;
             this.kills = loadedData.kills;
-            this.floors = loadedData.floors;
             this.waves = loadedData.waves;
             this.deaths = loadedData.deaths;
+            this.maxFloors = loadedData.maxFloors;
             this.gameOver = loadedData.gameOver;
         }
     }
@@ -92,5 +92,12 @@ public class GameStat {
     public void setWaves(int waves) {
         this.waves = waves;
     }
-}
 
+    public int getMaxFloors() {
+        return maxFloors;
+    }
+
+    public void setMaxFloors(int maxFloors) {
+        this.maxFloors = maxFloors;
+    }
+}

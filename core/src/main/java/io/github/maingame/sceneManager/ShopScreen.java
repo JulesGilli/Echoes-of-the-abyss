@@ -80,7 +80,7 @@ public class ShopScreen extends ScreenAdapter {
 
     public Rectangle drawItem(int number){
         Item item = items.get(number);
-        if (item.isUnlocked(stat))
+        if (!item.isUnlocked(stat))
         {
             batch.draw(item.getTextureAvailable(), getItemAssetPosition(number).x + 10, getItemAssetPosition(number).y - 67, 75, 75);
         }
@@ -123,10 +123,17 @@ public class ShopScreen extends ScreenAdapter {
             }
             for (int i = 0; i < 12; i++){
                 if (listButtons.get(i).contains(clickPosition)) {
-                    if (shop.buyItem(stat, items.get(i))) {
-                        System.out.println("Item acheté : " + items.get(i).getStrGold());
+                    if (items.get(i).isUnlocked(stat)) {
+                        if (shop.buyItem(stat, items.get(i))) {
+                            batch.draw(items.get(i).getTextureDisabled(), getItemAssetPosition(i).x + 10, getItemAssetPosition(i).y - 67, 75, 75);
+                            font.draw(batch, "bought", getItemGoldPosition(i).x - 50, getItemGoldPosition(i).y);
+                            System.out.println("Item acheté : " + items.get(i).getStrGold());
+
+                        } else {
+                            System.out.println("Achat échoué !");
+                        }
                     } else {
-                        System.out.println("Achat échoué !");
+                        System.out.println("Item non débloqué");;
                     }
                 }
             }
