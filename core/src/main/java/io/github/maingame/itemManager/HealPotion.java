@@ -23,6 +23,6 @@ public class HealPotion extends Consumable{
 
     @Override
     public boolean isUnlocked(GameStat stat) {
-        return stat.getFloors() > 1;
+        return stat.getMaxFloors() > 1;
     }
 }

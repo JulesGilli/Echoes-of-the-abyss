@@ -35,6 +35,7 @@ public class Shop {
         if (gameStat.getGolds() < item.getGold())
             return false;
         if (item instanceof Weapon){
+
             return !inventory.containWeapon();
         }
         if (item instanceof Armor){
@@ -52,6 +53,7 @@ public class Shop {
         }
         if (isAvailable(item) && stat.getGolds() >= item.gold) {
             stat.setGolds(stat.getGolds() - item.gold);
+            inventory.addItem(item);
             player.equipItem(item);
             return true;
         }

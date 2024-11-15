@@ -13,8 +13,6 @@ import io.github.maingame.Main;
 import io.github.maingame.Platform;
 import io.github.maingame.characterManager.*;
 import io.github.maingame.design2dManager.TextureManager;
-import io.github.maingame.itemManager.Inventory;
-import io.github.maingame.itemManager.Shop;
 import io.github.maingame.utilsManager.GameStat;
 
 import java.util.ArrayList;
@@ -85,7 +83,6 @@ public class GameScreen extends ScreenAdapter {
     }
 
     private void setupFloorEnemies() {
-        stat.setWaves(stat.getWaves() + 1);
         spawnList.clear();
         int enemyCount = baseEnemyCount + stat.getFloors();
 
@@ -256,6 +253,7 @@ public class GameScreen extends ScreenAdapter {
 
     private void onPlayerReachNewFloor() {
         stat.setFloors(stat.getFloors() + 1);
+        stat.setMaxFloors(Math.max(stat.getFloors(), stat.getMaxFloors()));
         baseEnemyCount++;
     }
 

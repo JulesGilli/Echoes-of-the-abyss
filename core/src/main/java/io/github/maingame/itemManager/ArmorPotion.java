@@ -22,6 +22,6 @@ public class ArmorPotion extends Consumable {
 
     @Override
     public boolean isUnlocked(GameStat stat) {
-        return stat.getFloors() > 6;
+        return stat.getMaxFloors() > 6;
     }
 }

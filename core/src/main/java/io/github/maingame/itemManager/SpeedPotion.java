@@ -22,6 +22,6 @@ public class SpeedPotion extends Consumable {
 
     @Override
     public boolean isUnlocked(GameStat stat) {
-        return stat.getFloors() > 3;
+        return stat.getMaxFloors() > 3;
     }
 }
