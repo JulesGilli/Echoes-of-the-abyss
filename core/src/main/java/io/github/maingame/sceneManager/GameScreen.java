@@ -87,18 +87,48 @@ public class GameScreen extends ScreenAdapter {
     private void setupFloorEnemies() {
         stat.setWaves(stat.getWaves() + 1);
         spawnList.clear();
+
         int enemyCount = baseEnemyCount + stat.getFloors();
 
         for (int i = 0; i < enemyCount; i++) {
-            Enemy enemy = EnemyFactory.createRandomEnemy(new Vector2(-200, 100), Platform.getPlatforms(), player, stat);
+            Enemy enemy;
+            if (stat.getWaves() <= 3) {
+                enemy = new Skeleton(new Vector2(-200, 100), Platform.getPlatforms(), player, stat);
+            } else if (stat.getWaves() <= 6) {
+                if (MathUtils.randomBoolean(0.7f)) {
+                    enemy = new Skeleton(new Vector2(-200, 100), Platform.getPlatforms(), player, stat);
+                } else {
+                    enemy = new Goblin(new Vector2(-200, 100), Platform.getPlatforms(), player, stat);
+                }
+            } else if (stat.getWaves() <= 9) {
+                float random = MathUtils.random();
+                if (random < 0.5f) {
+                    enemy = new Skeleton(new Vector2(-200, 100), Platform.getPlatforms(), player, stat);
+                } else if (random < 0.8f) {
+                    enemy = new Goblin(new Vector2(-200, 100), Platform.getPlatforms(), player, stat);
+                } else {
+                    enemy = new Mushroom(new Vector2(-200, 100), Platform.getPlatforms(), player, stat);
+                }
+            } else {
+                float random = MathUtils.random();
+                if (random < 0.4f) {
+                    enemy = new Skeleton(new Vector2(-200, 100), Platform.getPlatforms(), player, stat);
+                } else if (random < 0.7f) {
+                    enemy = new Goblin(new Vector2(-200, 100), Platform.getPlatforms(), player, stat);
+                } else {
+                    enemy = new Mushroom(new Vector2(-200, 100), Platform.getPlatforms(), player, stat);
+                }/* else {
+                    enemy = new Skeleton(new Vector2(-200, 100), Platform.getPlatforms(), player, stat);
+                }*/
+            }
 
             enemy.setScaleFactor(3f);
-
             spawnList.add(enemy);
         }
 
         spawnDelay = Math.max(1.0f, spawnDelay * 0.95f);
     }
+
 
 
 

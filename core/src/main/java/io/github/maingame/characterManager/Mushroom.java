@@ -7,30 +7,30 @@ import io.github.maingame.utilsManager.GameStat;
 
 import java.util.List;
 
-public class Goblin extends Enemy {
+public class Mushroom extends Enemy {
 
     private float attackDelayTimer = 0f;
 
-    public Goblin(Vector2 position, List<Platform> platforms, Player player, GameStat gameStat) {
+    public Mushroom(Vector2 position, List<Platform> platforms, Player player, GameStat gameStat) {
         super(
             position,
             platforms,
             player,
             gameStat,
             new AnimationManager(
-                "GoblinWalk.png",
-                "GoblinIdle.png",
-                "GoblinWalk.png",
-                "GoblinAttack.png",
-                "GoblinDeath.png",
-                "GoblinWalk.png",
-                150, 101, 0.15f, 0.1f
+                "MushroomWalk.png",
+                "MushroomIdle.png",
+                "MushroomWalk.png",
+                "MushroomAttack.png",
+                "MushroomDeath.png",
+                "MushroomWalk.png",
+                150, 101, 0.2f, 0.15f
             ),
-            30,
-            400,
-            5,
-            150,
-            1.2f
+            80,
+            200,
+            10,
+            100,
+            1.5f
         );
     }
 

@@ -7,30 +7,30 @@ import io.github.maingame.utilsManager.GameStat;
 
 import java.util.List;
 
-public class Goblin extends Enemy {
+public class FlyingEye extends Enemy {
 
     private float attackDelayTimer = 0f;
 
-    public Goblin(Vector2 position, List<Platform> platforms, Player player, GameStat gameStat) {
+    public FlyingEye(Vector2 position, List<Platform> platforms, Player player, GameStat gameStat) {
         super(
             position,
             platforms,
             player,
             gameStat,
             new AnimationManager(
-                "GoblinWalk.png",
-                "GoblinIdle.png",
-                "GoblinWalk.png",
-                "GoblinAttack.png",
-                "GoblinDeath.png",
-                "GoblinWalk.png",
-                150, 101, 0.15f, 0.1f
+                "FlyingEyeFly.png",
+                "FlyingEyeIdle.png",
+                "FlyingEyeFly.png",
+                "FlyingEyeAttack.png",
+                "FlyingEyeDeath.png",
+                "FlyingEyeWalkfq.png",
+                120, 101, 0.1f, 0.1f
             ),
-            30,
-            400,
-            5,
-            150,
-            1.2f
+            20,
+            500,
+            8,
+            250,
+            1.0f
         );
     }
 
