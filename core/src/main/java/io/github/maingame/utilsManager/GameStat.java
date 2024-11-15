@@ -14,14 +14,12 @@ public class GameStat {
     private int deaths;
     private boolean gameOver;
 
-    public GameStat(){
+    public GameStat() {
         this.golds = 0;
         this.kills = 0;
-        this.killStreak = 0;
         this.waves = 0;
         this.maxFloors = 0;
         this.deaths = 0;
-        this.floors = 0;
         this.gameOver = false;
     }
 
@@ -47,72 +45,11 @@ public class GameStat {
             GameStat loadedData = json.fromJson(GameStat.class, Gdx.files.local("saveData.json").readString());
             this.golds = loadedData.golds;
             this.kills = loadedData.kills;
-            this.maxFloors = loadedData.maxFloors;
-            this.killStreak = loadedData.killStreak;
+            this.floors = loadedData.floors;
             this.waves = loadedData.waves;
             this.deaths = loadedData.deaths;
             this.gameOver = loadedData.gameOver;
         }
-    }
-
-    public int getMaxFloors() {
-        return maxFloors;
-    }
-
-    public void resetFloor() {
-        setFloors(0);
-    }
-
-    public void addGold(int amount) {
-        golds += amount;
-    }
-
-    public void subtractGold(int amount) {
-        golds = Math.max(0, golds - amount);
-    }
-
-    public void resetFloors() {
-        this.floors = 0;
-    }
-
-    public int getKillScore() {
-        return kills;
-    }
-
-    public void setKillScore(int killScore) {
-        this.kills = killScore;
-    }
-
-    public int getTotalGold() {
-        return golds;
-    }
-
-    public void setTotalGold(int totalGold) {
-        this.golds = totalGold;
-    }
-
-    public int getKillStreak() {
-        return killStreak;
-    }
-
-    public void setKillStreak(int killStreak) {
-        this.killStreak = killStreak;
-    }
-
-    public boolean isGameOver() {
-        return gameOver;
-    }
-
-    public void setGameState(boolean gameOver) {
-        this.gameOver = gameOver;
-    }
-
-    public int getDeaths() {
-        return deaths;
-    }
-
-    public void setDeaths(int deaths) {
-        this.deaths = deaths;
     }
 
     public int getFloors() {
@@ -131,6 +68,14 @@ public class GameStat {
         this.golds = golds;
     }
 
+    public int getDeaths() {
+        return deaths;
+    }
+
+    public void setDeaths(int deaths) {
+        this.deaths = deaths;
+    }
+
     public int getKills() {
         return kills;
     }
@@ -139,15 +84,13 @@ public class GameStat {
         this.kills = kills;
     }
 
-    public void addKills (int kills) {
-        this.kills += kills;
-    }
-
     public int getWaves() {
         return waves;
     }
+
 
     public void setWaves(int waves) {
         this.waves = waves;
     }
 }
+
