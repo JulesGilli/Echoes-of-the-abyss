@@ -67,6 +67,7 @@ public class ShopScreen extends ScreenAdapter {
         buttonTexture = new Texture(Gdx.files.internal("assets/buttonMenu.png"));
         playButtonBounds = new com.badlogic.gdx.math.Rectangle((screenWidth - buttonWidth ) / 2 - buttonWidth/2, screenHeight - shopHeight  - 250, buttonWidth, buttonHeight);
         quitButtonBounds = new com.badlogic.gdx.math.Rectangle((screenWidth - buttonWidth) / 2 + buttonWidth/2, screenHeight - shopHeight - 250, buttonWidth, buttonHeight);
+        System.out.println("ShopScreen");
     }
 
     public Vector2 getItemAssetPosition(int number){

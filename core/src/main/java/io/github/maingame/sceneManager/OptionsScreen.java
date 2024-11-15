@@ -31,12 +31,12 @@ public class OptionsScreen extends ScreenAdapter {
     private final Rectangle attackKeyBounds;
     private final Rectangle rollKeyBounds;
 
+    private boolean isDispose = false;
     private int leftKey = Input.Keys.A;
     private int rightKey = Input.Keys.D;
     private int jumpKey = Input.Keys.SPACE;
     private int attackKey = Input.Keys.F;
     private int rollKey = Input.Keys.SHIFT_LEFT;
-
     private boolean waitingForNewKey = false;
     private String keyToRemap = "";
 
@@ -78,6 +78,7 @@ public class OptionsScreen extends ScreenAdapter {
 
         preferences = Gdx.app.getPreferences("GamePreferences");
         loadKeys();
+        System.out.println("Option Screen");
     }
 
     @Override
@@ -184,12 +185,14 @@ public class OptionsScreen extends ScreenAdapter {
 
     @Override
     public void dispose() {
-        batch.dispose();
-        font.dispose();
-        titleFont.dispose();
-        backgroundTexture.dispose();
-        buttonTexture.dispose();
-        backgroundGUI.dispose();
+        if (!isDispose) {
+            batch.dispose();
+            font.dispose();
+            titleFont.dispose();
+            backgroundTexture.dispose();
+            buttonTexture.dispose();
+            backgroundGUI.dispose();
+        }
     }
 
     public int getLeftKey() {

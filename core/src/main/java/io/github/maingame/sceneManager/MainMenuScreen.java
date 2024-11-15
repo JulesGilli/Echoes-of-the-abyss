@@ -44,6 +44,7 @@ public class MainMenuScreen extends ScreenAdapter {
         playButtonBounds = new Rectangle((screenWidth - buttonWidth) / 2, screenHeight / 2, buttonWidth, buttonHeight);
         optionButtonBounds = new Rectangle((screenWidth - buttonWidth) / 2, screenHeight / 2 - 150, buttonWidth, buttonHeight);
         quitButtonBounds = new Rectangle((screenWidth - buttonWidth) / 2, screenHeight / 2 - 300, buttonWidth, buttonHeight);
+        System.out.println("Main Menu");
     }
 
     private void initFonts() {
@@ -91,7 +92,7 @@ public class MainMenuScreen extends ScreenAdapter {
                 GameStat stat = new GameStat();
                 Player player = new Player(new Vector2(100, 100), Platform.getPlatforms(),
                     Input.Keys.A, Input.Keys.D, Input.Keys.SPACE,
-                    Input.Keys.F, Input.Keys.SHIFT_LEFT);
+                    Input.Keys.F, Input.Keys.SHIFT_LEFT,Input.Keys.E);
                 stat.loadGame();
                 game.setScreen(new GameScreen(game, stat, player));
             }

@@ -82,6 +82,7 @@ public class GameScreen extends ScreenAdapter {
         Platform.createPlatforms();
 
         setupFloorEnemies();
+        System.out.println("GameScreen");
     }
 
     private void setupFloorEnemies() {
