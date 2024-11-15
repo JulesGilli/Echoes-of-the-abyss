@@ -57,7 +57,6 @@ public class ShopScreen extends ScreenAdapter {
         this.batch = new SpriteBatch();
         this.shop = new Shop(new Inventory(), stat, player);
         this.items = shop.getItems();
-        stat.setGolds(400);
         shopWidth = 876 * shopSize;
         shopHeight = 641 * shopSize;
         centerShopWidth = screenWidth / 2f - shopWidth / 2f;
@@ -110,6 +109,7 @@ public class ShopScreen extends ScreenAdapter {
 
             if (playButtonBounds.contains(clickPosition)) {
                 comingFromShop = true;
+                stat.saveGame();
                 game.setScreen(new GameScreen(game, stat, player));
             }
             if (quitButtonBounds.contains(clickPosition)) {

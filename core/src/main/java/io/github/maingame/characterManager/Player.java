@@ -236,7 +236,7 @@ public class Player extends Entity {
 
     public void onDeath() {
         isDead = true;
-        inventory.clear();
+        inventory.clear(this);
         velocity.set(0, 0);
         reset();
     }

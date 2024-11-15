@@ -56,8 +56,13 @@ public class Inventory {
         }
     }
 
-    public void clear() {
-        items.clear();
+    public void clear(Entity entity) {
+        for (Item item : items) {
+            if (item instanceof Gear){
+                ((Gear) item).resetItem(entity);
+            }
+            items.remove(item);
+        }
     }
 
     public void applyConsumable(Player target) {
