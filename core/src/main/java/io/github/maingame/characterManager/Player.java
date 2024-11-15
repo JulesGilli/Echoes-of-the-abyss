@@ -22,6 +22,7 @@ public class Player extends Entity {
     private int jumpKey;
     private int attackKey;
     private int rollKey;
+    private int potionKey;
 
     private boolean isRolling = false;
     private float rollDuration = 0.5f;
@@ -30,7 +31,7 @@ public class Player extends Entity {
 
     private Inventory inventory;
 
-    public Player(Vector2 position, List<Platform> platforms, int leftKey, int rightKey, int jumpKey, int attackKey, int rollKey){
+    public Player(Vector2 position, List<Platform> platforms, int leftKey, int rightKey, int jumpKey, int attackKey, int rollKey, int potionKey){
         super(position, new AnimationManager("_Run.png","_Idle.png","_Jump.png",
             "_Attack.png","_Death.png","_Roll.png", 120, 80, 0.1f,0.04f),
             300,100, 25);
@@ -40,6 +41,7 @@ public class Player extends Entity {
         this.jumpKey = jumpKey;
         this.attackKey = attackKey;
         this.rollKey = rollKey;
+        this.potionKey = potionKey;
 
         this.inventory = new Inventory();
 
@@ -157,6 +159,10 @@ public class Player extends Entity {
             animationTime = 0f;
             rollTimer = 0f;
         }
+        if (Gdx.input.isKeyJustPressed(potionKey))
+        {
+            inventory.applyConsumable(this);
+        }
     }
 
     public void equipItem(Item item) {
@@ -236,7 +242,7 @@ public class Player extends Entity {
 
     public void onDeath() {
         isDead = true;
-        inventory.clear();
+        inventory.clear(this);
         velocity.set(0, 0);
         reset();
     }

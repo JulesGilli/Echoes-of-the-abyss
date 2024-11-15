@@ -57,7 +57,6 @@ public class ShopScreen extends ScreenAdapter {
         this.batch = new SpriteBatch();
         this.shop = new Shop(new Inventory(), stat, player);
         this.items = shop.getItems();
-        stat.setGolds(400);
         shopWidth = 876 * shopSize;
         shopHeight = 641 * shopSize;
         centerShopWidth = screenWidth / 2f - shopWidth / 2f;
@@ -68,6 +67,7 @@ public class ShopScreen extends ScreenAdapter {
         buttonTexture = new Texture(Gdx.files.internal("assets/buttonMenu.png"));
         playButtonBounds = new com.badlogic.gdx.math.Rectangle((screenWidth - buttonWidth ) / 2 - buttonWidth/2, screenHeight - shopHeight  - 250, buttonWidth, buttonHeight);
         quitButtonBounds = new com.badlogic.gdx.math.Rectangle((screenWidth - buttonWidth) / 2 + buttonWidth/2, screenHeight - shopHeight - 250, buttonWidth, buttonHeight);
+        System.out.println("ShopScreen");
     }
 
     public Vector2 getItemAssetPosition(int number){
@@ -110,6 +110,7 @@ public class ShopScreen extends ScreenAdapter {
 
             if (playButtonBounds.contains(clickPosition)) {
                 comingFromShop = true;
+                stat.saveGame();
                 game.setScreen(new GameScreen(game, stat, player));
             }
             if (quitButtonBounds.contains(clickPosition)) {
