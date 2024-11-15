@@ -1,6 +1,8 @@
 package io.github.maingame.itemManager;
 
 import io.github.maingame.characterManager.Entity;
+import io.github.maingame.characterManager.Player;
+import io.github.maingame.utilsManager.GameStat;
 
 public class Armor extends Gear{
     protected int reductionDamage;
@@ -10,13 +12,18 @@ public class Armor extends Gear{
     }
 
     @Override
-    public void applyItem(Entity target) {
-        target.setArmor(reductionDamage);
+    public void applyItem(Player targetEntity) {
+        targetEntity.setArmor(reductionDamage);
     }
 
     @Override
-    public void resetItem(Entity target) {
-        target.setArmor(0);
+    public void resetItem(Player targetEntity) {
+        targetEntity.setArmor(0);
+    }
+
+    @Override
+    public boolean isUnlocked(GameStat stat) {
+        return true;
     }
 
     public int getReductionDamage() {

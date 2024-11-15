@@ -79,18 +79,23 @@ public class ShopScreen extends ScreenAdapter {
     }
 
     public Rectangle drawItem(int number){
-        if (shop.isAvailable(items.get(number)))
+        Item item = items.get(number);
+        if (item.isUnlocked(stat))
         {
-            batch.draw(items.get(number).getTextureAvailable(), getItemAssetPosition(number).x + 10, getItemAssetPosition(number).y - 67, 75, 75);
+            batch.draw(item.getTextureAvailable(), getItemAssetPosition(number).x + 10, getItemAssetPosition(number).y - 67, 75, 75);
+        }
+        if (shop.isAvailable(item))
+        {
+            batch.draw(item.getTextureAvailable(), getItemAssetPosition(number).x + 10, getItemAssetPosition(number).y - 67, 75, 75);
 
         } else {
-            batch.draw(items.get(number).getTextureDisabled(), getItemAssetPosition(number).x + 10, getItemAssetPosition(number).y - 67, 75, 75);
+            batch.draw(item.getTextureDisabled(), getItemAssetPosition(number).x + 10, getItemAssetPosition(number).y - 67, 75, 75);
         }
-        if (shop.getInventory().inInventory(items.get(number))){
+        if (shop.getInventory().inInventory(item)){
             font.draw(batch,"bought", getItemGoldPosition(number).x - 50, getItemGoldPosition(number).y);
 
         } else{
-            font.draw(batch, items.get(number).getStrGold(), getItemGoldPosition(number).x, getItemGoldPosition(number).y);
+            font.draw(batch, item.getStrGold(), getItemGoldPosition(number).x, getItemGoldPosition(number).y);
         }
         Rectangle rectangle = new Rectangle(getItemGoldPosition(0).x - 50 + number % 4 * 200, getItemGoldPosition(0).y - 50 - number / 4 * 200 , 200 , 200);
         return rectangle;

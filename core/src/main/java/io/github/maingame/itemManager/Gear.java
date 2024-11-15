@@ -1,8 +1,6 @@
 package io.github.maingame.itemManager;
 
-import io.github.maingame.characterManager.Entity;
-
-public abstract class Gear extends Item implements GearManager{
+public abstract class Gear extends Item {
     public Gear(int gold, String textureName, String textureBuyName) {
         super( gold, textureName, textureBuyName);
     }
