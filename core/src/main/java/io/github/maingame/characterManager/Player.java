@@ -57,6 +57,7 @@ public class Player extends Entity {
         this.renderWidth = 450;
         this.renderHeight = 300;
         this.attackRange = 200;
+
     }
 
     public void update(float delta, List<Enemy> enemies, float leftBoundary, float rightBoundary) {
@@ -111,11 +112,12 @@ public class Player extends Entity {
     }
 
     private boolean isEnemyInFront(Enemy enemy) {
-        if (isLookingRight && enemy.getPosition().x > position.x) {
-            return true;
-        }
-        return !isLookingRight && enemy.getPosition().x < position.x;
+        boolean inFront = (isLookingRight && enemy.getPosition().x > position.x) ||
+            (!isLookingRight && enemy.getPosition().x < position.x);
+        Gdx.app.log("Player", "Enemy " + (inFront ? "is" : "is not") + " in front.");
+        return inFront;
     }
+
 
     @Override
     public void receiveDamage(float damage) {

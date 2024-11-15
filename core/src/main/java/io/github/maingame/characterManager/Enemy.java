@@ -36,23 +36,34 @@ public class Enemy extends Entity {
 
 
     public Enemy(Vector2 position, List<Platform> platforms, Player player, GameStat gameStat) {
+
         super(
             position,
-            new AnimationManager("_RunEnemy.png", "_IdleEnemy.png", "_Jump.png",
-                "_AttackEnemy.png", "_DeathEnemy.png", "_Roll.png",
-                120, 80, 0.1f, 0.1f),
+            new AnimationManager(
+                "SkeletonWalk.png",
+                "SkeletonIdle.png",
+                "SkeletonWalk.png",
+                "SkeletonAttack.png",
+                "SkeletonDeath.png",
+                "SkeletonWalk.png",
+                150, 101,
+                0.1f, 0.1f
+            ),
             50 * (1 + (gameStat.getFloors() / 50f)),
             10,
             10 * (1 + (gameStat.getFloors() / 50f))
         );
+
+        TextureRegion firstFrame = animation.getIdleCase().getKeyFrames()[0];
+        this.renderWidth = firstFrame.getRegionWidth();
+        this.renderHeight = firstFrame.getRegionHeight();
+
         this.target = player;
         this.speed = 300;
         this.jumpVelocity = 1200;
         this.gravity = -25;
         this.platforms = platforms;
         this.range = 200;
-        this.renderWidth = 450;
-        this.renderHeight = 300;
         this.attackRange = 200;
 
     }
@@ -194,7 +205,17 @@ public class Enemy extends Entity {
     @Override
     public void render(SpriteBatch batch) {
         TextureRegion currentFrame = getCurrentFrame();
-        batch.draw(currentFrame, position.x, position.y, 450, 300);
+
+        float scaleFactor = 3;
+        float aspectRatio = renderWidth / (float) renderHeight;
+
+        batch.draw(
+            currentFrame,
+            position.x,
+            position.y,
+            renderWidth * scaleFactor,
+            renderHeight * scaleFactor
+        );
 
         for (Iterator<DamageText> iterator = damageTexts.iterator(); iterator.hasNext(); ) {
             DamageText damageText = iterator.next();

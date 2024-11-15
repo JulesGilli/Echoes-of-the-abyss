@@ -48,10 +48,13 @@ public abstract class Entity implements lifeCycle{
         this.attackDamage = attack;
     }
 
-    protected Vector2 getCenterPosition()
-    {
-        return new Vector2((position.x + (float) renderWidth / 2), (position.y + (float) renderHeight / 2));
+    protected Vector2 getCenterPosition() {
+        return new Vector2(
+            position.x + renderWidth / 2f,
+            position.y + renderHeight / 2f
+        );
     }
+
 
     public void applyGravity(){
         if (isJumping) {
@@ -132,21 +135,31 @@ public abstract class Entity implements lifeCycle{
         animationTime = 0f;
     }
 
-    public void moveLaterally(float SPEED){
+    public void moveLaterally(float SPEED) {
         velocity.x = SPEED;
-        isLookingRight = !(SPEED < 0);
+        isLookingRight = SPEED > 0;
         isWalking = true;
     }
 
+
     public boolean isCollidingWith(Entity other, float attackRange) {
-        Vector2 thisCenter = getCenterPosition();
-        Vector2 otherCenter = other.getCenterPosition();
+        float thisLeft = position.x;
+        float thisRight = position.x + other.renderWidth * 0.5f;
+        float thisTop = position.y + other.renderHeight * 0.5f;
+        float thisBottom = position.y;
 
-        float distance = thisCenter.dst(otherCenter);
+        float otherLeft = other.getPosition().x;
+        float otherRight = other.getPosition().x + other.renderWidth * 0.5f;
+        float otherTop = other.getPosition().y + other.renderHeight * 0.5f;
+        float otherBottom = other.getPosition().y;
 
-        System.out.println(distance <= attackRange);
-        return distance <= attackRange;
+        boolean isHorizontallyAligned = (isLookingRight && otherLeft <= thisRight + attackRange && otherRight >= thisRight) ||
+            (!isLookingRight && otherRight >= thisLeft - attackRange && otherLeft <= thisLeft);
+        boolean isVerticallyAligned = (thisBottom <= otherTop && thisTop >= otherBottom);
+
+        return isHorizontallyAligned && isVerticallyAligned;
     }
+
 
     public boolean isAlive() {
         return health > 0;

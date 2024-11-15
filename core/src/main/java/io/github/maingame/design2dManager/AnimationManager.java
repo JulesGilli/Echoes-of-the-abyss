@@ -34,6 +34,7 @@ public class AnimationManager {
 
     private Animation<TextureRegion> createAnimation(Texture allSteps, int stepWidth, int stepHeight, float stepDuration) {
         TextureRegion[][] tmpSteps = TextureRegion.split(allSteps, stepWidth, stepHeight);
+
         int totalFrames = tmpSteps.length * tmpSteps[0].length;
         TextureRegion[] frames = new TextureRegion[totalFrames];
         int indexFrame = 0;
