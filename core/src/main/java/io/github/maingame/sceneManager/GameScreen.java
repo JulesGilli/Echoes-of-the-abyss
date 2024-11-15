@@ -86,6 +86,7 @@ public class GameScreen extends ScreenAdapter {
     }
 
     private void setupFloorEnemies() {
+        stat.setWaves(stat.getWaves() + 1);
         spawnList.clear();
         int enemyCount = baseEnemyCount + stat.getFloors();
         for (int i = 0; i < enemyCount; i++) {
@@ -108,6 +109,7 @@ public class GameScreen extends ScreenAdapter {
         }
 
         if (player.getHealth() <= 0 && player.isDeathAnimationFinished() && !isGameOver) {
+            stat.setDeaths(stat.getDeaths() + 1);
             isGameOver = true;
             stat.saveGame();
         }
@@ -239,6 +241,7 @@ public class GameScreen extends ScreenAdapter {
 
             if (enemy.isDeathAnimationFinished()) {
                 stat.addGolds(enemy.getGold());
+                stat.setKills(stat.getKills() + 1);
                 iterator.remove();
             }
 
