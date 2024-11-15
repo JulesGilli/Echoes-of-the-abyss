@@ -1,4 +1,5 @@
 package io.github.maingame.characterManager;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import io.github.maingame.Platform;
@@ -54,6 +55,18 @@ public abstract class Entity implements lifeCycle{
             position.y + renderHeight / 2f
         );
     }
+
+    public void render(SpriteBatch batch) {
+        TextureRegion currentFrame = getCurrentFrame();
+        batch.draw(
+            currentFrame,
+            position.x,
+            position.y,
+            renderWidth,
+            renderHeight
+        );
+    }
+
 
 
     public void applyGravity(){
