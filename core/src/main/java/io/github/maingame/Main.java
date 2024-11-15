@@ -1,6 +1,7 @@
 package io.github.maingame;
 
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import io.github.maingame.itemManager.Shop;
@@ -29,11 +30,18 @@ public class Main extends Game {
 
     @Override
     public void dispose() {
-        batch.dispose();
+        if (batch != null) {
+            Gdx.app.log("Main", "Disposing batch");
+            batch.dispose();
+            batch = null;
+        }
         if (getScreen() != null) {
             getScreen().dispose();
+            setScreen(null);
         }
     }
+
+
 
 
 }

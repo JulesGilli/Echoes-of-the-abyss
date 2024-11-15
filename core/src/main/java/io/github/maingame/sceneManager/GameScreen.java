@@ -261,13 +261,17 @@ public class GameScreen extends ScreenAdapter {
 
     @Override
     public void dispose() {
-        batch.dispose();
         hud.dispose();
-        background1.dispose();
-        background2.dispose();
-        background3.dispose();
-        background4a.dispose();
-        background4b.dispose();
+        if (background1 != null) background1.dispose();
+        if (background2 != null) background2.dispose();
+        if (background3 != null) background3.dispose();
+        if (background4a != null) background4a.dispose();
+        if (background4b != null) background4b.dispose();
         TextureManager.dispose();
     }
+
+
+
+
+
 }

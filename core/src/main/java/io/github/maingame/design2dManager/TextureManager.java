@@ -2,20 +2,22 @@ package io.github.maingame.design2dManager;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import java.util.HashMap;
 
 public class TextureManager {
-    public static Texture platformTexture;
+    private static final HashMap<String, Texture> textures = new HashMap<>();
 
-    public static Texture getPlatformTexture() {
-        if (platformTexture == null) {
-            platformTexture = new Texture(Gdx.files.internal("platform.png"));
+    public static Texture getTexture(String filePath) {
+        if (!textures.containsKey(filePath)) {
+            textures.put(filePath, new Texture(Gdx.files.internal(filePath)));
         }
-        return platformTexture;
+        return textures.get(filePath);
     }
 
     public static void dispose() {
-        if (platformTexture != null) {
-            platformTexture.dispose();
+        for (Texture texture : textures.values()) {
+            texture.dispose();
         }
+        textures.clear();
     }
 }

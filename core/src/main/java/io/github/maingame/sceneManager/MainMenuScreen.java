@@ -109,10 +109,11 @@ public class MainMenuScreen extends ScreenAdapter {
 
     @Override
     public void dispose() {
-        batch.dispose();
-        font.dispose();
-        titleFont.dispose();
-        backgroundTexture.dispose();
-        buttonTexture.dispose();
+        if (batch != null) batch.dispose();
+        if (font != null) font.dispose();
+        if (titleFont != null) titleFont.dispose();
+        if (backgroundTexture != null) backgroundTexture.dispose();
+        if (buttonTexture != null) buttonTexture.dispose();
     }
+
 }

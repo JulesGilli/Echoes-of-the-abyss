@@ -155,10 +155,20 @@ public class ShopScreen extends ScreenAdapter {
         batch.end();
     }
 
-    public void dispose(){
-        batch.dispose();
-        shopTexture.dispose();
-        backgroundTexture.dispose();
-        font.dispose();
+    @Override
+    public void dispose() {
+        if (batch != null) {
+            batch.dispose();
+        }
+        if (shopTexture != null) {
+            shopTexture.dispose();
+        }
+        if (backgroundTexture != null) {
+            backgroundTexture.dispose();
+        }
+        if (font != null) {
+            font.dispose();
+        }
     }
+
 }

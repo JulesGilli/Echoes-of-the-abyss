@@ -191,11 +191,17 @@ public class GameHUD {
     }
 
     public void dispose() {
-        goldFont.dispose();
-        menuFont.dispose();
-        healthFrame.dispose();
-        healthBar.dispose();
-        buttonMenu.dispose();
-        backgroundGUI.dispose();
+
+
+        if (goldFont != null) goldFont.dispose();
+        if (menuFont != null) menuFont.dispose();
+        if (healthFrame != null) healthFrame.dispose();
+        if (healthBar != null) healthBar.dispose();
+        if (buttonMenu != null) buttonMenu.dispose();
+        if (backgroundGUI != null) backgroundGUI.dispose();
+        if (goldIcon != null) goldIcon.dispose();
+        if (headerGUI != null) headerGUI.dispose();
     }
+
+
 }

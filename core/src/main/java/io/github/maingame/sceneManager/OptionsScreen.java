@@ -184,13 +184,14 @@ public class OptionsScreen extends ScreenAdapter {
 
     @Override
     public void dispose() {
-        batch.dispose();
-        font.dispose();
-        titleFont.dispose();
-        backgroundTexture.dispose();
-        buttonTexture.dispose();
-        backgroundGUI.dispose();
+        if (batch != null) batch.dispose();
+        if (font != null) font.dispose();
+        if (titleFont != null) titleFont.dispose();
+        if (backgroundTexture != null) backgroundTexture.dispose();
+        if (buttonTexture != null) buttonTexture.dispose();
+        if (backgroundGUI != null) backgroundGUI.dispose();
     }
+
 
     public int getLeftKey() {
         return leftKey;
@@ -207,6 +208,7 @@ public class OptionsScreen extends ScreenAdapter {
     public int getAttackKey() {
         return attackKey;
     }
+
     public int getRollKey() {
         return rollKey;
     }

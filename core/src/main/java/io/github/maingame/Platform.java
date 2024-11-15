@@ -9,7 +9,7 @@ import io.github.maingame.utilsManager.lifeCycle;
 import java.util.ArrayList;
 import java.util.List;
 
-import static io.github.maingame.design2dManager.TextureManager.platformTexture;
+import io.github.maingame.design2dManager.TextureManager;
 
 public class Platform implements lifeCycle {
     private final Rectangle bounds;
@@ -18,16 +18,15 @@ public class Platform implements lifeCycle {
     public static final List<Platform> platforms = new ArrayList<>();
 
 
-    public Platform(float x, float y, float width, float height, Texture texture) {
+    public Platform(float x, float y, float width, float height) {
         this.bounds = new Rectangle(x, y, width, height);
-        this.texture = TextureManager.getPlatformTexture();
-
+        this.texture = TextureManager.getTexture("platform.png");
     }
 
     public static void createPlatforms() {
         platforms.clear();
-        platforms.add(new Platform(0, 0, 1500, 150, platformTexture));
-        platforms.add(new Platform(1500, 0, 1500, 150, platformTexture));
+        platforms.add(new Platform(0, 0, 1500, 150));
+        platforms.add(new Platform(1500, 0, 1500, 150));
     }
 
     public static List<Platform> getPlatforms() {
