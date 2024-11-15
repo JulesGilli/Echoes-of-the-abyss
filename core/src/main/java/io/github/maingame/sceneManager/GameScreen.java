@@ -11,8 +11,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import io.github.maingame.Main;
 import io.github.maingame.Platform;
-import io.github.maingame.characterManager.Enemy;
-import io.github.maingame.characterManager.Player;
+import io.github.maingame.characterManager.*;
 import io.github.maingame.design2dManager.TextureManager;
 import io.github.maingame.itemManager.Inventory;
 import io.github.maingame.itemManager.Shop;
@@ -88,12 +87,19 @@ public class GameScreen extends ScreenAdapter {
     private void setupFloorEnemies() {
         spawnList.clear();
         int enemyCount = baseEnemyCount + stat.getFloors();
+
         for (int i = 0; i < enemyCount; i++) {
-            spawnList.add(new Enemy(new Vector2(-200, 100), Platform.getPlatforms(), player, stat));
+            Enemy enemy = EnemyFactory.createRandomEnemy(new Vector2(-200, 100), Platform.getPlatforms(), player, stat);
+
+            enemy.setScaleFactor(3f);
+
+            spawnList.add(enemy);
         }
 
         spawnDelay = Math.max(1.0f, spawnDelay * 0.95f);
     }
+
+
 
     @Override
     public void render(float delta) {
