@@ -23,6 +23,6 @@ public class StrenghtPotion extends Consumable{
 
     @Override
     public boolean isUnlocked(GameStat stat) {
-        return stat.getMaxFloors() > 4;
+        return stat.getFloors() > 4;
     }
 }
