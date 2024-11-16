@@ -1,7 +1,13 @@
 package io.github.maingame.itemManager;
 
 public abstract class Gear extends Item {
-    public Gear(int gold, String textureName, String textureBuyName , String textureLockName) {
+    protected int lvl;
+    public Gear(int gold, String textureName, String textureBuyName , String textureLockName, int lvl) {
         super( gold, textureName, textureBuyName, textureLockName);
+        this.lvl = lvl;
+    }
+
+    public int getLvl() {
+        return lvl;
     }
 }
