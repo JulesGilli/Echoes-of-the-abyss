@@ -7,7 +7,7 @@ import io.github.maingame.utilsManager.GameStat;
 public class Weapon extends Gear{
     protected int attackIncrease;
     public Weapon(int lvl) {
-        super(50 + 150 * lvl,"assets/Weapon_t"+lvl+".png","assets/Weapon_t"+lvl+"_Buy.png");
+        super(50 + 150 * lvl,"assets/items/weapon/lvl" + lvl + ".png","assets/items/weapon/lvl" + lvl + "Buy.png", "assets/items/weapon/lvl" + lvl + "Lock.png");
         this.attackIncrease = 5 + 10 * lvl;
     }
 

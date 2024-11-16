@@ -6,7 +6,7 @@ import io.github.maingame.utilsManager.GameStat;
 public class ArmorPotion extends Consumable {
     private final int armorBonus;
     public ArmorPotion(int lvl) {
-        super(50 + 10 * lvl, 50,"assets/ArmorPotion.png","assets/ArmorPotion-1.png" );
+        super(50 + 10 * lvl, 50,"assets/items/armorPotion.png","assets/items/armorPotionBuy.png","assets/items/armorPotionLock.png" );
         this.armorBonus = 10 + 5 * lvl;
     }
 
