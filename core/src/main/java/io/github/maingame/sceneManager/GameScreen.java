@@ -79,7 +79,6 @@ public class GameScreen extends ScreenAdapter {
         Platform.createPlatforms();
 
         setupFloorEnemies();
-        System.out.println("GameScreen");
     }
 
     private void setupFloorEnemies() {
@@ -89,7 +88,7 @@ public class GameScreen extends ScreenAdapter {
 
         for (int i = 0; i < enemyCount; i++) {
             Enemy enemy;
-            if (stat.getWaves() <= 3) {
+            if (stat.getFloors() <= 3) {
                 enemy = new Skeleton(new Vector2(-200, 100), Platform.getPlatforms(), player, stat);
             } else if (stat.getWaves() <= 6) {
                 if (MathUtils.randomBoolean(0.7f)) {
@@ -97,7 +96,7 @@ public class GameScreen extends ScreenAdapter {
                 } else {
                     enemy = new Goblin(new Vector2(-200, 100), Platform.getPlatforms(), player, stat);
                 }
-            } else if (stat.getWaves() <= 9) {
+            } else if (stat.getFloors() <= 9) {
                 float random = MathUtils.random();
                 if (random < 0.5f) {
                     enemy = new Skeleton(new Vector2(-200, 100), Platform.getPlatforms(), player, stat);
@@ -114,13 +113,13 @@ public class GameScreen extends ScreenAdapter {
                     enemy = new Goblin(new Vector2(-200, 100), Platform.getPlatforms(), player, stat);
                 } else {
                     enemy = new Mushroom(new Vector2(-200, 100), Platform.getPlatforms(), player, stat);
-                }/* else {
-                    enemy = new Skeleton(new Vector2(-200, 100), Platform.getPlatforms(), player, stat);
-                }*/
+                }
             }
 
+            enemy.updateStats(stat);
             enemy.setScaleFactor(3f);
             spawnList.add(enemy);
+
         }
 
         spawnDelay = Math.max(1.0f, spawnDelay * 0.95f);

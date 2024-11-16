@@ -26,9 +26,9 @@ public class Skeleton extends Enemy {
                 "SkeletonWalk.png",
                 150, 101, 0.1f, 0.1f
             ),
-            50 * (1 + (gameStat.getFloors() / 50f)),
+            50,
             300,
-            10 * (1 + (gameStat.getFloors() / 50f)),
+            10,
             200,
             1.5f
         );

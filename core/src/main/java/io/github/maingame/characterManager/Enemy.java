@@ -41,6 +41,13 @@ public abstract class Enemy extends Entity {
         this.attackCooldown = attackCooldown;
     }
 
+    public void updateStats(GameStat stat) {
+        float waveMultiplier = 1 + (stat.getFloors() * 0.5f);
+        this.health = this.maxHealth * waveMultiplier;
+        this.attackDamage *= waveMultiplier;
+    }
+
+
     protected boolean isPlayerInFront() {
         return (isLookingRight && target.getPosition().x > position.x) ||
             (!isLookingRight && target.getPosition().x < position.x);
