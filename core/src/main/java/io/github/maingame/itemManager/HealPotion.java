@@ -5,9 +5,9 @@ import io.github.maingame.utilsManager.GameStat;
 
 public class HealPotion extends Consumable{
     private final int potionBonus;
-    public HealPotion(int lvl) {
-        super(50 + 10 * lvl, 50,"assets/items/healPotion.png","assets/items/healPotionBuy.png","assets/items/healPotionLock.png" );
-        this.potionBonus = 50 + 5 * lvl;
+    public HealPotion(GameStat stat) {
+        super(50 + 10 * stat.getMaxFloors(), 50,"assets/items/healPotion.png","assets/items/healPotionBuy.png","assets/items/healPotionLock.png" );
+        this.potionBonus = 50 + 5 * stat.getDeaths();
     }
 
     @Override

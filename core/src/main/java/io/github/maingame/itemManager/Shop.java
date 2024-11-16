@@ -10,7 +10,7 @@ public class Shop {
     private final List<Item> items = new ArrayList<>();
     private GameStat gameStat;
     private Inventory inventory;
-    private Player player;
+    private final Player player;
 
     public Shop(Inventory inventory, GameStat gameStat, Player player) {
         this.player = player;
@@ -23,10 +23,10 @@ public class Shop {
         for (int i = 1; i < 4; i++){
             items.add(new Armor(i));
         }
-        items.add(new SpeedPotion(1));
-        items.add(new HealPotion(2));
-        items.add(new StrengthPotion(3));
-        items.add(new ArmorPotion(1));
+        items.add(new SpeedPotion(gameStat));
+        items.add(new HealPotion(gameStat));
+        items.add(new StrengthPotion(gameStat));
+        items.add(new ArmorPotion(gameStat));
         this.gameStat = gameStat;
         this.inventory = inventory;
     }

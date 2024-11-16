@@ -13,6 +13,7 @@ public class GameStat {
     private int maxFloors;
     private int deaths;
     private boolean gameOver;
+    private int speedPotionUse;
 
     public GameStat() {
         this.golds = 0;
@@ -20,6 +21,7 @@ public class GameStat {
         this.waves = 0;
         this.maxFloors = 0;
         this.deaths = 0;
+        this.speedPotionUse = 0;
         this.gameOver = false;
     }
 
@@ -49,7 +51,16 @@ public class GameStat {
             this.deaths = loadedData.deaths;
             this.maxFloors = loadedData.maxFloors;
             this.gameOver = loadedData.gameOver;
+            this.speedPotionUse = loadedData.speedPotionUse;
         }
+    }
+
+    public int getSpeedPotionUse() {
+        return speedPotionUse;
+    }
+    
+    public void setSpeedPotionUse(int speedPotionUse) {
+        this.speedPotionUse = speedPotionUse;
     }
 
     public int getFloors() {

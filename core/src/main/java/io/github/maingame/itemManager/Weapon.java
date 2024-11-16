@@ -7,7 +7,7 @@ import io.github.maingame.utilsManager.GameStat;
 public class Weapon extends Gear{
     protected int attackIncrease;
     public Weapon(int lvl) {
-        super(50 + 150 * lvl,"assets/items/weapon/lvl" + lvl + ".png","assets/items/weapon/lvl" + lvl + "Buy.png", "assets/items/weapon/lvl" + lvl + "Lock.png");
+        super(50 + 150 * lvl,"assets/items/weapon/lvl" + lvl + ".png","assets/items/weapon/lvl" + lvl + "Buy.png", "assets/items/weapon/lvl" + lvl + "Lock.png" , lvl);
         this.attackIncrease = 5 + 10 * lvl;
     }
 
@@ -23,7 +23,9 @@ public class Weapon extends Gear{
 
     @Override
     public boolean isUnlocked(GameStat stat) {
-        return true;
+
+        return stat.getMaxFloors() > 3 * lvl && stat.getMaxFloors() < 15 * lvl;
+
     }
 
     public int getAttackIncrease() {

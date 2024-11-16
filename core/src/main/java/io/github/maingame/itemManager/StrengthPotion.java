@@ -5,9 +5,9 @@ import io.github.maingame.utilsManager.GameStat;
 
 public class StrengthPotion extends Consumable{
     private final int strengthBoost;
-    public StrengthPotion(int lvl) {
-        super(50 + 10 * lvl, 30 ,"assets/items/strengthPotion.png","assets/items/strengthPotionBuy.png","assets/items/strengthPotionLock.png");
-        this.strengthBoost = 25 + 10 * lvl;
+    public StrengthPotion(GameStat stat) {
+        super(50 + 10 * stat.getMaxFloors(), 30 ,"assets/items/strengthPotion.png","assets/items/strengthPotionBuy.png","assets/items/strengthPotionLock.png");
+        this.strengthBoost = 25 + 10 * stat.getMaxFloors();
     }
 
     @Override

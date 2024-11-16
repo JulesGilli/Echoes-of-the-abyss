@@ -5,9 +5,10 @@ import io.github.maingame.utilsManager.GameStat;
 public class SpeedPotion extends Consumable {
     private final float SpeedIncrease;
 
-    public SpeedPotion(int lvl){
-        super(50 + 10 * lvl, 50,"assets/items/speedPotion.png","assets/items/speedPotionBuy.png","assets/items/speedPotionLock.png" );
-        this.SpeedIncrease = 10 + 5 * lvl;
+    public SpeedPotion(GameStat stat) {
+        super(50 + 10 * stat.getMaxFloors(), 50,"assets/items/speedPotion.png","assets/items/speedPotionBuy.png","assets/items/speedPotionLock.png" );
+        this.SpeedIncrease = Math.min(10 + (0.3f * stat.getSpeedPotionUse()),50);
+        stat.setSpeedPotionUse(stat.getSpeedPotionUse() + 1);
     }
 
     @Override
