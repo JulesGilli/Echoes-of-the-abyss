@@ -1,13 +1,12 @@
 package io.github.maingame.itemManager;
 
-import com.badlogic.gdx.Game;
 import io.github.maingame.characterManager.Player;
 import io.github.maingame.utilsManager.GameStat;
 
-public class StrenghtPotion extends Consumable{
+public class StrengthPotion extends Consumable{
     private final int strengthBoost;
-    public StrenghtPotion(int lvl) {
-        super(50 + 10 * lvl, 30 ,"assets/StrengthPotion.png","assets/StrengthPotion-1.png" );
+    public StrengthPotion(int lvl) {
+        super(50 + 10 * lvl, 30 ,"assets/items/strengthPotion.png","assets/items/strengthPotionBuy.png","assets/items/strengthPotionLock.png");
         this.strengthBoost = 25 + 10 * lvl;
     }
 

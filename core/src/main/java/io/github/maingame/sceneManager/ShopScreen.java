@@ -82,9 +82,9 @@ public class ShopScreen extends ScreenAdapter {
         Item item = items.get(number);
         if (!item.isUnlocked(stat))
         {
-            batch.draw(item.getTextureAvailable(), getItemAssetPosition(number).x + 10, getItemAssetPosition(number).y - 67, 75, 75);
+            batch.draw(item.getTextureLock(), getItemAssetPosition(number).x + 10, getItemAssetPosition(number).y - 67, 75, 75);
         }
-        if (shop.isAvailable(item))
+        else if (shop.isAvailable(item))
         {
             batch.draw(item.getTextureAvailable(), getItemAssetPosition(number).x + 10, getItemAssetPosition(number).y - 67, 75, 75);
 

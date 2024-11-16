@@ -6,7 +6,7 @@ public class SpeedPotion extends Consumable {
     private final float SpeedIncrease;
 
     public SpeedPotion(int lvl){
-        super(50 + 10 * lvl, 50,"assets/SpeedPotion.png","assets/SpeedPotion-1.png" );
+        super(50 + 10 * lvl, 50,"assets/items/speedPotion.png","assets/items/speedPotionBuy.png","assets/items/speedPotionLock.png" );
         this.SpeedIncrease = 10 + 5 * lvl;
     }
 

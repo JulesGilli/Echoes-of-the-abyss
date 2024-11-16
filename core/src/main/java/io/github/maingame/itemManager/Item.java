@@ -7,11 +7,13 @@ public abstract class Item implements ItemSolution{
     protected int gold;
     protected Texture textureAvailable;
     protected Texture textureDisabled;
+    protected  Texture textureLock;
 
-    public Item(int value, String textureName, String textureDisabledName) {
+    public Item(int value, String textureName, String textureDisabledName, String textureLockName) {
         this.gold = value;
         this.textureAvailable = new Texture(textureName);
         this.textureDisabled = new Texture(textureDisabledName);
+        this.textureLock = new Texture(textureLockName);
     }
 
     public String getStrGold() {
@@ -28,5 +30,9 @@ public abstract class Item implements ItemSolution{
 
     public Texture getTextureDisabled() {
         return textureDisabled;
+    }
+
+    public Texture getTextureLock() {
+        return textureLock;
     }
 }

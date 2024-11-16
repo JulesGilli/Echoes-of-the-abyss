@@ -25,7 +25,7 @@ public class Shop {
         }
         items.add(new SpeedPotion(1));
         items.add(new HealPotion(2));
-        items.add(new StrenghtPotion(3));
+        items.add(new StrengthPotion(3));
         items.add(new ArmorPotion(1));
         this.gameStat = gameStat;
         this.inventory = inventory;
