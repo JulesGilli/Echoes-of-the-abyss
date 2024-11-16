@@ -33,7 +33,6 @@ public class GameStat {
         this.golds = Math.max(0, this.golds - amount);
     }
 
-
     public void saveGame() {
         Json json = new Json();
         json.setOutputType(JsonWriter.OutputType.json);
@@ -58,7 +57,7 @@ public class GameStat {
     public int getSpeedPotionUse() {
         return speedPotionUse;
     }
-    
+
     public void setSpeedPotionUse(int speedPotionUse) {
         this.speedPotionUse = speedPotionUse;
     }
