@@ -51,9 +51,9 @@ public class MainMenuScreen extends ScreenAdapter {
         float screenHeight = Gdx.graphics.getHeight();
 
         playButtonBounds = new Rectangle((screenWidth - buttonWidth) / 2 , screenHeight / 2 + 150, buttonWidth, buttonHeight);
-        shopButtonBounds = new Rectangle((screenWidth - buttonWidth) / 2 - 150, screenHeight / 2, buttonWidth, buttonHeight);
+        shopButtonBounds = new Rectangle((screenWidth - buttonWidth) / 2 , screenHeight / 2, buttonWidth, buttonHeight);
         optionButtonBounds = new Rectangle((screenWidth - buttonWidth) / 2, screenHeight / 2 - 150 , buttonWidth, buttonHeight);
-        quitButtonBounds = new Rectangle((screenWidth - buttonWidth) / 2 + 150, screenHeight / 2 - 300, buttonWidth, buttonHeight);
+        quitButtonBounds = new Rectangle((screenWidth - buttonWidth) / 2 , screenHeight / 2 - 300, buttonWidth, buttonHeight);
 
         System.out.println("Main Menu");
     }
@@ -86,9 +86,9 @@ public class MainMenuScreen extends ScreenAdapter {
         batch.draw(buttonTexture, optionButtonBounds.x, optionButtonBounds.y, optionButtonBounds.width, optionButtonBounds.height);
         batch.draw(buttonTexture, shopButtonBounds.x, shopButtonBounds.y, shopButtonBounds.width, shopButtonBounds.height);
         font.draw(batch, "Play", playButtonBounds.x + 250, playButtonBounds.y + 125);
-        font.draw(batch, "Shop", shopButtonBounds.x + 220 , shopButtonBounds.y + 125);
+        font.draw(batch, "Shop", shopButtonBounds.x + 235 , shopButtonBounds.y + 125);
         font.draw(batch, "Option", optionButtonBounds.x + 220 , optionButtonBounds.y + 125);
-        font.draw(batch, "Quit", quitButtonBounds.x + 250 , quitButtonBounds.y + 125);
+        font.draw(batch, "Quit", quitButtonBounds.x + 240 , quitButtonBounds.y + 125);
         titleFont.draw(batch, "Echoes of the Abyss", 600, 950);
 
         batch.end();
