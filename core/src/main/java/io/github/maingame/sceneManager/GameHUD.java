@@ -25,32 +25,38 @@ public class GameHUD {
     private final Texture backgroundGUI;
     private final Texture goldIcon;
     private final Texture headerGUI;
+    private final Texture statBackground;
+    private final Texture statTicket;
     private final GlyphLayout layout;
-    private GameStat stat;
+    private final GameStat stat;
+    private Player player;
 
     private final Rectangle mainMenuButtonBounds;
     private final Rectangle resumeButtonBounds;
     private final Rectangle quitButtonBounds;
     private final Rectangle shopButtonBounds;
 
-    public GameHUD(Main game, GameStat stat) {
+    private final FreeTypeFontGenerator.FreeTypeFontParameter parameter;
+
+    public GameHUD(Main game, GameStat stat, Player player) {
         this.game = game;
         this.stat = stat;
+        this.player = player;
 
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("assets/fonts/Jacquard12-Regular.ttf"));
-        FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        this.parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
         parameter.size = 64;
 
         goldFont = generator.generateFont(parameter);
-        Color MY_GOLD = new Color(255 / 255f, 204 / 255f, 101 / 255f, 1);
-        goldFont.setColor(MY_GOLD);
+        Color goldColor = new Color(255 / 255f, 204 / 255f, 101 / 255f, 1);
+        goldFont.setColor(goldColor);
 
         menuFont = generator.generateFont(parameter);
         menuFont.setColor(Color.BROWN);
 
         headerFont = generator.generateFont(parameter);
-        Color LIGHT_GREEN = new Color(0 / 255f, 153 / 255f, 76 / 255f, 1);
-        headerFont.setColor(LIGHT_GREEN);
+        Color lightGreen = new Color(0 / 255f, 153 / 255f, 76 / 255f, 1);
+        headerFont.setColor(lightGreen);
 
         generator.dispose();
 
@@ -60,6 +66,8 @@ public class GameHUD {
         backgroundGUI = new Texture(Gdx.files.internal("BackGroundGUI.png"));
         goldIcon = new Texture(Gdx.files.internal("gold.png"));
         headerGUI = new Texture(Gdx.files.internal("Header.png"));
+        statTicket = new Texture(Gdx.files.internal("buttonMenu.png"));
+        statBackground = new Texture(Gdx.files.internal("BackGroundGUI.png"));
 
 
         layout = new GlyphLayout();
@@ -75,6 +83,14 @@ public class GameHUD {
         shopButtonBounds = new Rectangle(screenWidth / 2 - buttonWidth / 2, screenHeight / 2 - 120, buttonWidth, buttonHeight);
 
         System.out.println("Game HUD screen");
+    }
+
+    public void showStats(SpriteBatch batch, Player player) {
+        menuFont.getData().setScale(0.6f, 0.6f);
+        menuFont.draw(batch, "attack: " + player.getAttack(), mainMenuButtonBounds.x + 40, mainMenuButtonBounds.y + 30);
+        menuFont.draw(batch, "speed: " + player.getSpeed(), mainMenuButtonBounds.x + 40, mainMenuButtonBounds.y - 10);
+        menuFont.draw(batch, "health: " + player.getHealth(), mainMenuButtonBounds.x + 40, mainMenuButtonBounds.y + - 50);
+        menuFont.getData().setScale(1,1);
     }
 
     public void renderPauseMenu(SpriteBatch batch) {
@@ -93,6 +109,8 @@ public class GameHUD {
         menuFont.draw(batch, "Resume", resumeButtonBounds.x + 120, resumeButtonBounds.y + 120);
         menuFont.draw(batch, "Main Menu", mainMenuButtonBounds.x + 100, mainMenuButtonBounds.y + 120);
         menuFont.draw(batch, "Quit", quitButtonBounds.x + 160, quitButtonBounds.y + 120);
+
+        showStats(batch, player);
 
         batch.end();
 

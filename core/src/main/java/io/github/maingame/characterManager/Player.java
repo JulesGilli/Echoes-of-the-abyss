@@ -244,7 +244,6 @@ public class Player extends Entity {
         return isDead && animationTime >= animation.getDeathCase().getAnimationDuration();
     }
 
-
     public void setLeftKey(int leftKey) {
         this.leftKey = leftKey;
     }

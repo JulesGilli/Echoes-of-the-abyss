@@ -58,7 +58,7 @@ public class GameScreen extends ScreenAdapter {
         this.optionsScreen = new OptionsScreen(game);
         this.batch = game.batch;
 
-        this.hud = new GameHUD(game, stat);
+        this.hud = new GameHUD(game, stat, player);
 
         camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0);

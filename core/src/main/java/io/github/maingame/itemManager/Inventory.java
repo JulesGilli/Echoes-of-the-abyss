@@ -74,6 +74,7 @@ public class Inventory {
                     try {
                         Thread.sleep(consumable.getTimeDuration()* 1000L);
                         consumable.resetItem(target);
+                        removeItem(consumable);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
