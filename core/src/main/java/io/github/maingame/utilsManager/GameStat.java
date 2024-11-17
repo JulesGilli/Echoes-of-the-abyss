@@ -32,7 +32,7 @@ public class GameStat {
     public void removeGolds(int amount) {
         this.golds = Math.max(0, this.golds - amount);
     }
-    
+
     public void saveGame() {
         Json json = new Json();
         json.setOutputType(JsonWriter.OutputType.json);

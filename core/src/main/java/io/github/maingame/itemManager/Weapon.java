@@ -8,17 +8,20 @@ public class Weapon extends Gear{
     protected int attackIncrease;
     public Weapon(int lvl) {
         super(50 + 150 * lvl,"assets/items/weapon/lvl" + lvl + ".png","assets/items/weapon/lvl" + lvl + "Buy.png", "assets/items/weapon/lvl" + lvl + "Lock.png" , lvl);
-        this.attackIncrease = 5 + 10 * lvl;
+        this.attackIncrease  = 5;
     }
 
     @Override
     public void applyItem(Player targetEntity) {
-        targetEntity.setAttackBonus((this).getAttackIncrease());
+        setIncreaseValue(attackIncrease + 10 * lvl);
+        targetEntity.setAttackDamage( targetEntity.getAttack() + (this).getIncreaseValue());
+        System.out.println("applying weapon gear, currentAttack : " + targetEntity.getAttack());
     }
 
     @Override
     public void resetItem(Player targetEntity) {
-        targetEntity.setAttackBonus(0);
+        targetEntity.setAttackDamage(targetEntity.getAttack() - getIncreaseValue());
+        System.out.println("reset weapon gear, current attack : " + targetEntity.getAttack());
     }
 
     @Override
@@ -26,9 +29,5 @@ public class Weapon extends Gear{
 
         return stat.getMaxFloors() > 3 * lvl && stat.getMaxFloors() < 15 * lvl;
 
-    }
-
-    public int getAttackIncrease() {
-        return attackIncrease;
     }
 }

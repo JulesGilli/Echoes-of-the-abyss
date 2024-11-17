@@ -1,8 +1,10 @@
 package io.github.maingame.itemManager;
 
 import com.badlogic.gdx.graphics.Texture;
+import io.github.maingame.utilsManager.GameStat;
 
 public abstract class Item implements ItemSolution{
+    protected int increaseValue;
     protected String name;
     protected int gold;
     protected Texture textureAvailable;
@@ -34,5 +36,13 @@ public abstract class Item implements ItemSolution{
 
     public Texture getTextureLock() {
         return textureLock;
+    }
+
+    public int getIncreaseValue() {
+        return increaseValue;
+    }
+
+    public void setIncreaseValue(int increaseValue) {
+        this.increaseValue = increaseValue;
     }
 }
