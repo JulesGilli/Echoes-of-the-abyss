@@ -7,7 +7,6 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import io.github.maingame.Platform;
 import io.github.maingame.design2dManager.AnimationManager;
-import io.github.maingame.itemManager.Consumable;
 import io.github.maingame.itemManager.Gear;
 import io.github.maingame.itemManager.Inventory;
 import io.github.maingame.itemManager.Item;
@@ -222,13 +221,6 @@ public class Player extends Entity {
         }
     }
 
-    public void onDeath() {
-        isDead = true;
-        inventory.clear(this);
-        velocity.set(0, 0);
-        reset();
-    }
-
     public boolean isDeathAnimationFinished() {
         return isDead && animationTime >= animation.getDeathCase().getAnimationDuration();
     }
@@ -253,30 +245,10 @@ public class Player extends Entity {
         this.rollKey = rollKey;
     }
 
-    public boolean isDead() {
-        return isDead;
-    }
 
     @Override
     public void update(float delta) {
 
-    }
-
-    public boolean isLookingRight() {
-        return isLookingRight;
-    }
-
-    public double getInitialHealth() {
-        return maxHealth;
-    }
-
-
-    public void setLookingRight(boolean b) {
-        isLookingRight = b;
-    }
-
-    public boolean isJumping() {
-        return isJumping;
     }
 
     public Inventory getInventory() {

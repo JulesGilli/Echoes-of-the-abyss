@@ -207,6 +207,7 @@ public class GameScreen extends ScreenAdapter {
         player.setRightKey(optionsScreen.getRightKey());
         player.setJumpKey(optionsScreen.getJumpKey());
         player.setAttackKey(optionsScreen.getAttackKey());
+        player.setRollKey(optionsScreen.getRollKey());
     }
 
 
