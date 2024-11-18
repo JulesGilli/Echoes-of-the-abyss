@@ -83,13 +83,6 @@ public class Inventory {
         }
     }
 
-    public void equipItem(Player player, Item item) {
-        if (item instanceof Gear) {
-            ((Gear) item).applyItem(player);
-        }
-        items.add(item);
-    }
-
     public List<Item> getItems() {
         return items;
     }
