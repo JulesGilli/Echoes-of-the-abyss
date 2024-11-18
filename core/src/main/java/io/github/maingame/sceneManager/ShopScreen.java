@@ -61,10 +61,10 @@ public class ShopScreen extends ScreenAdapter {
         shopHeight = 641 * shopSize;
         centerShopWidth = screenWidth / 2f - shopWidth / 2f;
         centerShopHeight = screenHeight / 2f - shopHeight / 2f;
-        backgroundTexture = new Texture(Gdx.files.internal("assets/backGroundMainMenu.png"));
-        shopTexture = new Texture(Gdx.files.internal("assets/shop.png"));
+        backgroundTexture = new Texture(Gdx.files.internal("backgrounds/background_menuscreen.png"));
+        shopTexture = new Texture(Gdx.files.internal("backgrounds/background_shop.png"));
         initFonts();
-        buttonTexture = new Texture(Gdx.files.internal("assets/buttonMenu.png"));
+        buttonTexture = new Texture(Gdx.files.internal("GUI/button_basic.png"));
         playButtonBounds = new com.badlogic.gdx.math.Rectangle((screenWidth - buttonWidth ) / 2 + buttonWidth/2, screenHeight - shopHeight  - 250, buttonWidth, buttonHeight);
         mainMenuButtonBounds = new com.badlogic.gdx.math.Rectangle((screenWidth - buttonWidth) / 2 - buttonWidth/2, screenHeight - shopHeight - 250, buttonWidth, buttonHeight);
         System.out.println("ShopScreen");

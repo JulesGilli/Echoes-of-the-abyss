@@ -60,14 +60,14 @@ public class GameHUD {
 
         generator.dispose();
 
-        healthFrame = new Texture(Gdx.files.internal("Health_01.png"));
-        healthBar = new Texture(Gdx.files.internal("Health_01_Bar01.png"));
-        buttonMenu = new Texture(Gdx.files.internal("buttonMenu.png"));
-        backgroundGUI = new Texture(Gdx.files.internal("BackGroundGUI.png"));
-        goldIcon = new Texture(Gdx.files.internal("gold.png"));
-        headerGUI = new Texture(Gdx.files.internal("Header.png"));
-        statTicket = new Texture(Gdx.files.internal("buttonMenu.png"));
-        statBackground = new Texture(Gdx.files.internal("BackGroundGUI.png"));
+        healthFrame = new Texture(Gdx.files.internal("GUI/sprite_health.png"));
+        healthBar = new Texture(Gdx.files.internal("GUI/sprite_healthBar.png"));
+        buttonMenu = new Texture(Gdx.files.internal("GUI/button_basic.png"));
+        backgroundGUI = new Texture(Gdx.files.internal("backgrounds/background_gamescreen_GUI.png"));
+        goldIcon = new Texture(Gdx.files.internal("GUI/icon_gold.png"));
+        headerGUI = new Texture(Gdx.files.internal("GUI/header_floors.png"));
+        statTicket = new Texture(Gdx.files.internal("GUI/button_basic.png"));
+        statBackground = new Texture(Gdx.files.internal("backgrounds/background_gamescreen_GUI.png"));
 
 
         layout = new GlyphLayout();

@@ -40,8 +40,8 @@ public class MainMenuScreen extends ScreenAdapter {
 
         stat.loadGame();
 
-        backgroundTexture = new Texture(Gdx.files.internal("assets/backGroundMainMenu.png"));
-        buttonTexture = new Texture(Gdx.files.internal("assets/buttonMenu.png"));
+        backgroundTexture = new Texture(Gdx.files.internal("assets/backgrounds/background_menuscreen.png"));
+        buttonTexture = new Texture(Gdx.files.internal("assets/GUI/button_basic.png"));
 
         initFonts();
 

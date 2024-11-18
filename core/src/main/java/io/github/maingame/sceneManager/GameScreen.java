@@ -67,11 +67,11 @@ public class GameScreen extends ScreenAdapter {
         hudCamera.position.set(hudCamera.viewportWidth / 2, hudCamera.viewportHeight / 2, 0);
         hudCamera.update();
 
-        background1 = new Texture(Gdx.files.internal("background1.png"));
-        background2 = new Texture(Gdx.files.internal("background2.png"));
-        background3 = new Texture(Gdx.files.internal("background3.png"));
-        background4a = new Texture(Gdx.files.internal("background4a.png"));
-        background4b = new Texture(Gdx.files.internal("background4b.png"));
+        background1 = new Texture(Gdx.files.internal("backgrounds/background_gamescreen1.png"));
+        background2 = new Texture(Gdx.files.internal("backgrounds/background_gamescreen2.png"));
+        background3 = new Texture(Gdx.files.internal("backgrounds/background_gamescreen3.png"));
+        background4a = new Texture(Gdx.files.internal("backgrounds/background_gamescreen4a.png"));
+        background4b = new Texture(Gdx.files.internal("backgrounds/background_gamescreen4b.png"));
 
         stat.loadGame();
 
@@ -90,7 +90,7 @@ public class GameScreen extends ScreenAdapter {
             Enemy enemy;
             if (stat.getFloors() <= 3) {
                 enemy = new Skeleton(new Vector2(-200, 100), Platform.getPlatforms(), player, stat);
-            } else if (stat.getWaves() <= 6) {
+            } else if (stat.getFloors() <= 6) {
                 if (MathUtils.randomBoolean(0.7f)) {
                     enemy = new Skeleton(new Vector2(-200, 100), Platform.getPlatforms(), player, stat);
                 } else {

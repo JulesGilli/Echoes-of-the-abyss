@@ -46,9 +46,9 @@ public class OptionsScreen extends ScreenAdapter {
         this.game = game;
         this.batch = new SpriteBatch();
 
-        backgroundTexture = new Texture(Gdx.files.internal("backGroundMainMenu.png"));
-        buttonTexture = new Texture(Gdx.files.internal("buttonMenu.png"));
-        backgroundGUI = new Texture(Gdx.files.internal("BackGroundGUI.png"));
+        backgroundTexture = new Texture(Gdx.files.internal("backgrounds/background_menuscreen.png"));
+        buttonTexture = new Texture(Gdx.files.internal("GUI/button_basic.png"));
+        backgroundGUI = new Texture(Gdx.files.internal("backgrounds/background_gamescreen_GUI.png"));
 
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("assets/fonts/Jacquard12-Regular.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
