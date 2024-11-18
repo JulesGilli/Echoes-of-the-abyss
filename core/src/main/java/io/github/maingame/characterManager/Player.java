@@ -28,6 +28,14 @@ public class Player extends Entity {
     private float rollTimer = 0f;
     private float rollSpeed = 700;
 
+    private float stamina = 100;
+    private  float maxStamina = 100;
+
+    private final float staminaCostAttack = 20f;
+    private final float staminaCostRoll = 25f;
+    private final float staminaRegenRate = 10f;
+
+
     private Inventory inventory;
 
     public Player(Vector2 position, List<Platform> platforms, int leftKey, int rightKey, int jumpKey, int attackKey, int rollKey, int potionKey){
@@ -115,6 +123,9 @@ public class Player extends Entity {
                 checkOnFloor();
             }
         }
+
+        stamina = Math.min(maxStamina, stamina + staminaRegenRate * delta);
+
     }
 
     private boolean isEnemyInFront(Enemy enemy) {
@@ -159,17 +170,22 @@ public class Player extends Entity {
         }
 
         if (Gdx.input.isKeyJustPressed(attackKey) && !isAttacking && !isJumping) {
-            isAttacking = true;
-            animationTime = 0f;
+            if (stamina >= staminaCostAttack) {
+                stamina -= staminaCostAttack;
+                isAttacking = true;
+                animationTime = 0f;
+            }
         }
 
         if (Gdx.input.isKeyJustPressed(rollKey) && !isRolling && !isJumping) {
-            isRolling = true;
-            animationTime = 0f;
-            rollTimer = 0f;
+            if (stamina >= staminaCostRoll) {
+                stamina -= staminaCostRoll;
+                isRolling = true;
+                animationTime = 0f;
+                rollTimer = 0f;
+            }
         }
-        if (Gdx.input.isKeyJustPressed(potionKey))
-        {
+        if (Gdx.input.isKeyJustPressed(potionKey)) {
             inventory.applyConsumable(this);
         }
     }
@@ -245,6 +261,14 @@ public class Player extends Entity {
 
     public void setRollKey(int rollKey) {
         this.rollKey = rollKey;
+    }
+
+    public float getStamina() {
+        return stamina;
+    }
+
+    public float getMaxStamina() {
+        return maxStamina;
     }
 
 

@@ -24,6 +24,9 @@ public class GameHUD {
     private final BitmapFont headerFont;
     private final Texture healthFrame;
     private final Texture healthBar;
+    private final Texture staminaFrame;
+    private final Texture staminaBar;
+
     private final Texture buttonMenu;
     private final Texture backgroundGUI;
     private final Texture goldIcon;
@@ -68,8 +71,11 @@ public class GameHUD {
         potionTextures.put("HealPotion", new Texture(Gdx.files.internal("icons/items/potion/icon_potionHealth.png")));
         potionTextures.put("ArmorPotion", new Texture(Gdx.files.internal("icons/items/potion/icon_potionArmor.png")));
 
+        staminaFrame = new Texture(Gdx.files.internal("GUI/sprite_stamina.png"));
+        staminaBar = new Texture(Gdx.files.internal("GUI/sprite_staminaBar.png"));
         healthFrame = new Texture(Gdx.files.internal("GUI/sprite_health.png"));
         healthBar = new Texture(Gdx.files.internal("GUI/sprite_healthBar.png"));
+
         buttonMenu = new Texture(Gdx.files.internal("GUI/button_basic.png"));
         backgroundGUI = new Texture(Gdx.files.internal("backgrounds/background_gamescreen_GUI.png"));
         goldIcon = new Texture(Gdx.files.internal("icons/icon_gold.png"));
@@ -150,8 +156,26 @@ public class GameHUD {
         }
     }
 
+    public void renderWaveTransition(SpriteBatch batch, int waveNumber, float alpha) {
+        float screenWidth = Gdx.graphics.getWidth();
+        float screenHeight = Gdx.graphics.getHeight();
+
+        String waveText = "Floor " + waveNumber;
+
+        headerFont.setColor(0 / 255f, 153 / 255f, 76 / 255f, alpha);
+        headerFont.getData().setScale(2.0f);
+
+        layout.setText(headerFont, waveText);
+        headerFont.draw(batch, waveText, screenWidth / 2f - layout.width / 2, screenHeight / 2f + layout.height / 2);
+
+        headerFont.getData().setScale(1.0f);
+        headerFont.setColor(0 / 255f, 153 / 255f, 76 / 255f, 1);
+    }
+
+
     public void render(SpriteBatch batch, Player player, float screenWidth, float screenHeight, boolean isGameOver) {
         drawHealthBar(batch, player, screenHeight);
+        drawStaminaBar(batch, player, screenHeight);
         drawGold(batch, player, screenWidth, screenHeight);
         drawFloor(batch, screenWidth, screenHeight);
         drawPotion(batch, player, screenWidth, screenHeight);
@@ -186,6 +210,18 @@ public class GameHUD {
         float healthBarWidth = healthBar.getWidth() * healthPercentage;
         batch.draw(healthBar, offset + 12, screenHeight - offset + 12, healthBarWidth * sizeHealthBar * 1f, healthBar.getHeight() * sizeHealthBar);
     }
+
+    private void drawStaminaBar(SpriteBatch batch, Player player, float screenHeight) {
+        float offset = 120;
+        float sizeStaminaBar = 2;
+
+        batch.draw(staminaFrame, 70, screenHeight - offset, staminaFrame.getWidth() * sizeStaminaBar, staminaFrame.getHeight() * sizeStaminaBar);
+
+        float staminaPercentage = player.getStamina() / (float) player.getMaxStamina();
+        float staminaBarWidth = staminaBar.getWidth() * staminaPercentage;
+        batch.draw(staminaBar, 82, screenHeight - offset + 12, staminaBarWidth * sizeStaminaBar, staminaBar.getHeight() * sizeStaminaBar);
+    }
+
 
     private void drawGold(SpriteBatch batch, Player player, float screenWidth, float screenHeight) {
         String goldText = "" + stat.getGolds();

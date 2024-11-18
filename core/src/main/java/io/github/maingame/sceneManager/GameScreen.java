@@ -6,6 +6,7 @@ import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
@@ -20,12 +21,11 @@ import java.util.Iterator;
 import java.util.List;
 
 public class GameScreen extends ScreenAdapter {
-    private final Main game;
     private final SpriteBatch batch;
     private final Texture background1, background2, background3, background4a, background4b;
 
-    private OrthographicCamera camera;
-    private OrthographicCamera hudCamera;
+    private final OrthographicCamera camera;
+    private final OrthographicCamera hudCamera;
     final Player player;
 
     private final List<Enemy> enemies = new ArrayList<>();
@@ -36,22 +36,16 @@ public class GameScreen extends ScreenAdapter {
     private float spawnDelay = 3.0f;
     private final GameStat stat;
     private final GameHUD hud;
-    private OptionsScreen optionsScreen;
+    private final OptionsScreen optionsScreen;
 
     private boolean isGameOver = false;
     private boolean isPaused = false;
 
-    private final float minX = 0;
-    private final float maxX = 3000;
-    private final float minY = 0;
-    private final float maxY = 1000;
-
-    private final float leftBoundary = -200;
-    private final float rightBoundary = 3200;
+    private boolean isWaveTransition = false;
+    private float waveTransitionTimer = 0f;
 
 
     public GameScreen(Main game, GameStat stat, Player player) {
-        this.game = game;
         this.stat = stat;
         this.player = player;
 
@@ -119,9 +113,29 @@ public class GameScreen extends ScreenAdapter {
             stat.saveGame();
         }
 
+        if (isWaveTransition) {
+            waveTransitionTimer += delta;
+
+            float waveTransitionDuration = 2f;
+            if (waveTransitionTimer >= waveTransitionDuration) {
+                isWaveTransition = false;
+                waveTransitionTimer = 0f;
+            } else {
+                float alpha = MathUtils.clamp(1.0f - Math.abs(waveTransitionTimer - waveTransitionDuration / 2) / (waveTransitionDuration / 2), 0, 1);
+                batch.setProjectionMatrix(hudCamera.combined);
+                batch.begin();
+                hud.renderWaveTransition(batch, stat.getFloors(), alpha);
+                batch.end();
+                return;
+            }
+        }
+
+
         float targetCameraX = player.getPosition().x + 300;
         camera.position.x += (targetCameraX - camera.position.x) * 0.05f;
 
+        float minX = 0;
+        float maxX = 3000;
         camera.position.x = MathUtils.clamp(camera.position.x, minX + camera.viewportWidth / 2, maxX - camera.viewportWidth / 2);
         camera.position.y = (float) Gdx.graphics.getHeight() / 2;
 
@@ -140,6 +154,8 @@ public class GameScreen extends ScreenAdapter {
         player.render(batch);
 
         if (!isGameOver) {
+            float rightBoundary = 3200;
+            float leftBoundary = -200;
             player.update(delta, enemies, leftBoundary, rightBoundary);
             spawnEnemies(delta);
         }
@@ -151,8 +167,9 @@ public class GameScreen extends ScreenAdapter {
         hud.render(batch, player, screenWidth, screenHeight, isGameOver);
         batch.end();
 
-        if (spawnList.isEmpty() && enemies.isEmpty()) {
+        if (spawnList.isEmpty() && enemies.isEmpty() && !isWaveTransition) {
             onPlayerReachNewFloor();
+            isWaveTransition = true;
             setupFloorEnemies();
         }
     }
@@ -166,14 +183,6 @@ public class GameScreen extends ScreenAdapter {
             resetGame();
         }
     }
-
-
-    public void prepareForNewGame() {
-        player.prepareForNewGame();
-        stat.setFloors(0);
-        resetGame();
-    }
-
 
     public void updatePlayerKeys() {
         player.setLeftKey(optionsScreen.getLeftKey());
