@@ -53,7 +53,6 @@ public class Shop {
         }
         if (isAvailable(item) && stat.getGolds() >= item.gold) {
             stat.setGolds(stat.getGolds() - item.gold);
-            inventory.addItem(item);
             player.equipItem(item);
             return true;
         }
