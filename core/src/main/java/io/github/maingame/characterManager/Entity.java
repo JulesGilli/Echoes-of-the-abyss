@@ -173,12 +173,6 @@ public abstract class Entity implements lifeCycle{
         return isHorizontallyAligned && isVerticallyAligned;
     }
 
-
-    public boolean isAlive() {
-        return health > 0;
-    }
-
-
     public int getGold() {
         return gold;
     }

@@ -7,7 +7,6 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import io.github.maingame.Platform;
 import io.github.maingame.design2dManager.AnimationManager;
-import io.github.maingame.itemManager.Consumable;
 import io.github.maingame.itemManager.Gear;
 import io.github.maingame.itemManager.Inventory;
 import io.github.maingame.itemManager.Item;
@@ -240,7 +239,7 @@ public class Player extends Entity {
     public boolean isDeathAnimationFinished() {
         return isDead && animationTime >= animation.getDeathCase().getAnimationDuration();
     }
-    
+
     public void setLeftKey(int leftKey) {
         this.leftKey = leftKey;
     }
