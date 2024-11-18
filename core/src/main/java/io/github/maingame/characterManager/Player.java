@@ -167,14 +167,6 @@ public class Player extends Entity {
         }
     }
 
-    public void equipItem(Item item) {
-        if (item instanceof Gear) {
-            item.applyItem(this);
-        }
-        inventory.addItem(item);
-    }
-
-
     @Override
     public TextureRegion getCurrentFrame() {
         if (isDead) {
@@ -212,7 +204,6 @@ public class Player extends Entity {
         position.set(initialPosition);
         velocity.set(0, 0);
         isDead = false;
-        inventory.applyGears(this);
     }
 
 
