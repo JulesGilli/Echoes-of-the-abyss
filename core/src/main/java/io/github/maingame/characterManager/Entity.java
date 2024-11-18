@@ -211,6 +211,18 @@ public abstract class Entity implements lifeCycle{
         this.health -= damage - armor;
     }
 
+    public void setMaxHealth(float maxHealth) {
+        this.maxHealth = maxHealth;
+    }
+
+    public float getAttackBonus() {
+        return attackBonus;
+    }
+
+    public float getSpeedBonus() {
+        return speedBonus;
+    }
+
     public float getSpeed() {
         return speed + speedBonus;
     }

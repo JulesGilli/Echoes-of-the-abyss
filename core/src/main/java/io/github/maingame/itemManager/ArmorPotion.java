@@ -11,24 +11,25 @@ public class ArmorPotion extends Consumable {
             "icons/items/potion/icon_potionArmor_bought.png",
             "icons/items/potion/icon_potionArmor_lock.png",
             stat);
+
     }
 
     @Override
     public  void applyItem(Player targetEntity){
-        System.out.println("applying Armor potion, current armor bonus: " + getIncreaseValue());
-        System.out.println("time duration : " + timeDuration);
-        setIncreaseValue(stat.getDeaths());
+        setIncreaseValue(10 * stat.getFloors());
         targetEntity.setArmor(targetEntity.getArmor() + getIncreaseValue());
+        System.out.println("applying Armor potion, current armor: " + targetEntity.getArmor());
+        System.out.println("time duration : " + timeDuration);
     }
 
     @Override
     public void resetItem(Player targetEntity){
         targetEntity.setArmor(0);
-        System.out.println("reset Armor potion, current armor bonus: " + targetEntity.getArmor());
+        System.out.println("reset Armor potion, current armor : " + targetEntity.getArmor());
     }
 
     @Override
     public boolean isUnlocked(GameStat stat) {
-        return stat.getMaxFloors() >= 6;
+        return stat.getMaxFloors() >= 7;
     }
 }

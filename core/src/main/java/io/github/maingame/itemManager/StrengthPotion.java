@@ -6,7 +6,7 @@ import io.github.maingame.utilsManager.GameStat;
 public class StrengthPotion extends Consumable{
 
     public StrengthPotion(GameStat stat) {
-        super(50 + 10 * stat.getMaxFloors(), 10 ,
+        super(160, 30,
             "icons/items/potion/icon_potionStrength.png",
             "icons/items/potion/icon_potionStrength_bought.png",
             "icons/items/potion/icon_potionStrength_lock.png",
@@ -24,9 +24,8 @@ public class StrengthPotion extends Consumable{
 
     @Override
     public void resetItem(Player targetEntity) {
-        System.out.println("reset strength potion, reset bonus: " + getIncreaseValue());
-        System.out.println("time duration : " + timeDuration);
         targetEntity.setAttackBonus(0);
+        System.out.println("reset strength potion, reset bonus: " + targetEntity.getAttackBonus());
     }
 
     @Override
