@@ -7,8 +7,11 @@ import io.github.maingame.utilsManager.GameStat;
 public class Armor extends Gear{
     protected int reductionDamage;
     public Armor(int lvl) {
-        super(450 * lvl - 200,"assets/items/armor/lvl" + lvl + ".png","assets/items/armor/lvl" + lvl + "Buy.png", "assets/items/armor/lvl" + lvl + "Lock.png" ,lvl);
-        this.reductionDamage = 5;
+        super((int) (300 * Math.pow(2, lvl - 1)),
+            "assets/items/armor/lvl" + lvl + ".png",
+            "assets/items/armor/lvl" + lvl + "Buy.png",
+            "assets/items/armor/lvl" + lvl + "Lock.png",
+            lvl);        this.reductionDamage = 5;
     }
 
     @Override
