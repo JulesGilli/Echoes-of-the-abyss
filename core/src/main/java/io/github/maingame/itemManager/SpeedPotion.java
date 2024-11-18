@@ -5,9 +5,9 @@ import io.github.maingame.utilsManager.GameStat;
 public class SpeedPotion extends Consumable {
     public SpeedPotion(GameStat stat) {
         super(50 + 10 * stat.getMaxFloors(), 50,
-            "icons/items/icon_potionSpeed.png",
-            "icons/items/icon_potionSpeed_bought.png",
-            "icons/items/icon_potionSpeed_lock.png",
+            "icons/items/potion/icon_potionSpeed.png",
+            "icons/items/potion/icon_potionSpeed_bought.png",
+            "icons/items/potion/icon_potionSpeed_lock.png",
             stat);
         stat.setSpeedPotionUse(stat.getSpeedPotionUse() + 1);
     }

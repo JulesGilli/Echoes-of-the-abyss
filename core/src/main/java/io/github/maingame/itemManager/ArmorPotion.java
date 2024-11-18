@@ -7,9 +7,9 @@ import io.github.maingame.utilsManager.GameStat;
 public class ArmorPotion extends Consumable {
     public ArmorPotion(GameStat stat) {
         super(50 + 10 * stat.getMaxFloors(), 50,
-            "icons/items/icon_potionArmor",
-            "icons/items/icon_potionArmor_bought.png",
-            "icons/items/icon_potionArmor_lock.png",
+            "icons/items/potion/icon_potionArmor.png",
+            "icons/items/potion/icon_potionArmor_bought.png",
+            "icons/items/potion/icon_potionArmor_lock.png",
             stat);
     }
 
