@@ -32,9 +32,15 @@ public class Player extends Entity {
     private Inventory inventory;
 
     public Player(Vector2 position, List<Platform> platforms, int leftKey, int rightKey, int jumpKey, int attackKey, int rollKey, int potionKey){
-        super(position, new AnimationManager("_Run.png","_Idle.png","_Jump.png",
-            "_Attack.png","_Death.png","_Roll.png", 120, 80, 0.1f,0.04f),
-            300,100, 25);
+        super(position,
+            new AnimationManager(
+                "atlas/player/sprite_player_walk.png",
+                "atlas/player/sprite_player_idle.png",
+                "atlas/player/sprite_player_jump.png",
+            "atlas/player/sprite_player_attack.png",
+                "atlas/player/sprite_player_death.png",
+                "atlas/player/sprite_player_roll.png",
+                120, 80, 0.1f,0.04f), 300,100, 25);
 
         this.leftKey = leftKey;
         this.rightKey = rightKey;
