@@ -39,7 +39,7 @@ public abstract class Entity implements lifeCycle{
 
     protected boolean isHit = false;
     protected float hitAnimationTime = 0f;
-    protected float hitDuration = 0.5f;
+    protected float hitDuration = 0.3f;
 
 
     public Entity(Vector2 position, AnimationManager animation, float health, int gold, float attack) {

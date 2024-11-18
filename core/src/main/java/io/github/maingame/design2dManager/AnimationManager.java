@@ -49,6 +49,16 @@ public class AnimationManager {
         return new Animation<>(stepDuration, frames);
     }
 
+    public void updateFrameDurations(float speedMultiplier) {
+        updateAnimationFrameDuration(attackCase, speedMultiplier);
+    }
+
+    private void updateAnimationFrameDuration(Animation<TextureRegion> animation, float speedMultiplier) {
+        float originalFrameDuration = animation.getFrameDuration();
+        animation.setFrameDuration(originalFrameDuration * speedMultiplier);
+    }
+
+
     public Animation<TextureRegion> getAttackCase() {
         return attackCase;
     }
