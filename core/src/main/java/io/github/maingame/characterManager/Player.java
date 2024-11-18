@@ -197,14 +197,6 @@ public class Player extends Entity {
         batch.draw(currentFrame, position.x, position.y,renderWidth, renderHeight);
     }
 
-    public void dispose(){
-        animation.getIdleCase().getKeyFrames()[0].getTexture().dispose();
-        animation.getAttackCase().getKeyFrames()[0].getTexture().dispose();
-        animation.getJumpCase().getKeyFrames()[0].getTexture().dispose();
-        animation.getWalkCase().getKeyFrames()[0].getTexture().dispose();
-        animation.getDeathCase().getKeyFrames()[0].getTexture().dispose();
-    }
-
     public void prepareForNewGame() {
         health = maxHealth;
         position.set(initialPosition);
@@ -240,7 +232,7 @@ public class Player extends Entity {
     public boolean isDeathAnimationFinished() {
         return isDead && animationTime >= animation.getDeathCase().getAnimationDuration();
     }
-    
+
     public void setLeftKey(int leftKey) {
         this.leftKey = leftKey;
     }
