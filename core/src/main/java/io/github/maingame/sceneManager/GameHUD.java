@@ -159,13 +159,13 @@ public class GameHUD {
 
 
     private void drawHealthBar(SpriteBatch batch, Player player, float screenHeight) {
-        float offset = 100;
-        float sizeHealthBar = 4;
+        float offset = 70;
+        float sizeHealthBar = 2;
         batch.draw(healthFrame, offset, screenHeight - offset, healthFrame.getWidth() * sizeHealthBar, healthFrame.getHeight() * sizeHealthBar);
 
         float healthPercentage = player.getHealth() / (float) player.getMaxHealth();
         float healthBarWidth = healthBar.getWidth() * healthPercentage;
-        batch.draw(healthBar, offset + 64, screenHeight - offset + 36, healthBarWidth * sizeHealthBar * 1.025f, healthBar.getHeight() * sizeHealthBar);
+        batch.draw(healthBar, offset + 12, screenHeight - offset + 12, healthBarWidth * sizeHealthBar * 1f, healthBar.getHeight() * sizeHealthBar);
     }
 
     private void drawGold(SpriteBatch batch, Player player, float screenWidth, float screenHeight) {
