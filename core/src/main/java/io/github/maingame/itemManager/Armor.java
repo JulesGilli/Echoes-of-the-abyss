@@ -11,7 +11,8 @@ public class Armor extends Gear{
             "assets/items/armor/lvl" + lvl + ".png",
             "assets/items/armor/lvl" + lvl + "Buy.png",
             "assets/items/armor/lvl" + lvl + "Lock.png",
-            lvl);        this.reductionDamage = 5;
+            lvl);
+        this.reductionDamage = 5;
     }
 
     @Override
