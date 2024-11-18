@@ -240,7 +240,7 @@ public class Player extends Entity {
     public boolean isDeathAnimationFinished() {
         return isDead && animationTime >= animation.getDeathCase().getAnimationDuration();
     }
-
+    
     public void setLeftKey(int leftKey) {
         this.leftKey = leftKey;
     }

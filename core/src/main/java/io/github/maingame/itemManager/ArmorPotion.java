@@ -6,25 +6,25 @@ import io.github.maingame.utilsManager.GameStat;
 
 public class ArmorPotion extends Consumable {
     public ArmorPotion(GameStat stat) {
-        super(50 + 10 * stat.getMaxFloors(), 50,"assets/items/armorPotion.png","assets/items/armorPotionBuy.png","assets/items/armorPotionLock.png", stat);
+        super(200, 30,"assets/items/armorPotion.png","assets/items/armorPotionBuy.png","assets/items/armorPotionLock.png", stat);
     }
 
     @Override
     public  void applyItem(Player targetEntity){
-        System.out.println("applying Armor potion, current armor bonus: " + getIncreaseValue());
-        System.out.println("time duration : " + timeDuration);
-        setIncreaseValue(stat.getDeaths());
+        setIncreaseValue(10 * stat.getFloors());
         targetEntity.setArmor(targetEntity.getArmor() + getIncreaseValue());
+        System.out.println("applying Armor potion, current armor: " + targetEntity.getArmor());
+        System.out.println("time duration : " + timeDuration);
     }
 
     @Override
     public void resetItem(Player targetEntity){
         targetEntity.setArmor(0);
-        System.out.println("reset Armor potion, current armor bonus: " + targetEntity.getArmor());
+        System.out.println("reset Armor potion, current armor : " + targetEntity.getArmor());
     }
 
     @Override
     public boolean isUnlocked(GameStat stat) {
-        return stat.getMaxFloors() >= 6;
+        return stat.getMaxFloors() >= 7;
     }
 }
