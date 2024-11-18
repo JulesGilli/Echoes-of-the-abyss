@@ -64,7 +64,7 @@ public class GameHUD {
         healthBar = new Texture(Gdx.files.internal("GUI/sprite_healthBar.png"));
         buttonMenu = new Texture(Gdx.files.internal("GUI/button_basic.png"));
         backgroundGUI = new Texture(Gdx.files.internal("backgrounds/background_gamescreen_GUI.png"));
-        goldIcon = new Texture(Gdx.files.internal("GUI/icon_gold.png"));
+        goldIcon = new Texture(Gdx.files.internal("icons/icon_gold.png"));
         headerGUI = new Texture(Gdx.files.internal("GUI/header_floors.png"));
         statTicket = new Texture(Gdx.files.internal("GUI/button_basic.png"));
         statBackground = new Texture(Gdx.files.internal("backgrounds/background_gamescreen_GUI.png"));

@@ -5,7 +5,11 @@ import io.github.maingame.utilsManager.GameStat;
 
 public class HealPotion extends Consumable{
     public HealPotion(GameStat stat) {
-        super(50 + 10 * stat.getMaxFloors(), 50,"assets/items/healPotion.png","assets/items/healPotionBuy.png","assets/items/healPotionLock.png", stat);
+        super(50 + 10 * stat.getMaxFloors(), 50,
+            "icons/items/icon_potionHealth.png",
+            "icons/items/icon_potionHealth_bought.png",
+            "icons/items/icon_potionHealth_lock.png",
+            stat);
     }
 
     @Override

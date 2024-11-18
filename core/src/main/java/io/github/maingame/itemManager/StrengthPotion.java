@@ -6,7 +6,11 @@ import io.github.maingame.utilsManager.GameStat;
 public class StrengthPotion extends Consumable{
 
     public StrengthPotion(GameStat stat) {
-        super(50 + 10 * stat.getMaxFloors(), 10 ,"assets/items/strengthPotion.png","assets/items/strengthPotionBuy.png","assets/items/strengthPotionLock.png", stat);
+        super(50 + 10 * stat.getMaxFloors(), 10 ,
+            "icons/items/icon_potionStrength.png",
+            "icons/items/icon_potionStrength_bought.png",
+            "icons/items/icon_potionStrength_lock.png",
+            stat);
     }
 
     @Override
