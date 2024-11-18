@@ -18,12 +18,12 @@ public class Goblin extends Enemy {
             player,
             gameStat,
             new AnimationManager(
-                "GoblinWalk.png",
-                "GoblinIdle.png",
-                "GoblinWalk.png",
-                "GoblinAttack.png",
-                "GoblinDeath.png",
-                "GoblinWalk.png",
+                "atlas/goblin/sprite_goblin_walk.png",
+                "atlas/goblin/sprite_goblin_idle.png",
+                "atlas/goblin/sprite_goblin_walk.png",
+                "atlas/goblin/sprite_goblin_attack.png",
+                "atlas/goblin/sprite_goblin_death.png",
+                "atlas/goblin/sprite_goblin_walk.png",
                 150, 101, 0.15f, 0.1f
             ),
             30,

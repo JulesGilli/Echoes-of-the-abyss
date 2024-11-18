@@ -18,12 +18,12 @@ public class Mushroom extends Enemy {
             player,
             gameStat,
             new AnimationManager(
-                "MushroomWalk.png",
-                "MushroomIdle.png",
-                "MushroomWalk.png",
-                "MushroomAttack.png",
-                "MushroomDeath.png",
-                "MushroomWalk.png",
+                "atlas/mushroom/sprite_mushroom_walk.png",
+                "atlas/mushroom/sprite_mushroom_idle.png",
+                "atlas/mushroom/sprite_mushroom_walk.png",
+                "atlas/mushroom/sprite_mushroom_attack.png",
+                "atlas/mushroom/sprite_mushroom_death.png",
+                "atlas/mushroom/sprite_mushroom_walk.png",
                 150, 101, 0.2f, 0.15f
             ),
             80,

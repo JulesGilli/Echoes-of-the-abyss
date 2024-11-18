@@ -18,12 +18,12 @@ public class FlyingEye extends Enemy {
             player,
             gameStat,
             new AnimationManager(
-                "FlyingEyeFly.png",
-                "FlyingEyeIdle.png",
-                "FlyingEyeFly.png",
-                "FlyingEyeAttack.png",
-                "FlyingEyeDeath.png",
-                "FlyingEyeWalkfq.png",
+                "atlas/flyingeye/sprite_flyingeye_walk.png",
+                "atlas/flyingeye/sprite_flyingeye_idle.png",
+                "atlas/flyingeye/sprite_flyingeye_walk.png",
+                "atlas/flyingeye/sprite_flyingeye_attack.png",
+                "atlas/flyingeye/sprite_flyingeye_death.png",
+                "atlas/flyingeye/sprite_flyingeye_walk.png",
                 120, 101, 0.1f, 0.1f
             ),
             20,

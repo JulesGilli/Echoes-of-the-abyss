@@ -18,12 +18,12 @@ public class Skeleton extends Enemy {
             player,
             gameStat,
             new AnimationManager(
-                "SkeletonWalk.png",
-                "SkeletonIdle.png",
-                "SkeletonWalk.png",
-                "SkeletonAttack.png",
-                "SkeletonDeath.png",
-                "SkeletonWalk.png",
+                "atlas/skeleton/sprite_skeleton_walk.png",
+                "atlas/skeleton/sprite_skeleton_idle.png",
+                "atlas/skeleton/sprite_skeleton_walk.png",
+                "atlas/skeleton/sprite_skeleton_attack.png",
+                "atlas/skeleton/sprite_skeleton_death.png",
+                "atlas/skeleton/sprite_skeleton_walk.png",
                 150, 101, 0.1f, 0.1f
             ),
             50,
