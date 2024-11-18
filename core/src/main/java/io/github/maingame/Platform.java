@@ -20,7 +20,7 @@ public class Platform implements lifeCycle {
 
     public Platform(float x, float y, float width, float height) {
         this.bounds = new Rectangle(x, y, width, height);
-        this.texture = TextureManager.getTexture("platform.png");
+        this.texture = TextureManager.getTexture("environment/sprite_platform.png");
     }
 
     public static void createPlatforms() {
