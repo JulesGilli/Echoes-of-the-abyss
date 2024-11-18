@@ -36,8 +36,6 @@ public abstract class Entity implements lifeCycle{
     protected float initialHealth;
     protected int initialGold;
     protected float initialAttack;
-    protected boolean isDead = false;
-    protected Inventory inventory;
 
     protected boolean isHit = false;
     protected float hitAnimationTime = 0f;
@@ -54,13 +52,6 @@ public abstract class Entity implements lifeCycle{
         this.attackDamage = attack;
     }
 
-    protected Vector2 getCenterPosition() {
-        return new Vector2(
-            position.x + renderWidth / 2f,
-            position.y + renderHeight / 2f
-        );
-    }
-
     public void render(SpriteBatch batch) {
         TextureRegion currentFrame = getCurrentFrame();
         batch.draw(
@@ -71,8 +62,6 @@ public abstract class Entity implements lifeCycle{
             renderHeight
         );
     }
-
-
 
     public void applyGravity(){
         if (isJumping) {
@@ -116,8 +105,6 @@ public abstract class Entity implements lifeCycle{
         }
     }
 
-
-
     public TextureRegion flipAnimationCheck(TextureRegion currentFrame) {
         if ((isLookingRight && currentFrame.isFlipX()) || (!isLookingRight && !currentFrame.isFlipX())) {
             currentFrame.flip(true, false);
@@ -159,7 +146,6 @@ public abstract class Entity implements lifeCycle{
         isWalking = true;
     }
 
-
     public boolean isCollidingWith(Entity other, float attackRange) {
         float thisLeft = position.x;
         float thisRight = position.x + other.renderWidth * 0.5f;
@@ -182,7 +168,6 @@ public abstract class Entity implements lifeCycle{
     public boolean isAlive() {
         return health > 0;
     }
-
 
     public int getGold() {
         return gold;

@@ -29,7 +29,7 @@ public class Mushroom extends Enemy {
             ),
             80,
             200,
-            10,
+            20,
             100,
             1.5f
         );

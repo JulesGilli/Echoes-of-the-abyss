@@ -27,7 +27,7 @@ public class Skeleton extends Enemy {
             ),
             50,
             300,
-            10,
+            20,
             200,
             1.5f
         );

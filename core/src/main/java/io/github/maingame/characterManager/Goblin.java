@@ -29,9 +29,9 @@ public class Goblin extends Enemy {
             ),
             30,
             400,
-            5,
+            15,
             150,
-            1.2f
+            1f
         );
     }
 

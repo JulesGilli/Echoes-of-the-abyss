@@ -62,7 +62,7 @@ public class Player extends Entity {
         this.platforms = platforms;
         this.renderWidth = 450;
         this.renderHeight = 300;
-        this.attackRange = 200;
+        this.attackRange = 50;
 
     }
 
