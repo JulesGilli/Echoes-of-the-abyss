@@ -9,12 +9,10 @@ import java.util.List;
 public class Shop {
     private final List<Item> items = new ArrayList<>();
     private GameStat gameStat;
-    private Inventory inventory;
     private final Player player;
 
-    public Shop(Inventory inventory, GameStat gameStat, Player player) {
+    public Shop(GameStat gameStat, Player player) {
         this.player = player;
-        this.inventory = inventory;
         this.gameStat = gameStat;
 
         for (int i = 1; i < 6; i++){
@@ -28,21 +26,19 @@ public class Shop {
         items.add(new StrengthPotion(gameStat));
         items.add(new ArmorPotion(gameStat));
         this.gameStat = gameStat;
-        this.inventory = inventory;
     }
 
     public boolean isAvailable(Item item){
         if (gameStat.getGolds() < item.getGold())
             return false;
         if (item instanceof Weapon){
-
-            return !inventory.containWeapon();
+            return !player.getInventory().containWeapon();
         }
         if (item instanceof Armor){
-            return !inventory.containArmor();
+            return !player.getInventory().containArmor();
         }
         if (item instanceof Consumable){
-            return !inventory.containConsumable();
+            return !player.getInventory().containConsumable();
         }
         return true;
     }
@@ -51,19 +47,20 @@ public class Shop {
         if (player == null) {
             throw new IllegalStateException("Le joueur n'a pas été initialisé correctement.");
         }
-        if (isAvailable(item) && stat.getGolds() >= item.gold) {
+
+        if (item.isUnlocked(stat) && isAvailable(item)){
             stat.setGolds(stat.getGolds() - item.gold);
-            player.equipItem(item);
+            player.getInventory().addItem(item);
+            System.out.println("item acheté");
             return true;
         }
-        return false;
+        else {
+            System.out.println("achat impossible");
+            return false;
+        }
     }
 
     public List<Item> getItems() {
         return items;
-    }
-
-    public Inventory getInventory() {
-        return inventory;
     }
 }

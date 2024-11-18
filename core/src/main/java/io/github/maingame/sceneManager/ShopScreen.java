@@ -55,7 +55,7 @@ public class ShopScreen extends ScreenAdapter {
         this.stat = stat;
         this.player = player;
         this.batch = new SpriteBatch();
-        this.shop = new Shop(new Inventory(), stat, player);
+        this.shop = new Shop(stat, player);
         this.items = shop.getItems();
         shopWidth = 876 * shopSize;
         shopHeight = 641 * shopSize;
@@ -91,7 +91,7 @@ public class ShopScreen extends ScreenAdapter {
         } else {
             batch.draw(item.getTextureDisabled(), getItemAssetPosition(number).x + 10, getItemAssetPosition(number).y - 67, 75, 75);
         }
-        if (shop.getInventory().inInventory(item)){
+        if (player.getInventory().inInventory(item)){
             font.draw(batch,"bought", getItemGoldPosition(number).x - 50, getItemGoldPosition(number).y);
 
         } else{
@@ -123,17 +123,9 @@ public class ShopScreen extends ScreenAdapter {
             }
             for (int i = 0; i < 12; i++){
                 if (listButtons.get(i).contains(clickPosition)) {
-                    if (items.get(i).isUnlocked(stat)) {
-                        if (shop.buyItem(stat, items.get(i))) {
-                            batch.draw(items.get(i).getTextureDisabled(), getItemAssetPosition(i).x + 10, getItemAssetPosition(i).y - 67, 75, 75);
-                            font.draw(batch, "bought", getItemGoldPosition(i).x - 50, getItemGoldPosition(i).y);
-                            System.out.println("Item acheté : " + items.get(i).getStrGold());
-
-                        } else {
-                            System.out.println("Achat échoué !");
-                        }
-                    } else {
-                        System.out.println("Item non débloqué");;
+                    if (shop.buyItem(stat, items.get(i))){
+                        batch.draw(items.get(i).getTextureDisabled(), getItemAssetPosition(i).x + 10, getItemAssetPosition(i).y - 67, 75, 75);
+                        font.draw(batch, "bought", getItemGoldPosition(i).x - 50, getItemGoldPosition(i).y);
                     }
                 }
             }
