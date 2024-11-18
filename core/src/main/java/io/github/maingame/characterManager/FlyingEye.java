@@ -24,6 +24,7 @@ public class FlyingEye extends Enemy {
                 "atlas/flyingeye/sprite_flyingeye_attack.png",
                 "atlas/flyingeye/sprite_flyingeye_death.png",
                 "atlas/flyingeye/sprite_flyingeye_walk.png",
+                "atlas/flyingeye/sprite_flyingeye_hit.png",
                 120, 101, 0.1f, 0.1f
             ),
             20,

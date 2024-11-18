@@ -22,6 +22,7 @@ public class Skeleton extends Enemy {
                 "atlas/skeleton/sprite_skeleton_attack.png",
                 "atlas/skeleton/sprite_skeleton_death.png",
                 "atlas/skeleton/sprite_skeleton_walk.png",
+                "atlas/skeleton/sprite_skeleton_hit.png",
                 150, 101, 0.1f, 0.1f
             ),
             50,

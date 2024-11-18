@@ -24,6 +24,7 @@ public class Goblin extends Enemy {
                 "atlas/goblin/sprite_goblin_attack.png",
                 "atlas/goblin/sprite_goblin_death.png",
                 "atlas/goblin/sprite_goblin_walk.png",
+                "atlas/goblin/sprite_goblin_hit.png",
                 150, 101, 0.15f, 0.1f
             ),
             30,

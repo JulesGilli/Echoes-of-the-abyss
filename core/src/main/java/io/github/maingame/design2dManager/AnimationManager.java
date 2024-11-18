@@ -14,14 +14,16 @@ public class AnimationManager {
     private Animation<TextureRegion> attackCase;
     private Animation<TextureRegion> deathCase;
     private Animation<TextureRegion> rollCase;
+    private Animation<TextureRegion> hitCase;
 
-    public AnimationManager(String walkAsset, String idleAsset, String jumpAsset, String attackAsset, String deathAsset, String rollAsset, int frameWidth, int frameHeight, float frameDuration,float rollFrameDuration) {
+    public AnimationManager(String walkAsset, String idleAsset, String jumpAsset, String attackAsset, String deathAsset, String rollAsset, String hitAsset, int frameWidth, int frameHeight, float frameDuration,float rollFrameDuration) {
         Texture walkSteps = new Texture(Gdx.files.internal(walkAsset));
         Texture idleSteps= new Texture(Gdx.files.internal(idleAsset));
         Texture jumpSteps = new Texture(Gdx.files.internal(jumpAsset));
         Texture attackSteps = new Texture(Gdx.files.internal(attackAsset));
         Texture deathSteps = new Texture(Gdx.files.internal(deathAsset));
         Texture rollSteps = new Texture(Gdx.files.internal(rollAsset));
+        Texture hitSteps = new Texture(Gdx.files.internal(hitAsset));
 
 
         walkCase= createAnimation(walkSteps, frameWidth, frameHeight, frameDuration);
@@ -30,6 +32,7 @@ public class AnimationManager {
         attackCase = createAnimation(attackSteps, frameWidth, frameHeight, frameDuration);
         deathCase = createAnimation(deathSteps, frameWidth, frameHeight, frameDuration);
         rollCase = createAnimation(rollSteps, frameWidth, frameHeight, rollFrameDuration);
+        hitCase = createAnimation(hitSteps, frameWidth, frameHeight, frameDuration);
     }
 
     private Animation<TextureRegion> createAnimation(Texture allSteps, int stepWidth, int stepHeight, float stepDuration) {
@@ -70,6 +73,11 @@ public class AnimationManager {
         return rollCase;
     }
 
+    public Animation<TextureRegion> getHitCase() {
+        return hitCase;
+    }
+
+
     public void dispose() {
         walkCase.getKeyFrames()[0].getTexture().dispose();
         idleCase.getKeyFrames()[0].getTexture().dispose();
@@ -77,6 +85,7 @@ public class AnimationManager {
         attackCase.getKeyFrames()[0].getTexture().dispose();
         deathCase.getKeyFrames()[0].getTexture().dispose();
         rollCase.getKeyFrames()[0].getTexture().dispose();
+        hitCase.getKeyFrames()[0].getTexture().dispose();
     }
 
 }

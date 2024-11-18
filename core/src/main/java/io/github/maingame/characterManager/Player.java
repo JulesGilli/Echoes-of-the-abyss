@@ -39,7 +39,8 @@ public class Player extends Entity {
             "atlas/player/sprite_player_attack.png",
                 "atlas/player/sprite_player_death.png",
                 "atlas/player/sprite_player_roll.png",
-                120, 80, 0.1f,0.04f), 300,100, 25);
+                "atlas/player/sprite_player_hit.png",
+                120, 80, 0.1f,0.04f), 100,100, 25);
 
         this.leftKey = leftKey;
         this.rightKey = rightKey;
@@ -132,6 +133,7 @@ public class Player extends Entity {
         this.health -= reducedDamage;
 
         if (this.health <= 0) {
+            this.health = 0;
             isDead = true;
             animationTime = 0f;
         }

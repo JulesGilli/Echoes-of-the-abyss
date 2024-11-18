@@ -78,6 +78,8 @@ public abstract class Enemy extends Entity {
                 animationTime = 0f;
                 goldTexts.add(new GoldText("+10", new Vector2(position.x, position.y)));
             } else {
+                isHit = true;
+                hitAnimationTime = 0f;
                 invulnerabilityTimer = invulnerabilityDuration;
             }
         }
@@ -87,7 +89,12 @@ public abstract class Enemy extends Entity {
     public void update(float delta) {
         timeSinceLastAttack += delta;
 
-        if (isDying) {
+        if (isHit) {
+            hitAnimationTime += delta;
+            if (hitAnimationTime >= hitDuration) {
+                isHit = false;
+            }
+        } else if (isDying) {
             animationTime += delta;
             if (animation.getDeathCase().isAnimationFinished(animationTime)) {
                 isDead = true;
@@ -150,7 +157,9 @@ public abstract class Enemy extends Entity {
 
     @Override
     public TextureRegion getCurrentFrame() {
-        if (isDying) {
+        if (isHit) {
+            return flipAnimationCheck(animation.getHitCase().getKeyFrame(hitAnimationTime, false));
+        } else if (isDying) {
             return flipAnimationCheck(animation.getDeathCase().getKeyFrame(animationTime, false));
         } else if (isAttacking) {
             return flipAnimationCheck(animation.getAttackCase().getKeyFrame(animationTime, true));
@@ -162,6 +171,7 @@ public abstract class Enemy extends Entity {
             return flipAnimationCheck(animation.getIdleCase().getKeyFrame(animationTime, true));
         }
     }
+
 
 
     @Override

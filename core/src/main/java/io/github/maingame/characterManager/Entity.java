@@ -39,6 +39,11 @@ public abstract class Entity implements lifeCycle{
     protected boolean isDead = false;
     protected Inventory inventory;
 
+    protected boolean isHit = false;
+    protected float hitAnimationTime = 0f;
+    protected float hitDuration = 0.5f;
+
+
     public Entity(Vector2 position, AnimationManager animation, float health, int gold, float attack) {
         this.position = position;
         this.velocity = new Vector2(0, 0);
