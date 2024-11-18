@@ -24,11 +24,12 @@ public class Mushroom extends Enemy {
                 "atlas/mushroom/sprite_mushroom_attack.png",
                 "atlas/mushroom/sprite_mushroom_death.png",
                 "atlas/mushroom/sprite_mushroom_walk.png",
+                "atlas/mushroom/sprite_mushroom_hit.png",
                 150, 101, 0.2f, 0.15f
             ),
             80,
             200,
-            10,
+            20,
             100,
             1.5f
         );

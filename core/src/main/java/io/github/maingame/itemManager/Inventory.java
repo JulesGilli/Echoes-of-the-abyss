@@ -70,6 +70,8 @@ public class Inventory {
             if (item instanceof Consumable){
                 Consumable consumable = (Consumable) item;
                 consumable.applyItem(target);
+                removeItem(consumable);
+
                 new Thread(() -> {
                     try {
                         Thread.sleep(consumable.getTimeDuration()* 1000L);
@@ -79,9 +81,22 @@ public class Inventory {
                         e.printStackTrace();
                     }
                 }).start();
+                break;
             }
         }
     }
+
+    public String getPotionTexture() {
+        for (Item item : items) {
+            if (item instanceof Consumable) {
+                return item.getClass().getSimpleName();
+            }
+        }
+        return null;
+    }
+
+
+
 
     public List<Item> getItems() {
         return items;

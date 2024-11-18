@@ -5,7 +5,12 @@ import io.github.maingame.utilsManager.GameStat;
 
 public class HealPotion extends Consumable{
     public HealPotion(GameStat stat) {
-        super(80, 30,"assets/items/healPotion.png","assets/items/healPotionBuy.png","assets/items/healPotionLock.png", stat);
+        super(80, 30,
+            "icons/items/potion/icon_potionHealth.png",
+            "icons/items/potion/icon_potionHealth_bought.png",
+            "icons/items/potion/icon_potionHealth_lock.png",
+            stat);
+
     }
 
     @Override

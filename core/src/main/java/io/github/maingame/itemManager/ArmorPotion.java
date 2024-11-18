@@ -6,7 +6,12 @@ import io.github.maingame.utilsManager.GameStat;
 
 public class ArmorPotion extends Consumable {
     public ArmorPotion(GameStat stat) {
-        super(200, 30,"assets/items/armorPotion.png","assets/items/armorPotionBuy.png","assets/items/armorPotionLock.png", stat);
+        super(200,30,
+            "icons/items/potion/icon_potionArmor.png",
+            "icons/items/potion/icon_potionArmor_bought.png",
+            "icons/items/potion/icon_potionArmor_lock.png",
+            stat);
+
     }
 
     @Override

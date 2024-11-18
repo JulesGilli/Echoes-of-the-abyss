@@ -39,7 +39,8 @@ public class Player extends Entity {
             "atlas/player/sprite_player_attack.png",
                 "atlas/player/sprite_player_death.png",
                 "atlas/player/sprite_player_roll.png",
-                120, 80, 0.1f,0.04f), 300,100, 25);
+                "atlas/player/sprite_player_hit.png",
+                120, 80, 0.1f,0.04f), 100,100, 25);
 
         this.leftKey = leftKey;
         this.rightKey = rightKey;
@@ -61,7 +62,7 @@ public class Player extends Entity {
         this.platforms = platforms;
         this.renderWidth = 450;
         this.renderHeight = 300;
-        this.attackRange = 200;
+        this.attackRange = 50;
 
     }
 
@@ -132,6 +133,7 @@ public class Player extends Entity {
         this.health -= reducedDamage;
 
         if (this.health <= 0) {
+            this.health = 0;
             isDead = true;
             animationTime = 0f;
         }
@@ -196,14 +198,6 @@ public class Player extends Entity {
         batch.draw(currentFrame, position.x, position.y,renderWidth, renderHeight);
     }
 
-    public void dispose(){
-        animation.getIdleCase().getKeyFrames()[0].getTexture().dispose();
-        animation.getAttackCase().getKeyFrames()[0].getTexture().dispose();
-        animation.getJumpCase().getKeyFrames()[0].getTexture().dispose();
-        animation.getWalkCase().getKeyFrames()[0].getTexture().dispose();
-        animation.getDeathCase().getKeyFrames()[0].getTexture().dispose();
-    }
-
     public void prepareForNewGame() {
         health = maxHealth;
         position.set(initialPosition);
@@ -227,13 +221,6 @@ public class Player extends Entity {
                 ((Gear) item).applyItem(this);
             }
         }
-    }
-
-    public void onDeath() {
-        isDead = true;
-        inventory.clear(this);
-        velocity.set(0, 0);
-        reset();
     }
 
     public boolean isDeathAnimationFinished() {
@@ -260,30 +247,10 @@ public class Player extends Entity {
         this.rollKey = rollKey;
     }
 
-    public boolean isDead() {
-        return isDead;
-    }
 
     @Override
     public void update(float delta) {
 
-    }
-
-    public boolean isLookingRight() {
-        return isLookingRight;
-    }
-
-    public double getInitialHealth() {
-        return maxHealth;
-    }
-
-
-    public void setLookingRight(boolean b) {
-        isLookingRight = b;
-    }
-
-    public boolean isJumping() {
-        return isJumping;
     }
 
     public Inventory getInventory() {

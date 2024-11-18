@@ -22,6 +22,9 @@ public abstract class Enemy extends Entity {
     protected float attackDelay = 0.3f;
     protected float attackDelayTimer = 0f;
 
+    protected float baseAttackDamage;
+    protected float baseSpeed;
+
     protected boolean isDead = false;
     protected boolean isDying = false;
     protected boolean hasHitPlayer = false;
@@ -39,13 +42,25 @@ public abstract class Enemy extends Entity {
         this.speed = speed;
         this.range = range;
         this.attackCooldown = attackCooldown;
+
+        this.baseAttackDamage = attackDamage;
+        this.baseSpeed = speed;
     }
 
     public void updateStats(GameStat stat) {
-        float waveMultiplier = 1 + (stat.getFloors() * 0.5f);
-        this.health = this.maxHealth * waveMultiplier;
-        this.attackDamage *= waveMultiplier;
+        int level = stat.getFloors();
+        float multiplier = (float) Math.pow(1.3, level - 1);
+
+        this.health = this.maxHealth * multiplier;
+
+        this.attackDamage = this.baseAttackDamage * multiplier;
+
+        this.speed = this.baseSpeed * (1 + (level - 1) * 0.1f);
+
+        float animationSpeedMultiplier = 1 / (1 + (level - 1) * 0.1f);
+        animation.updateFrameDurations(animationSpeedMultiplier);
     }
+
 
 
     protected boolean isPlayerInFront() {
@@ -78,6 +93,8 @@ public abstract class Enemy extends Entity {
                 animationTime = 0f;
                 goldTexts.add(new GoldText("+10", new Vector2(position.x, position.y)));
             } else {
+                isHit = true;
+                hitAnimationTime = 0f;
                 invulnerabilityTimer = invulnerabilityDuration;
             }
         }
@@ -92,24 +109,37 @@ public abstract class Enemy extends Entity {
             if (animation.getDeathCase().isAnimationFinished(animationTime)) {
                 isDead = true;
             }
-        } else {
+            return;
+        }
+
             if (invulnerabilityTimer > 0) {
                 invulnerabilityTimer -= delta;
             }
 
+            if (isHit) {
+                hitAnimationTime += delta;
+                if (hitAnimationTime >= hitDuration) {
+                    isHit = false;
+                    hitAnimationTime = 0f;
+                }
+            return;
+            }
+
             makeAction(delta);
 
-            animationTime += delta;
-
-            if (isAttacking) {
-                checkAttackFinish();
-            } else {
+            if (!isHit) {
                 applyGravity();
                 checkOnPlatform();
                 position.add(velocity.cpy().scl(delta));
                 checkOnFloor();
             }
-        }
+
+            animationTime += delta;
+
+            if (isAttacking) {
+                checkAttackFinish();
+            }
+
     }
 
     public abstract void makeAction(float delta);
@@ -150,7 +180,9 @@ public abstract class Enemy extends Entity {
 
     @Override
     public TextureRegion getCurrentFrame() {
-        if (isDying) {
+        if (isHit) {
+            return flipAnimationCheck(animation.getHitCase().getKeyFrame(hitAnimationTime, false));
+        } else if (isDying) {
             return flipAnimationCheck(animation.getDeathCase().getKeyFrame(animationTime, false));
         } else if (isAttacking) {
             return flipAnimationCheck(animation.getAttackCase().getKeyFrame(animationTime, true));
@@ -164,8 +196,11 @@ public abstract class Enemy extends Entity {
     }
 
 
+
     @Override
     protected void checkAttackFinish() {
+        if (isHit) return;
+
         if (animation.getAttackCase().isAnimationFinished(animationTime)) {
             isAttacking = false;
             animationTime = 0f;

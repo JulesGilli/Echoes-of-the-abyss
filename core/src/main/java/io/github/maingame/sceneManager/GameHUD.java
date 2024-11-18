@@ -14,6 +14,9 @@ import io.github.maingame.Main;
 import io.github.maingame.characterManager.Player;
 import io.github.maingame.utilsManager.GameStat;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class GameHUD {
     private final Main game;
     private final BitmapFont goldFont;
@@ -27,9 +30,9 @@ public class GameHUD {
     private final Texture headerGUI;
     private final Texture statBackground;
     private final Texture statTicket;
-    private final GlyphLayout layout;
+    private final Map<String, Texture> potionTextures = new HashMap<>();    private final GlyphLayout layout;
     private final GameStat stat;
-    private Player player;
+    private final Player player;
 
     private final Rectangle mainMenuButtonBounds;
     private final Rectangle resumeButtonBounds;
@@ -60,11 +63,16 @@ public class GameHUD {
 
         generator.dispose();
 
+        potionTextures.put("StrengthPotion", new Texture(Gdx.files.internal("icons/items/potion/icon_potionStrength.png")));
+        potionTextures.put("SpeedPotion", new Texture(Gdx.files.internal("icons/items/potion/icon_potionSpeed.png")));
+        potionTextures.put("HealPotion", new Texture(Gdx.files.internal("icons/items/potion/icon_potionHealth.png")));
+        potionTextures.put("ArmorPotion", new Texture(Gdx.files.internal("icons/items/potion/icon_potionArmor.png")));
+
         healthFrame = new Texture(Gdx.files.internal("GUI/sprite_health.png"));
         healthBar = new Texture(Gdx.files.internal("GUI/sprite_healthBar.png"));
         buttonMenu = new Texture(Gdx.files.internal("GUI/button_basic.png"));
         backgroundGUI = new Texture(Gdx.files.internal("backgrounds/background_gamescreen_GUI.png"));
-        goldIcon = new Texture(Gdx.files.internal("GUI/icon_gold.png"));
+        goldIcon = new Texture(Gdx.files.internal("icons/icon_gold.png"));
         headerGUI = new Texture(Gdx.files.internal("GUI/header_floors.png"));
         statTicket = new Texture(Gdx.files.internal("GUI/button_basic.png"));
         statBackground = new Texture(Gdx.files.internal("backgrounds/background_gamescreen_GUI.png"));
@@ -83,6 +91,17 @@ public class GameHUD {
         shopButtonBounds = new Rectangle(screenWidth / 2 - buttonWidth / 2, screenHeight / 2 - 120, buttonWidth, buttonHeight);
 
         System.out.println("Game HUD screen");
+    }
+
+    private void drawPotion(SpriteBatch batch, Player player, float screenWidth, float screenHeight) {
+        String potionType = player.getInventory().getPotionTexture();
+        if (potionType != null && potionTextures.containsKey(potionType)) {
+            Texture potionTexture = potionTextures.get(potionType);
+            float potionX = 100;
+            float potionY = screenHeight - 160;
+            float potionSize = 80;
+            batch.draw(potionTexture, potionX, potionY, potionSize, potionSize);
+        }
     }
 
     public void showStats(SpriteBatch batch, Player player) {
@@ -135,7 +154,7 @@ public class GameHUD {
         drawHealthBar(batch, player, screenHeight);
         drawGold(batch, player, screenWidth, screenHeight);
         drawFloor(batch, screenWidth, screenHeight);
-
+        drawPotion(batch, player, screenWidth, screenHeight);
 
         if (isGameOver) {
             displayGameOverMenu(batch, screenWidth, screenHeight);
@@ -159,13 +178,13 @@ public class GameHUD {
 
 
     private void drawHealthBar(SpriteBatch batch, Player player, float screenHeight) {
-        float offset = 100;
-        float sizeHealthBar = 4;
+        float offset = 70;
+        float sizeHealthBar = 2;
         batch.draw(healthFrame, offset, screenHeight - offset, healthFrame.getWidth() * sizeHealthBar, healthFrame.getHeight() * sizeHealthBar);
 
         float healthPercentage = player.getHealth() / (float) player.getMaxHealth();
         float healthBarWidth = healthBar.getWidth() * healthPercentage;
-        batch.draw(healthBar, offset + 64, screenHeight - offset + 36, healthBarWidth * sizeHealthBar * 1.025f, healthBar.getHeight() * sizeHealthBar);
+        batch.draw(healthBar, offset + 12, screenHeight - offset + 12, healthBarWidth * sizeHealthBar * 1f, healthBar.getHeight() * sizeHealthBar);
     }
 
     private void drawGold(SpriteBatch batch, Player player, float screenWidth, float screenHeight) {
@@ -211,7 +230,9 @@ public class GameHUD {
     }
 
     public void dispose() {
-
+        for (Texture texture : potionTextures.values()) {
+            if (texture != null) texture.dispose();
+        }
 
         if (goldFont != null) goldFont.dispose();
         if (menuFont != null) menuFont.dispose();

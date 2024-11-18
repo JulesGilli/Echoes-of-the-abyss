@@ -9,8 +9,6 @@ import java.util.List;
 
 public class Skeleton extends Enemy {
 
-    private float scaleFactor;
-
     public Skeleton(Vector2 position, List<Platform> platforms, Player player, GameStat gameStat) {
         super(
             position,
@@ -24,19 +22,20 @@ public class Skeleton extends Enemy {
                 "atlas/skeleton/sprite_skeleton_attack.png",
                 "atlas/skeleton/sprite_skeleton_death.png",
                 "atlas/skeleton/sprite_skeleton_walk.png",
+                "atlas/skeleton/sprite_skeleton_hit.png",
                 150, 101, 0.1f, 0.1f
             ),
             50,
             300,
-            10,
+            20,
             200,
             1.5f
         );
 
-        this.scaleFactor = 5;
+        float scaleFactor = 5;
 
-        this.renderWidth *= scaleFactor;
-        this.renderHeight *= scaleFactor;
+        this.renderWidth *= (int) scaleFactor;
+        this.renderHeight *= (int) scaleFactor;
     }
 
     @Override

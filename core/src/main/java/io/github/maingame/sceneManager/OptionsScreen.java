@@ -31,7 +31,6 @@ public class OptionsScreen extends ScreenAdapter {
     private final Rectangle attackKeyBounds;
     private final Rectangle rollKeyBounds;
 
-    private boolean isDispose = false;
     private int leftKey = Input.Keys.A;
     private int rightKey = Input.Keys.D;
     private int jumpKey = Input.Keys.SPACE;

@@ -8,9 +8,9 @@ public class Armor extends Gear{
     protected int reductionDamage;
     public Armor(int lvl) {
         super((int) (300 * Math.pow(2, lvl - 1)),
-            "assets/items/armor/lvl" + lvl + ".png",
-            "assets/items/armor/lvl" + lvl + "Buy.png",
-            "assets/items/armor/lvl" + lvl + "Lock.png",
+            "icons/items/armor/icon_armor" + lvl + ".png",
+            "icons/items/armor/icon_armor" + lvl + "_bought.png",
+            "icons/items/armor/icon_armor" + lvl + "_lock.png",
             lvl);
         this.reductionDamage = 5;
     }

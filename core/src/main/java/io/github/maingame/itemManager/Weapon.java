@@ -7,10 +7,10 @@ import io.github.maingame.utilsManager.GameStat;
 public class Weapon extends Gear{
     protected int attackIncrease;
     public Weapon(int lvl) {
-        super((int) (100 * Math.pow(2, lvl - 1)),
-            "assets/items/weapon/lvl" + lvl + ".png",
-            "assets/items/weapon/lvl" + lvl + "Buy.png",
-            "assets/items/weapon/lvl" + lvl + "Lock.png" ,
+        super((int) (200 * Math.pow(2, lvl - 1)),
+            "icons/items/weapon/icon_weapon" + lvl + ".png",
+            "icons/items/weapon/icon_weapon" + lvl + "_bought.png",
+            "icons/items/weapon/icon_weapon" + lvl + "_lock.png" ,
             lvl);
         this.attackIncrease  = 5;
     }
