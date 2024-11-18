@@ -7,7 +7,7 @@ import io.github.maingame.utilsManager.GameStat;
 public class Armor extends Gear{
     protected int reductionDamage;
     public Armor(int lvl) {
-        super(50 + 150 * lvl,"assets/items/armor/lvl" + lvl + ".png","assets/items/armor/lvl" + lvl + "Buy.png", "assets/items/armor/lvl" + lvl + "Lock.png" ,lvl);
+        super(450 * lvl - 200,"assets/items/armor/lvl" + lvl + ".png","assets/items/armor/lvl" + lvl + "Buy.png", "assets/items/armor/lvl" + lvl + "Lock.png" ,lvl);
         this.reductionDamage = 5;
     }
 
@@ -27,7 +27,7 @@ public class Armor extends Gear{
     @Override
     public boolean isUnlocked(GameStat stat) {
 
-        return stat.getMaxFloors() > 4 * lvl && stat.getFloors() < 10 * lvl;
+        return stat.getMaxFloors() >= 3 * lvl;
     }
 
     public int getReductionDamage() {

@@ -10,7 +10,7 @@ public class HealPotion extends Consumable{
 
     @Override
     public  void applyItem(Player targetEntity){
-        setIncreaseValue(20 + stat.getDeaths());
+        setIncreaseValue(50 + 10 * stat.getFloors());
         targetEntity.setHealth(targetEntity.getHealth() + getIncreaseValue());
         System.out.println("heal potion give you : " + getIncreaseValue() + " for " + timeDuration);
     }
@@ -25,6 +25,6 @@ public class HealPotion extends Consumable{
 
     @Override
     public boolean isUnlocked(GameStat stat) {
-        return stat.getMaxFloors() > 1;
+        return stat.getMaxFloors() >= 1;
     }
 }

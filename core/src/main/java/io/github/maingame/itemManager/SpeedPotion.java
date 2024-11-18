@@ -10,7 +10,7 @@ public class SpeedPotion extends Consumable {
 
     @Override
     public  void applyItem(Player targetEntity){
-        setIncreaseValue(Math.min(10 + stat.getSpeedPotionUse(),50));
+        setIncreaseValue(targetEntity.getSpeed() * 0.6f);
         System.out.println("Speed Potion give you : " + targetEntity.getSpeed() + " for " + timeDuration);
         targetEntity.setSpeedBonus(getIncreaseValue());
     }

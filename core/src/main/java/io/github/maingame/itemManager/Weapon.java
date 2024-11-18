@@ -27,7 +27,7 @@ public class Weapon extends Gear{
     @Override
     public boolean isUnlocked(GameStat stat) {
 
-        return stat.getMaxFloors() > 3 * lvl && stat.getMaxFloors() < 15 * lvl;
+        return stat.getMaxFloors() >= 2 * lvl;
 
     }
 }

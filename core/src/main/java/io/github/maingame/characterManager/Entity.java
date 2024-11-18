@@ -26,7 +26,7 @@ public abstract class Entity implements lifeCycle{
     protected float health;
     protected float maxHealth;
     protected float attackDamage;
-    protected int armor = 0;
+    protected float armor = 0;
     protected float attackBonus  = 0;
     protected float speedBonus  = 0;
     protected int renderWidth  = 100;
@@ -215,7 +215,7 @@ public abstract class Entity implements lifeCycle{
         return speed + speedBonus;
     }
 
-    public void setAttackBonus(int attackBonus) {
+    public void setAttackBonus(float attackBonus) {
         this.attackBonus = attackBonus;
     }
 
@@ -223,7 +223,7 @@ public abstract class Entity implements lifeCycle{
         this.speedBonus = speedBonus;
     }
 
-    public void setArmor(int armor) {
+    public void setArmor(float armor) {
         this.armor = armor;
     }
 
@@ -231,7 +231,7 @@ public abstract class Entity implements lifeCycle{
         this.health = health;
     }
 
-    public int getArmor() {
+    public float getArmor() {
         return armor;
     }
 
