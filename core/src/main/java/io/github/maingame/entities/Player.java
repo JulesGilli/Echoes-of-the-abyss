@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import io.github.maingame.input.PlayerInputHandler;
 import io.github.maingame.utils.Platform;
 import io.github.maingame.utils.AnimationManager;
 import io.github.maingame.items.Gear;
@@ -17,17 +18,13 @@ public class Player extends Entity {
     private final float maxStamina = 100;
     private final Inventory inventory;
     private boolean isDead = false;
-    private int leftKey;
-    private int rightKey;
-    private int jumpKey;
-    private int attackKey;
-    private int rollKey;
-    private final int potionKey;
     private boolean isRolling = false;
     private float rollTimer = 0f;
     private float stamina = 100;
+    private PlayerInputHandler inputHandler;
 
-    public Player(Vector2 position, List<Platform> platforms, int leftKey, int rightKey, int jumpKey, int attackKey, int rollKey, int potionKey) {
+    // Constructor
+    public Player(Vector2 position, List<Platform> platforms) {
         super(position,
             new AnimationManager(
                 "atlas/player/sprite_player_walk.png",
@@ -39,15 +36,7 @@ public class Player extends Entity {
                 "atlas/player/sprite_player_hit.png",
                 120, 80, 0.1f, 0.04f), 100, 100, 25);
 
-        this.leftKey = leftKey;
-        this.rightKey = rightKey;
-        this.jumpKey = jumpKey;
-        this.attackKey = attackKey;
-        this.rollKey = rollKey;
-        this.potionKey = potionKey;
-
         this.inventory = new Inventory();
-
         this.initialPosition = new Vector2(position);
         this.initialHealth = health;
         this.initialGold = gold;
@@ -61,129 +50,96 @@ public class Player extends Entity {
         this.renderHeight = 300;
         this.attackRange = 50;
 
+        this.inputHandler = new PlayerInputHandler(this);
     }
 
+    // Update Method
     public void update(float delta, List<Enemy> enemies, float leftBoundary, float rightBoundary) {
         if (health <= 0 && !isDead) {
-            isDead = true;
-            isAttacking = false;
-            isRolling = false;
-            animationTime = 0f;
-            reset();
-
+            handleDeath();
         }
 
         if (isDead) {
             animationTime += delta;
         } else if (isRolling) {
-            rollTimer += delta;
-            animationTime += delta;
-            float rollDuration = 0.5f;
-            if (rollTimer >= rollDuration) {
-                isRolling = false;
-                rollTimer = 0f;
-            } else {
-                float rollSpeed = 700;
-                velocity.x = isLookingRight ? rollSpeed : -rollSpeed;
-                position.add(velocity.cpy().scl(delta));
-            }
+            handleRolling(delta);
         } else {
-            handleInput(delta);
+            handleInput();
             animationTime += delta;
 
             position.x = MathUtils.clamp(position.x, leftBoundary, rightBoundary - renderWidth);
 
             if (isAttacking) {
-                for (Enemy enemy : enemies) {
-                    if (isCollidingWith(enemy, attackRange) && isEnemyInFront(enemy)) {
-                        enemy.receiveDamage(getAttack());
-                    }
-                }
-                checkAttackFinish();
+                handleAttack(enemies);
             } else {
                 applyGravity();
-                for (Platform platform : platforms) {
-                    if (isOnPlatform(platform) && velocity.y <= 0) {
-                        position.y = platform.getBounds().y + platform.getBounds().height;
-                        velocity.y = 0;
-                        isJumping = false;
-                        break;
-                    }
-                }
+                handlePlatformCollision();
                 position.add(velocity.cpy().scl(delta));
                 checkOnFloor();
             }
         }
 
+        regenerateStamina(delta);
+    }
+
+    private void handleDeath() {
+        isDead = true;
+        isAttacking = false;
+        isRolling = false;
+        animationTime = 0f;
+        reset();
+    }
+
+    private void handleRolling(float delta) {
+        rollTimer += delta;
+        animationTime += delta;
+        float rollDuration = 0.5f;
+        if (rollTimer >= rollDuration) {
+            isRolling = false;
+            rollTimer = 0f;
+        } else {
+            float rollSpeed = 700;
+            velocity.x = isLookingRight ? rollSpeed : -rollSpeed;
+            position.add(velocity.cpy().scl(delta));
+        }
+    }
+
+    private void handleAttack(List<Enemy> enemies) {
+        for (Enemy enemy : enemies) {
+            if (isCollidingWith(enemy, attackRange) && isEnemyInFront(enemy)) {
+                enemy.receiveDamage(getAttack());
+            }
+        }
+        checkAttackFinish();
+    }
+
+    private void handlePlatformCollision() {
+        for (Platform platform : platforms) {
+            if (isOnPlatform(platform) && velocity.y <= 0) {
+                position.y = platform.getBounds().y + platform.getBounds().height;
+                velocity.y = 0;
+                isJumping = false;
+                break;
+            }
+        }
+    }
+
+    private void regenerateStamina(float delta) {
         float staminaRegenRate = 10f;
         stamina = Math.min(maxStamina, stamina + staminaRegenRate * delta);
+    }
 
+    // Input Handling
+    public void handleInput() {
+        inputHandler.handleInput();
     }
 
     private boolean isEnemyInFront(Enemy enemy) {
-        boolean inFront = (isLookingRight && enemy.getPosition().x > position.x) ||
+        return (isLookingRight && enemy.getPosition().x > position.x) ||
             (!isLookingRight && enemy.getPosition().x < position.x);
-        Gdx.app.log("Player", "Enemy " + (inFront ? "is" : "is not") + " in front.");
-        return inFront;
     }
 
-
-    @Override
-    public void receiveDamage(float damage) {
-        if (isDead || isRolling) return;
-
-        float reducedDamage = Math.max(0, damage - armor);
-        this.health -= reducedDamage;
-
-        if (this.health <= 0) {
-            this.health = 0;
-            isDead = true;
-            animationTime = 0f;
-        }
-    }
-
-
-    public void handleInput(float delta) {
-        if (isAttacking || isRolling || isDead) return;
-
-        if (Gdx.input.isKeyPressed(leftKey)) {
-            velocity.x = -speed;
-            isLookingRight = false;
-        } else if (Gdx.input.isKeyPressed(rightKey)) {
-            velocity.x = speed;
-            isLookingRight = true;
-        } else {
-            idle();
-        }
-
-        if (Gdx.input.isKeyJustPressed(jumpKey) && !isJumping && !isRolling) {
-            velocity.y = jumpVelocity;
-            isJumping = true;
-        }
-
-        if (Gdx.input.isKeyJustPressed(attackKey) && !isAttacking && !isJumping) {
-            float staminaCostAttack = 20f;
-            if (stamina >= staminaCostAttack) {
-                stamina -= staminaCostAttack;
-                isAttacking = true;
-                animationTime = 0f;
-            }
-        }
-
-        if (Gdx.input.isKeyJustPressed(rollKey) && !isRolling && !isJumping) {
-            float staminaCostRoll = 15f;
-            if (stamina >= staminaCostRoll) {
-                stamina -= staminaCostRoll;
-                isRolling = true;
-                animationTime = 0f;
-                rollTimer = 0f;
-            }
-        }
-        if (Gdx.input.isKeyJustPressed(potionKey)) {
-            inventory.applyConsumable(this);
-        }
-    }
-
+    // Override Methods
     @Override
     public TextureRegion getCurrentFrame() {
         if (isDead) {
@@ -201,20 +157,33 @@ public class Player extends Entity {
         }
     }
 
-
     @Override
     public void render(SpriteBatch batch) {
         TextureRegion currentFrame = getCurrentFrame();
         batch.draw(currentFrame, position.x, position.y, renderWidth, renderHeight);
     }
 
+    @Override
+    public void receiveDamage(float damage) {
+        if (isDead || isRolling) return;
+
+        float reducedDamage = Math.max(0, damage - armor);
+        health -= reducedDamage;
+
+        if (health <= 0) {
+            health = 0;
+            isDead = true;
+            animationTime = 0f;
+        }
+    }
+
+    // Reset and Game Logic
     public void prepareForNewGame() {
         health = maxHealth;
         position.set(initialPosition);
         velocity.set(0, 0);
         isDead = false;
     }
-
 
     public void reset() {
         position.set(initialPosition);
@@ -232,30 +201,7 @@ public class Player extends Entity {
         }
     }
 
-    public boolean isDeathAnimationFinished() {
-        return isDead && animationTime >= animation.getDeathCase().getAnimationDuration();
-    }
-
-    public void setLeftKey(int leftKey) {
-        this.leftKey = leftKey;
-    }
-
-    public void setRightKey(int rightKey) {
-        this.rightKey = rightKey;
-    }
-
-    public void setJumpKey(int jumpKey) {
-        this.jumpKey = jumpKey;
-    }
-
-    public void setAttackKey(int attackKey) {
-        this.attackKey = attackKey;
-    }
-
-    public void setRollKey(int rollKey) {
-        this.rollKey = rollKey;
-    }
-
+    // Getters and Setters
     public float getStamina() {
         return stamina;
     }
@@ -266,5 +212,62 @@ public class Player extends Entity {
 
     public Inventory getInventory() {
         return inventory;
+    }
+
+    public void setVelocityX(float velocityX) {
+        this.velocity.x = velocityX;
+    }
+
+    public float getSpeed() {
+        return this.speed;
+    }
+
+    public void jump() {
+        this.velocity.y = jumpVelocity;
+        this.isJumping = true;
+    }
+
+    public void attack() {
+        if (stamina >= 20f) {
+            stamina -= 20f;
+            isAttacking = true;
+            animationTime = 0f;
+        }
+    }
+
+    public void roll() {
+        if (stamina >= 15f) {
+            stamina -= 15f;
+            isRolling = true;
+            animationTime = 0f;
+        }
+    }
+
+    public void usePotion() {
+        inventory.applyConsumable(this);
+    }
+
+    public boolean isAttacking() {
+        return isAttacking;
+    }
+
+    public boolean isRolling() {
+        return isRolling;
+    }
+
+    public boolean isDead() {
+        return isDead;
+    }
+
+    public boolean isDeathAnimationFinished() {
+        return isDead && animationTime >= animation.getDeathCase().getAnimationDuration();
+    }
+
+    public void setInputHandler(PlayerInputHandler inputHandler) {
+        this.inputHandler = inputHandler;
+    }
+
+    public void setLookingRight(boolean b) {
+        isLookingRight = b;
     }
 }

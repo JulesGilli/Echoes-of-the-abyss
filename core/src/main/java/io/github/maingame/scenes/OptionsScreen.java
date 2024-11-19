@@ -2,7 +2,6 @@ package io.github.maingame.scenes;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
@@ -13,6 +12,7 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import io.github.maingame.core.Main;
+import io.github.maingame.input.InputManager;
 
 public class OptionsScreen extends ScreenAdapter {
     private final Main game;
@@ -24,20 +24,13 @@ public class OptionsScreen extends ScreenAdapter {
     private final Texture backgroundGUI;
     private final Rectangle backButtonBounds;
 
-
     private final Rectangle leftKeyBounds;
     private final Rectangle rightKeyBounds;
     private final Rectangle jumpKeyBounds;
     private final Rectangle attackKeyBounds;
     private final Rectangle rollKeyBounds;
     private final Rectangle potionKeyBounds;
-    private final Preferences preferences;
-    private int leftKey = Input.Keys.A;
-    private int rightKey = Input.Keys.D;
-    private int jumpKey = Input.Keys.SPACE;
-    private int attackKey = Input.Keys.F;
-    private int rollKey = Input.Keys.SHIFT_LEFT;
-    private int potionKey = Input.Keys.E;
+
     private boolean waitingForNewKey = false;
     private String keyToRemap = "";
 
@@ -75,10 +68,6 @@ public class OptionsScreen extends ScreenAdapter {
         attackKeyBounds = new Rectangle(screenWidth / 2 - 150, screenHeight - 560, 200, 100);
         rollKeyBounds = new Rectangle(screenWidth / 2 - 150, screenHeight - 640, 200, 100);
         potionKeyBounds = new Rectangle(screenWidth / 2 - 150, screenHeight - 720, 200, 100);
-
-        preferences = Gdx.app.getPreferences("GamePreferences");
-        loadKeys();
-        System.out.println("Option Screen");
     }
 
     @Override
@@ -98,35 +87,16 @@ public class OptionsScreen extends ScreenAdapter {
         titleFont.draw(batch, "Options", screenWidth / 2 - 150, screenHeight - 180);
         font.draw(batch, "Back", backButtonBounds.x + 170, backButtonBounds.y + 90);
 
-        font.draw(batch, "Left: " + Input.Keys.toString(leftKey), leftKeyBounds.x, leftKeyBounds.y + 50);
-        font.draw(batch, "Right: " + Input.Keys.toString(rightKey), rightKeyBounds.x, rightKeyBounds.y + 50);
-        font.draw(batch, "Jump: " + Input.Keys.toString(jumpKey), jumpKeyBounds.x, jumpKeyBounds.y + 50);
-        font.draw(batch, "Attack: " + Input.Keys.toString(attackKey), attackKeyBounds.x, attackKeyBounds.y + 50);
-        font.draw(batch, "Roll: " + Input.Keys.toString(rollKey), rollKeyBounds.x, rollKeyBounds.y + 50);
-        font.draw(batch, "Potion: " + Input.Keys.toString(potionKey), potionKeyBounds.x, potionKeyBounds.y + 50);
+        font.draw(batch, "Left: " + Input.Keys.toString(InputManager.getKey("leftKey")), leftKeyBounds.x, leftKeyBounds.y + 50);
+        font.draw(batch, "Right: " + Input.Keys.toString(InputManager.getKey("rightKey")), rightKeyBounds.x, rightKeyBounds.y + 50);
+        font.draw(batch, "Jump: " + Input.Keys.toString(InputManager.getKey("jumpKey")), jumpKeyBounds.x, jumpKeyBounds.y + 50);
+        font.draw(batch, "Attack: " + Input.Keys.toString(InputManager.getKey("attackKey")), attackKeyBounds.x, attackKeyBounds.y + 50);
+        font.draw(batch, "Roll: " + Input.Keys.toString(InputManager.getKey("rollKey")), rollKeyBounds.x, rollKeyBounds.y + 50);
+        font.draw(batch, "Potion: " + Input.Keys.toString(InputManager.getKey("potionKey")), potionKeyBounds.x, potionKeyBounds.y + 50);
 
         batch.end();
 
         handleInput();
-    }
-
-    private void loadKeys() {
-        leftKey = preferences.getInteger("leftKey", Input.Keys.A);
-        rightKey = preferences.getInteger("rightKey", Input.Keys.D);
-        jumpKey = preferences.getInteger("jumpKey", Input.Keys.SPACE);
-        attackKey = preferences.getInteger("attackKey", Input.Keys.F);
-        rollKey = preferences.getInteger("rollKey", Input.Keys.SHIFT_LEFT);
-        potionKey = preferences.getInteger("potionKey", Input.Keys.E);
-    }
-
-    private void saveKeys() {
-        preferences.putInteger("leftKey", leftKey);
-        preferences.putInteger("rightKey", rightKey);
-        preferences.putInteger("jumpKey", jumpKey);
-        preferences.putInteger("attackKey", attackKey);
-        preferences.putInteger("rollKey", rollKey);
-        preferences.putInteger("potionKey", potionKey);
-        preferences.flush();
     }
 
     private void handleInput() {
@@ -137,93 +107,42 @@ public class OptionsScreen extends ScreenAdapter {
                 game.setScreen(new MainMenuScreen(game));
             } else if (leftKeyBounds.contains(clickPosition)) {
                 waitingForNewKey = true;
-                keyToRemap = "left";
+                keyToRemap = "leftKey";
             } else if (rightKeyBounds.contains(clickPosition)) {
                 waitingForNewKey = true;
-                keyToRemap = "right";
+                keyToRemap = "rightKey";
             } else if (jumpKeyBounds.contains(clickPosition)) {
                 waitingForNewKey = true;
-                keyToRemap = "jump";
+                keyToRemap = "jumpKey";
             } else if (attackKeyBounds.contains(clickPosition)) {
                 waitingForNewKey = true;
-                keyToRemap = "attack";
+                keyToRemap = "attackKey";
             } else if (rollKeyBounds.contains(clickPosition)) {
                 waitingForNewKey = true;
-                keyToRemap = "roll";
+                keyToRemap = "rollKey";
             } else if (potionKeyBounds.contains(clickPosition)) {
                 waitingForNewKey = true;
-                keyToRemap = "potion";
+                keyToRemap = "potionKey";
             }
-
         }
         if (waitingForNewKey) {
             for (int key = 0; key < 256; key++) {
                 if (Gdx.input.isKeyJustPressed(key)) {
-                    assignNewKey(key);
+                    InputManager.setKey(keyToRemap, key);
                     waitingForNewKey = false;
-                    saveKeys();
                 }
             }
         }
-    }
 
-    private void assignNewKey(int key) {
-        switch (keyToRemap) {
-            case "left":
-                leftKey = key;
-                break;
-            case "right":
-                rightKey = key;
-                break;
-            case "jump":
-                jumpKey = key;
-                break;
-            case "attack":
-                attackKey = key;
-                break;
-            case "roll":
-                rollKey = key;
-                break;
-            case "potion":
-                potionKey = key;
-                break;
-        }
-        keyToRemap = "";
     }
-
 
     @Override
     public void dispose() {
-        if (batch != null) batch.dispose();
-        if (font != null) font.dispose();
-        if (titleFont != null) titleFont.dispose();
-        if (backgroundTexture != null) backgroundTexture.dispose();
-        if (buttonTexture != null) buttonTexture.dispose();
-        if (backgroundGUI != null) backgroundGUI.dispose();
-    }
-
-
-    public int getLeftKey() {
-        return leftKey;
-    }
-
-    public int getRightKey() {
-        return rightKey;
-    }
-
-    public int getJumpKey() {
-        return jumpKey;
-    }
-
-    public int getAttackKey() {
-        return attackKey;
-    }
-
-    public int getRollKey() {
-        return rollKey;
-    }
-
-    public int getPotionKey() {
-        return potionKey;
+        batch.dispose();
+        font.dispose();
+        titleFont.dispose();
+        backgroundTexture.dispose();
+        buttonTexture.dispose();
+        backgroundGUI.dispose();
     }
 }

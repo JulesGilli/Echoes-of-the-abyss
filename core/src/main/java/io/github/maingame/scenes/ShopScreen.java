@@ -11,11 +11,11 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import io.github.maingame.core.GameStat;
 import io.github.maingame.core.Main;
 import io.github.maingame.entities.Player;
 import io.github.maingame.items.Item;
 import io.github.maingame.items.Shop;
-import io.github.maingame.core.GameStat;
 
 import java.util.ArrayList;
 import java.util.List;

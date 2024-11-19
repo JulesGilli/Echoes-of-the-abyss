@@ -11,22 +11,23 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import io.github.maingame.core.Main;
-import io.github.maingame.utils.Platform;
-import io.github.maingame.entities.Player;
 import io.github.maingame.core.GameStat;
+import io.github.maingame.core.Main;
+import io.github.maingame.entities.Player;
+import io.github.maingame.input.PlayerInputHandler;
+import io.github.maingame.utils.Platform;
 
 public class MainMenuScreen extends ScreenAdapter {
     private final Main game;
     private final SpriteBatch batch;
     private final GameStat stat;
-    private final Player player;
     private final Texture backgroundTexture;
     private final Texture buttonTexture;
     private final Rectangle playButtonBounds;
     private final Rectangle quitButtonBounds;
     private final Rectangle optionButtonBounds;
     private final Rectangle shopButtonBounds;
+    private Player player = null;
     private BitmapFont font;
     private BitmapFont titleFont;
 
@@ -34,9 +35,12 @@ public class MainMenuScreen extends ScreenAdapter {
         this.game = game;
         this.batch = new SpriteBatch();
         stat = new GameStat();
-        player = new Player(new Vector2(100, 100), Platform.getPlatforms(),
-            Input.Keys.A, Input.Keys.D, Input.Keys.SPACE,
-            Input.Keys.F, Input.Keys.SHIFT_LEFT, Input.Keys.E);
+
+        player = new Player(new Vector2(100, 100), Platform.getPlatforms());
+
+        PlayerInputHandler inputHandler = new PlayerInputHandler(player);
+        player.setInputHandler(inputHandler);
+
 
         stat.loadGame();
 

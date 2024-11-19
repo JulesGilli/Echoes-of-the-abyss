@@ -9,13 +9,15 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import io.github.maingame.core.GameStat;
 import io.github.maingame.core.Main;
-import io.github.maingame.utils.Platform;
 import io.github.maingame.entities.Enemy;
 import io.github.maingame.entities.EnemyFactory;
 import io.github.maingame.entities.Player;
+import io.github.maingame.input.InputManager;
+import io.github.maingame.input.PlayerInputHandler;
+import io.github.maingame.utils.Platform;
 import io.github.maingame.utils.TextureManager;
-import io.github.maingame.core.GameStat;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -32,6 +34,7 @@ public class GameScreen extends ScreenAdapter {
     private final GameStat stat;
     private final HUD hud;
     private final OptionsScreen optionsScreen;
+    private final PlayerInputHandler playerInputHandler;
     private int baseEnemyCount = 3;
     private float timeSinceLastSpawn = 0f;
     private float spawnDelay = 3.0f;
@@ -39,13 +42,14 @@ public class GameScreen extends ScreenAdapter {
     private boolean isPaused = false;
     private boolean isWaveTransition = false;
     private float waveTransitionTimer = 0f;
-
     private boolean isTutorial = true;
 
     public GameScreen(Main game, GameStat stat, Player player) {
         this.stat = stat;
         this.player = player;
         this.isTutorial = stat.isFirstGame();
+
+        this.playerInputHandler = new PlayerInputHandler(player);
 
         this.optionsScreen = new OptionsScreen(game);
         this.batch = game.batch;
@@ -158,8 +162,12 @@ public class GameScreen extends ScreenAdapter {
         batch.setProjectionMatrix(hudCamera.combined);
 
         if (isTutorial) {
-            hud.renderFirstGameInstructions(batch, optionsScreen.getLeftKey(), optionsScreen.getRightKey(),
-                optionsScreen.getJumpKey(), optionsScreen.getAttackKey(), optionsScreen.getRollKey());
+            hud.renderFirstGameInstructions(batch,
+                InputManager.getLeftKey(),
+                InputManager.getRightKey(),
+                InputManager.getJumpKey(),
+                InputManager.getAttackKey(),
+                InputManager.getRollKey());
 
             if (Gdx.input.isKeyJustPressed(Input.Keys.ANY_KEY)) {
                 isTutorial = false;
@@ -169,6 +177,7 @@ public class GameScreen extends ScreenAdapter {
         } else {
             hud.render(batch, player, screenWidth, screenHeight, isGameOver);
         }
+
 
         if (!isTutorial && spawnList.isEmpty() && enemies.isEmpty() && !isWaveTransition) {
             onPlayerReachNewFloor();
@@ -190,13 +199,8 @@ public class GameScreen extends ScreenAdapter {
     }
 
     public void updatePlayerKeys() {
-        player.setLeftKey(optionsScreen.getLeftKey());
-        player.setRightKey(optionsScreen.getRightKey());
-        player.setJumpKey(optionsScreen.getJumpKey());
-        player.setAttackKey(optionsScreen.getAttackKey());
-        player.setRollKey(optionsScreen.getRollKey());
+        playerInputHandler.updateKeys();
     }
-
 
     private void drawBackground(float screenWidth, float screenHeight) {
 
