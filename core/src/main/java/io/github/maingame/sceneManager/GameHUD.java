@@ -117,10 +117,9 @@ public class GameHUD {
     }
 
     public void renderPauseMenu(SpriteBatch batch) {
-        batch.begin();
-
         float screenWidth = Gdx.graphics.getWidth();
         float screenHeight = Gdx.graphics.getHeight();
+
         batch.draw(backgroundGUI, screenWidth / 2 - backgroundGUI.getWidth() / 1.4f, screenHeight / 2 - backgroundGUI.getHeight() / 1.4f, 600, 800);
 
         menuFont.draw(batch, "Options", screenWidth / 2 - 100, screenHeight - 200);
@@ -134,8 +133,6 @@ public class GameHUD {
         menuFont.draw(batch, "Quit", quitButtonBounds.x + 160, quitButtonBounds.y + 120);
 
         showStats(batch, player);
-
-        batch.end();
 
         handlePauseMenuInput();
     }

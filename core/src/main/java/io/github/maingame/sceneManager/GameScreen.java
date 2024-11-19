@@ -102,21 +102,16 @@ public class GameScreen extends ScreenAdapter {
             isPaused = !isPaused;
         }
 
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+        batch.begin();
+
         if (isPaused) {
             batch.setProjectionMatrix(hudCamera.combined);
-            batch.begin();
             hud.renderPauseMenu(batch);
             batch.end();
             return;
         }
-
-        if (player.getHealth() <= 0 && player.isDeathAnimationFinished() && !isGameOver) {
-            stat.setDeaths(stat.getDeaths() + 1);
-            isGameOver = true;
-            stat.saveGame();
-        }
-
-
 
         if (isWaveTransition) {
             waveTransitionTimer += delta;
@@ -128,12 +123,17 @@ public class GameScreen extends ScreenAdapter {
             } else {
                 float alpha = MathUtils.clamp(1.0f - Math.abs(waveTransitionTimer - waveTransitionDuration / 2) / (waveTransitionDuration / 2), 0, 1);
                 batch.setProjectionMatrix(hudCamera.combined);
-                batch.begin();
                 hud.renderWaveTransition(batch, stat.getFloors(), alpha);
                 batch.end();
                 return;
             }
         }
+
+        /*if (player.getHealth() <= 0 && player.isDeathAnimationFinished() && !isGameOver) {
+            stat.setDeaths(stat.getDeaths() + 1);
+            isGameOver = true;
+            stat.saveGame();
+        }*/
 
         float targetCameraX = player.getPosition().x + 300;
         camera.position.x += (targetCameraX - camera.position.x) * 0.05f;
@@ -144,10 +144,7 @@ public class GameScreen extends ScreenAdapter {
         camera.position.y = (float) Gdx.graphics.getHeight() / 2;
         camera.update();
 
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
         batch.setProjectionMatrix(camera.combined);
-        batch.begin();
 
         float screenWidth = Gdx.graphics.getWidth();
         float screenHeight = Gdx.graphics.getHeight();
@@ -163,11 +160,7 @@ public class GameScreen extends ScreenAdapter {
             spawnEnemies(delta);
         }
 
-
-        batch.end();
-
         batch.setProjectionMatrix(hudCamera.combined);
-        batch.begin();
 
         if (isTutorial) {
             hud.renderFirstGameInstructions(batch, optionsScreen.getLeftKey(), optionsScreen.getRightKey(),
@@ -183,12 +176,6 @@ public class GameScreen extends ScreenAdapter {
         }
 
         batch.end();
-
-        if (!isTutorial && spawnList.isEmpty() && enemies.isEmpty() && !isWaveTransition) {
-            onPlayerReachNewFloor();
-            isWaveTransition = true;
-            setupFloorEnemies();
-        }
     }
 
     @Override
