@@ -3,13 +3,11 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import io.github.maingame.Platform;
-import io.github.maingame.itemManager.Inventory;
-import io.github.maingame.utilsManager.lifeCycle;
 import io.github.maingame.design2dManager.AnimationManager;
 
 import java.util.List;
 
-public abstract class Entity implements lifeCycle{
+public abstract class Entity {
     protected boolean isWalking = false;
     protected boolean isJumping = false;
     protected boolean isAttacking = false;

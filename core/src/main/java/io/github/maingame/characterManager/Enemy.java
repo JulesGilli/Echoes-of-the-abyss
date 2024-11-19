@@ -100,7 +100,6 @@ public abstract class Enemy extends Entity {
         }
     }
 
-    @Override
     public void update(float delta) {
         timeSinceLastAttack += delta;
 

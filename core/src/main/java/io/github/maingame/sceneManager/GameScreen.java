@@ -179,7 +179,7 @@ public class GameScreen extends ScreenAdapter {
         if (!isTutorial && spawnList.isEmpty() && enemies.isEmpty() && !isWaveTransition) {
             onPlayerReachNewFloor();
             isWaveTransition = true;
-            setupFloorEnemies(); 
+            setupFloorEnemies();
         }
 
         batch.end();

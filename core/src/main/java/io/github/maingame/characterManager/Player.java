@@ -270,12 +270,6 @@ public class Player extends Entity {
         return maxStamina;
     }
 
-
-    @Override
-    public void update(float delta) {
-
-    }
-
     public Inventory getInventory() {
         return inventory;
     }
