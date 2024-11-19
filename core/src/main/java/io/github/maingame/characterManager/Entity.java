@@ -236,6 +236,18 @@ public abstract class Entity implements lifeCycle{
         return armor;
     }
 
+    public Vector2 getVelocity() {
+        return velocity;
+    }
+
+    public void setVelocity(Vector2 velocity) {
+        this.velocity = velocity;
+    }
+
+    public boolean isJumping() {
+        return isJumping;
+    }
+
     public void dispose(){
         animation.getIdleCase().getKeyFrames()[0].getTexture().dispose();
         animation.getAttackCase().getKeyFrames()[0].getTexture().dispose();
