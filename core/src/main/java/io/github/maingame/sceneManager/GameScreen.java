@@ -129,11 +129,11 @@ public class GameScreen extends ScreenAdapter {
             }
         }
 
-        /*if (player.getHealth() <= 0 && player.isDeathAnimationFinished() && !isGameOver) {
+        if (player.getHealth() <= 0 && player.isDeathAnimationFinished() && !isGameOver) {
             stat.setDeaths(stat.getDeaths() + 1);
             isGameOver = true;
             stat.saveGame();
-        }*/
+        }
 
         float targetCameraX = player.getPosition().x + 300;
         camera.position.x += (targetCameraX - camera.position.x) * 0.05f;

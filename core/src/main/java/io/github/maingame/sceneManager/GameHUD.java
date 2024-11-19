@@ -33,6 +33,8 @@ public class GameHUD {
     private final Texture goldIcon;
     private final Texture headerGUI;
     private final Texture headerTuto;
+    private final Texture backgroundTexture;
+
     private final Map<String, Texture> potionTextures = new HashMap<>();    private final GlyphLayout layout;
     private final GameStat stat;
     private final Player player;
@@ -75,6 +77,7 @@ public class GameHUD {
         healthBar = new Texture(Gdx.files.internal("GUI/sprite_healthBar.png"));
 
         headerTuto = new Texture(Gdx.files.internal("GUI/sprite_header_tuto.png"));
+        backgroundTexture = new Texture(Gdx.files.internal("assets/backgrounds/background_menuscreen.png"));
 
         buttonMenu = new Texture(Gdx.files.internal("GUI/button_basic.png"));
         backgroundGUI = new Texture(Gdx.files.internal("backgrounds/background_gamescreen_GUI.png"));
@@ -102,7 +105,7 @@ public class GameHUD {
         if (potionType != null && potionTextures.containsKey(potionType)) {
             Texture potionTexture = potionTextures.get(potionType);
             float potionX = 100;
-            float potionY = screenHeight - 160;
+            float potionY = screenHeight - 210;
             float potionSize = 80;
             batch.draw(potionTexture, potionX, potionY, potionSize, potionSize);
         }
@@ -124,6 +127,7 @@ public class GameHUD {
 
         menuFont.draw(batch, "Options", screenWidth / 2 - 100, screenHeight - 200);
 
+        batch.draw(backgroundTexture, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         batch.draw(buttonMenu, resumeButtonBounds.x, resumeButtonBounds.y, resumeButtonBounds.width, resumeButtonBounds.height);
         batch.draw(buttonMenu, mainMenuButtonBounds.x, mainMenuButtonBounds.y, mainMenuButtonBounds.width, mainMenuButtonBounds.height);
         batch.draw(buttonMenu, quitButtonBounds.x, quitButtonBounds.y, quitButtonBounds.width, quitButtonBounds.height);
