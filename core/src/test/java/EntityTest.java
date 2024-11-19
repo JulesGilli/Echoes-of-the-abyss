@@ -2,8 +2,7 @@ import com.badlogic.gdx.math.Vector2;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class EntityTest {
 
@@ -11,7 +10,6 @@ public class EntityTest {
 
     @Before
     public void setup() {
-        // Initialisation de l'entité de test avec des valeurs arbitraires
         testEntity = new TestEntity(new Vector2(0, 0), 100, 50, 20);
     }
 
@@ -49,4 +47,25 @@ public class EntityTest {
         testEntity.jump();
         assertTrue(testEntity.isJumping());
     }
+
+    @Test
+    public void testSequentialOperations() {
+        System.out.println("=== Test: Sequential Operations ===");
+        TestEntity entity = new TestEntity(new Vector2(0, 0), 100, 50, 20);
+
+        entity.setGold(100);
+        System.out.println("Gold after addition: " + entity.getGold());
+        assertEquals(100, entity.getGold());
+
+        entity.receiveDamage(30);
+        System.out.println("Health after damage: " + entity.getHealth());
+        assertEquals(70, entity.getHealth(), 0.1);
+
+        assertTrue(entity.isAlive());
+
+        entity.receiveDamage(100);
+        System.out.println("Health after fatal damage: " + entity.getHealth());
+        assertFalse(entity.isAlive());
+    }
+
 }

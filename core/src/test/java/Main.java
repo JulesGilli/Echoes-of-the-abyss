@@ -4,9 +4,9 @@ import org.junit.runner.notification.Failure;
 
 public class Main {
     public static void main(String[] args) {
-        System.out.println("Running tests...");
+        System.out.println("Running automated tests...");
 
-        Result result = JUnitCore.runClasses(GameStatTest.class);
+        Result result = JUnitCore.runClasses(GameStatTest.class, EntityTest.class);
 
         for (Failure failure : result.getFailures()) {
             System.out.println("Test failed: " + failure.toString());
@@ -19,3 +19,4 @@ public class Main {
         }
     }
 }
+
