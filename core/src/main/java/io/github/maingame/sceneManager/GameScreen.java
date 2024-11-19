@@ -6,13 +6,14 @@ import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import io.github.maingame.Main;
 import io.github.maingame.Platform;
-import io.github.maingame.characterManager.*;
+import io.github.maingame.characterManager.Enemy;
+import io.github.maingame.characterManager.EnemyFactory;
+import io.github.maingame.characterManager.Player;
 import io.github.maingame.design2dManager.TextureManager;
 import io.github.maingame.utilsManager.GameStat;
 
@@ -21,23 +22,19 @@ import java.util.Iterator;
 import java.util.List;
 
 public class GameScreen extends ScreenAdapter {
+    final Player player;
     private final SpriteBatch batch;
     private final Texture background1, background2, background3, background4a, background4b;
-
     private final OrthographicCamera camera;
     private final OrthographicCamera hudCamera;
-    final Player player;
-
     private final List<Enemy> enemies = new ArrayList<>();
     private final List<Enemy> spawnList = new ArrayList<>();
-    private int baseEnemyCount = 3;
-
-    private float timeSinceLastSpawn = 0f;
-    private float spawnDelay = 3.0f;
     private final GameStat stat;
     private final GameHUD hud;
     private final OptionsScreen optionsScreen;
-
+    private int baseEnemyCount = 3;
+    private float timeSinceLastSpawn = 0f;
+    private float spawnDelay = 3.0f;
     private boolean isGameOver = false;
     private boolean isPaused = false;
     private boolean isWaveTransition = false;
@@ -91,9 +88,6 @@ public class GameScreen extends ScreenAdapter {
 
         spawnDelay = Math.max(1.0f, spawnDelay * 0.95f);
     }
-
-
-
 
 
     @Override
