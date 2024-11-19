@@ -1,6 +1,6 @@
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
-import io.github.maingame.characterManager.Entity;
+import io.github.maingame.entities.Entity;
 
 public class TestEntity extends Entity {
 
