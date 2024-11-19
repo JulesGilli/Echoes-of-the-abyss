@@ -9,10 +9,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Platform {
+    public static final List<Platform> platforms = new ArrayList<>();
     private final Rectangle bounds;
     private final Texture texture;
-
-    public static final List<Platform> platforms = new ArrayList<>();
 
 
     public Platform(float x, float y, float width, float height) {
