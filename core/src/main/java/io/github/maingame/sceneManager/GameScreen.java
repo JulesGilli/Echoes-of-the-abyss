@@ -48,6 +48,7 @@ public class GameScreen extends ScreenAdapter {
     public GameScreen(Main game, GameStat stat, Player player) {
         this.stat = stat;
         this.player = player;
+        this.isTutorial = stat.isFirstGame();
 
         this.optionsScreen = new OptionsScreen(game);
         this.batch = game.batch;
