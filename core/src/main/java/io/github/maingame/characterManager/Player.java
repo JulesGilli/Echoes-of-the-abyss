@@ -14,35 +14,30 @@ import io.github.maingame.itemManager.Item;
 import java.util.List;
 
 public class Player extends Entity {
+    private final float maxStamina = 100;
+    private final Inventory inventory;
     private boolean isDead = false;
-
     private int leftKey;
     private int rightKey;
     private int jumpKey;
     private int attackKey;
     private int rollKey;
-    private int potionKey;
-
+    private final int potionKey;
     private boolean isRolling = false;
     private float rollTimer = 0f;
-
     private float stamina = 100;
-    private final float maxStamina = 100;
 
-
-    private final Inventory inventory;
-
-    public Player(Vector2 position, List<Platform> platforms, int leftKey, int rightKey, int jumpKey, int attackKey, int rollKey, int potionKey){
+    public Player(Vector2 position, List<Platform> platforms, int leftKey, int rightKey, int jumpKey, int attackKey, int rollKey, int potionKey) {
         super(position,
             new AnimationManager(
                 "atlas/player/sprite_player_walk.png",
                 "atlas/player/sprite_player_idle.png",
                 "atlas/player/sprite_player_jump.png",
-            "atlas/player/sprite_player_attack.png",
+                "atlas/player/sprite_player_attack.png",
                 "atlas/player/sprite_player_death.png",
                 "atlas/player/sprite_player_roll.png",
                 "atlas/player/sprite_player_hit.png",
-                120, 80, 0.1f,0.04f), 100,100, 25);
+                120, 80, 0.1f, 0.04f), 100, 100, 25);
 
         this.leftKey = leftKey;
         this.rightKey = rightKey;
@@ -90,7 +85,7 @@ public class Player extends Entity {
             } else {
                 float rollSpeed = 700;
                 velocity.x = isLookingRight ? rollSpeed : -rollSpeed;
-            position.add(velocity.cpy().scl(delta));
+                position.add(velocity.cpy().scl(delta));
             }
         } else {
             handleInput(delta);
@@ -210,7 +205,7 @@ public class Player extends Entity {
     @Override
     public void render(SpriteBatch batch) {
         TextureRegion currentFrame = getCurrentFrame();
-        batch.draw(currentFrame, position.x, position.y,renderWidth, renderHeight);
+        batch.draw(currentFrame, position.x, position.y, renderWidth, renderHeight);
     }
 
     public void prepareForNewGame() {
@@ -219,7 +214,6 @@ public class Player extends Entity {
         velocity.set(0, 0);
         isDead = false;
     }
-
 
 
     public void reset() {
@@ -233,7 +227,7 @@ public class Player extends Entity {
 
         for (Item item : inventory.getItems()) {
             if (item instanceof Gear) {
-                ((Gear) item).applyItem(this);
+                item.applyItem(this);
             }
         }
     }
