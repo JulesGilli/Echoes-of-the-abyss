@@ -4,11 +4,11 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
-import io.github.maingame.utils.Platform;
+import io.github.maingame.core.GameStat;
 import io.github.maingame.utils.AnimationManager;
 import io.github.maingame.utils.DamageText;
 import io.github.maingame.utils.GoldText;
-import io.github.maingame.core.GameStat;
+import io.github.maingame.utils.Platform;
 
 import java.util.ArrayList;
 import java.util.Iterator;

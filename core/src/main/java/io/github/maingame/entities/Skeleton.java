@@ -1,9 +1,9 @@
 package io.github.maingame.entities;
 
 import com.badlogic.gdx.math.Vector2;
-import io.github.maingame.utils.Platform;
-import io.github.maingame.utils.AnimationManager;
 import io.github.maingame.core.GameStat;
+import io.github.maingame.utils.AnimationManager;
+import io.github.maingame.utils.Platform;
 
 import java.util.List;
 

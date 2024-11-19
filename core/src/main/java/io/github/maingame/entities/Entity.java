@@ -3,8 +3,8 @@ package io.github.maingame.entities;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
-import io.github.maingame.utils.Platform;
 import io.github.maingame.utils.AnimationManager;
+import io.github.maingame.utils.Platform;
 
 import java.util.List;
 

@@ -1,16 +1,15 @@
 package io.github.maingame.entities;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import io.github.maingame.input.PlayerInputHandler;
-import io.github.maingame.utils.Platform;
-import io.github.maingame.utils.AnimationManager;
 import io.github.maingame.items.Gear;
 import io.github.maingame.items.Inventory;
 import io.github.maingame.items.Item;
+import io.github.maingame.utils.AnimationManager;
+import io.github.maingame.utils.Platform;
 
 import java.util.List;
 
