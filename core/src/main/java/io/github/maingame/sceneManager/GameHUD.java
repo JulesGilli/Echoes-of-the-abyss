@@ -13,7 +13,6 @@ import com.badlogic.gdx.math.Vector2;
 import io.github.maingame.Main;
 import io.github.maingame.characterManager.Player;
 import io.github.maingame.utilsManager.GameStat;
-import org.w3c.dom.Text;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -35,7 +34,8 @@ public class GameHUD {
     private final Texture headerTuto;
     private final Texture backgroundTexture;
 
-    private final Map<String, Texture> potionTextures = new HashMap<>();    private final GlyphLayout layout;
+    private final Map<String, Texture> potionTextures = new HashMap<>();
+    private final GlyphLayout layout;
     private final GameStat stat;
     private final Player player;
 
@@ -115,8 +115,8 @@ public class GameHUD {
         menuFont.getData().setScale(0.6f, 0.6f);
         menuFont.draw(batch, "attack: " + player.getAttack(), mainMenuButtonBounds.x + 40, mainMenuButtonBounds.y + 30);
         menuFont.draw(batch, "speed: " + player.getSpeed(), mainMenuButtonBounds.x + 40, mainMenuButtonBounds.y - 10);
-        menuFont.draw(batch, "health: " + player.getHealth(), mainMenuButtonBounds.x + 40, mainMenuButtonBounds.y + - 50);
-        menuFont.getData().setScale(1,1);
+        menuFont.draw(batch, "health: " + player.getHealth(), mainMenuButtonBounds.x + 40, mainMenuButtonBounds.y + -50);
+        menuFont.getData().setScale(1, 1);
     }
 
     public void renderPauseMenu(SpriteBatch batch) {
@@ -181,10 +181,10 @@ public class GameHUD {
 
         float headerSize = 1.8f;
         batch.draw(backgroundGUI,
-            screenWidth / 2 - backgroundGUI.getWidth()*headerSize / 2f,
-            screenHeight / 2 - backgroundGUI.getHeight()*headerSize / 2f,
-            backgroundGUI.getWidth()*headerSize,
-            backgroundGUI.getHeight()*headerSize);
+            screenWidth / 2 - backgroundGUI.getWidth() * headerSize / 2f,
+            screenHeight / 2 - backgroundGUI.getHeight() * headerSize / 2f,
+            backgroundGUI.getWidth() * headerSize,
+            backgroundGUI.getHeight() * headerSize);
 
         headerSize = 2;
 
@@ -196,7 +196,7 @@ public class GameHUD {
         );
 
         headerFont.getData().setScale(1.5f);
-        headerFont.draw(batch, "Tutorial", screenWidth / 2  - 150, screenHeight - 70);
+        headerFont.draw(batch, "Tutorial", screenWidth / 2 - 150, screenHeight - 70);
 
         headerFont.getData().setScale(1f);
         headerFont.draw(batch, instructionsMovement, instructionsX + 130, instructionsY - 80);
@@ -257,7 +257,7 @@ public class GameHUD {
         float sizeHealthBar = 2;
         batch.draw(healthFrame, offset, screenHeight - offset, healthFrame.getWidth() * sizeHealthBar, healthFrame.getHeight() * sizeHealthBar);
 
-        float healthPercentage = player.getHealth() / (float) player.getMaxHealth();
+        float healthPercentage = player.getHealth() / player.getMaxHealth();
         float healthBarWidth = healthBar.getWidth() * healthPercentage;
         batch.draw(healthBar, offset + 12, screenHeight - offset + 12, healthBarWidth * sizeHealthBar * 1f, healthBar.getHeight() * sizeHealthBar);
     }
@@ -268,7 +268,7 @@ public class GameHUD {
 
         batch.draw(staminaFrame, 70, screenHeight - offset, staminaFrame.getWidth() * sizeStaminaBar, staminaFrame.getHeight() * sizeStaminaBar);
 
-        float staminaPercentage = player.getStamina() / (float) player.getMaxStamina();
+        float staminaPercentage = player.getStamina() / player.getMaxStamina();
         float staminaBarWidth = staminaBar.getWidth() * staminaPercentage;
         batch.draw(staminaBar, 82, screenHeight - offset + 12, staminaBarWidth * sizeStaminaBar, staminaBar.getHeight() * sizeStaminaBar);
     }
@@ -278,7 +278,7 @@ public class GameHUD {
         String goldText = "" + stat.getGolds();
         layout.setText(goldFont, goldText);
         goldFont.draw(batch, goldText, screenWidth - 200, screenHeight - 40);
-        batch.draw(goldIcon, screenWidth - 270, screenHeight - 90,goldIcon.getWidth() * 3,goldIcon.getHeight() * 3);
+        batch.draw(goldIcon, screenWidth - 270, screenHeight - 90, goldIcon.getWidth() * 3, goldIcon.getHeight() * 3);
 
     }
 

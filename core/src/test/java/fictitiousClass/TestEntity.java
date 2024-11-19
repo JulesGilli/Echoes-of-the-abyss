@@ -10,12 +10,6 @@ public class TestEntity extends Entity {
         super(position, null, health, gold, attack);
     }
 
-    @Override
-    public void update(float delta) {
-        // Implémentation vide pour les tests
-    }
-
-    @Override
     public void render(SpriteBatch batch) {
         // Implémentation vide pour les tests
     }

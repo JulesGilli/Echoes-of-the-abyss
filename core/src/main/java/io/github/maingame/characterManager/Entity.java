@@ -1,15 +1,14 @@
 package io.github.maingame.characterManager;
+
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import io.github.maingame.Platform;
-import io.github.maingame.itemManager.Inventory;
-import io.github.maingame.utilsManager.lifeCycle;
 import io.github.maingame.design2dManager.AnimationManager;
 
 import java.util.List;
 
-public abstract class Entity implements lifeCycle{
+public abstract class Entity {
     protected boolean isWalking = false;
     protected boolean isJumping = false;
     protected boolean isAttacking = false;
@@ -27,10 +26,10 @@ public abstract class Entity implements lifeCycle{
     protected float maxHealth;
     protected float attackDamage;
     protected float armor = 0;
-    protected float attackBonus  = 0;
-    protected float speedBonus  = 0;
-    protected int renderWidth  = 100;
-    protected int renderHeight  = 100;
+    protected float attackBonus = 0;
+    protected float speedBonus = 0;
+    protected int renderWidth = 100;
+    protected int renderHeight = 100;
     protected float attackRange;
     protected Vector2 initialPosition;
     protected float initialHealth;
@@ -63,13 +62,13 @@ public abstract class Entity implements lifeCycle{
         );
     }
 
-    public void applyGravity(){
+    public void applyGravity() {
         if (isJumping) {
             velocity.y += gravity;
         }
     }
 
-    protected void checkAttackFinish(){
+    protected void checkAttackFinish() {
         if (animation.getAttackCase().isAnimationFinished(animationTime)) {
             isAttacking = false;
             animationTime = 0f;
@@ -78,18 +77,18 @@ public abstract class Entity implements lifeCycle{
 
     protected boolean isOnPlatform(Platform platform) {
         return position.y <= platform.getBounds().y + platform.getBounds().height &&
-                position.y >= platform.getBounds().y &&
-                position.x + renderWidth > platform.getBounds().x &&
-                position.x < platform.getBounds().x + platform.getBounds().width;
+            position.y >= platform.getBounds().y &&
+            position.x + renderWidth > platform.getBounds().x &&
+            position.x < platform.getBounds().x + platform.getBounds().width;
     }
 
-    protected void applyPlatformPosition(Platform platform){
+    protected void applyPlatformPosition(Platform platform) {
         position.y = platform.getBounds().y + platform.getBounds().height;
         velocity.y = 0;
         isJumping = false;
     }
 
-    protected void checkOnPlatform(){
+    protected void checkOnPlatform() {
         for (Platform platform : platforms) {
             if (isOnPlatform(platform) && velocity.y <= 0) {
                 applyPlatformPosition(platform);
@@ -98,7 +97,7 @@ public abstract class Entity implements lifeCycle{
         }
     }
 
-    protected void checkOnFloor(){
+    protected void checkOnFloor() {
         if (position.y <= 0) {
             position.y = 0;
             isJumping = false;
@@ -124,18 +123,18 @@ public abstract class Entity implements lifeCycle{
         }
     }
 
-    public void idle(){
+    public void idle() {
         velocity.x = 0;
     }
 
-    public void jump(){
+    public void jump() {
         if (!isJumping) {
             velocity.y = jumpVelocity;
         }
-        isJumping =true;
+        isJumping = true;
     }
 
-    public void attack(){
+    public void attack() {
         isAttacking = true;
         animationTime = 0f;
     }
@@ -172,16 +171,24 @@ public abstract class Entity implements lifeCycle{
         return gold;
     }
 
+    public void setGold(int gold) {
+        this.gold = gold;
+    }
+
     public float getHealth() {
         return health;
     }
 
-    public  float getMaxHealth() {
+    public void setHealth(float health) {
+        this.health = health;
+    }
+
+    public float getMaxHealth() {
         return maxHealth;
     }
 
-    public void setGold(int gold) {
-        this.gold = gold;
+    public void setMaxHealth(float maxHealth) {
+        this.maxHealth = maxHealth;
     }
 
     public Vector2 getPosition() {
@@ -196,44 +203,36 @@ public abstract class Entity implements lifeCycle{
         this.attackDamage = attackDamage;
     }
 
-    public void receiveDamage(float damage){
+    public void receiveDamage(float damage) {
         this.health -= damage - armor;
-    }
-
-    public void setMaxHealth(float maxHealth) {
-        this.maxHealth = maxHealth;
     }
 
     public float getAttackBonus() {
         return attackBonus;
     }
 
-    public float getSpeedBonus() {
-        return speedBonus;
-    }
-
-    public float getSpeed() {
-        return speed + speedBonus;
-    }
-
     public void setAttackBonus(float attackBonus) {
         this.attackBonus = attackBonus;
+    }
+
+    public float getSpeedBonus() {
+        return speedBonus;
     }
 
     public void setSpeedBonus(float speedBonus) {
         this.speedBonus = speedBonus;
     }
 
-    public void setArmor(float armor) {
-        this.armor = armor;
-    }
-
-    public void setHealth(float health) {
-        this.health = health;
+    public float getSpeed() {
+        return speed + speedBonus;
     }
 
     public float getArmor() {
         return armor;
+    }
+
+    public void setArmor(float armor) {
+        this.armor = armor;
     }
 
     public Vector2 getVelocity() {
@@ -248,7 +247,7 @@ public abstract class Entity implements lifeCycle{
         return isJumping;
     }
 
-    public void dispose(){
+    public void dispose() {
         animation.getIdleCase().getKeyFrames()[0].getTexture().dispose();
         animation.getAttackCase().getKeyFrames()[0].getTexture().dispose();
         animation.getJumpCase().getKeyFrames()[0].getTexture().dispose();

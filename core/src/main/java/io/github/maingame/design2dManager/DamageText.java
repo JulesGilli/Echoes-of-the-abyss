@@ -1,9 +1,9 @@
 package io.github.maingame.design2dManager;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.math.Vector2;
 
@@ -11,8 +11,8 @@ public class DamageText {
     private final String text;
     private final Vector2 position;
     private final float duration = 1.0f;
-    private float elapsedTime = 0f;
     private final BitmapFont font;
+    private float elapsedTime = 0f;
 
     public DamageText(String text, Vector2 position) {
         this.text = text;

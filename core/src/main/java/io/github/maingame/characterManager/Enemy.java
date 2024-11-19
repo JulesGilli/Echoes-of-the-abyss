@@ -15,25 +15,21 @@ import java.util.Iterator;
 import java.util.List;
 
 public abstract class Enemy extends Entity {
+    protected final List<DamageText> damageTexts = new ArrayList<>();
+    protected final List<GoldText> goldTexts = new ArrayList<>();
     protected Player target;
     protected float range;
     protected float attackCooldown = 1.5f;
     protected float timeSinceLastAttack = 0f;
     protected float attackDelay = 0.3f;
     protected float attackDelayTimer = 0f;
-
     protected float baseAttackDamage;
     protected float baseSpeed;
-
     protected boolean isDead = false;
     protected boolean isDying = false;
     protected boolean hasHitPlayer = false;
-
     protected float invulnerabilityDuration = 0.5f;
     protected float invulnerabilityTimer = 0f;
-
-    protected final List<DamageText> damageTexts = new ArrayList<>();
-    protected final List<GoldText> goldTexts = new ArrayList<>();
 
     public Enemy(Vector2 position, List<Platform> platforms, Player player, GameStat gameStat, AnimationManager animation, float health, float speed, float attackDamage, float range, float attackCooldown) {
         super(position, animation, health, 10, attackDamage);
@@ -60,7 +56,6 @@ public abstract class Enemy extends Entity {
         float animationSpeedMultiplier = 1 / (1 + (level - 1) * 0.1f);
         animation.updateFrameDurations(animationSpeedMultiplier);
     }
-
 
 
     protected boolean isPlayerInFront() {
@@ -100,7 +95,6 @@ public abstract class Enemy extends Entity {
         }
     }
 
-    @Override
     public void update(float delta) {
         timeSinceLastAttack += delta;
 
@@ -112,33 +106,33 @@ public abstract class Enemy extends Entity {
             return;
         }
 
-            if (invulnerabilityTimer > 0) {
-                invulnerabilityTimer -= delta;
-            }
+        if (invulnerabilityTimer > 0) {
+            invulnerabilityTimer -= delta;
+        }
 
-            if (isHit) {
-                hitAnimationTime += delta;
-                if (hitAnimationTime >= hitDuration) {
-                    isHit = false;
-                    hitAnimationTime = 0f;
-                }
+        if (isHit) {
+            hitAnimationTime += delta;
+            if (hitAnimationTime >= hitDuration) {
+                isHit = false;
+                hitAnimationTime = 0f;
+            }
             return;
-            }
+        }
 
-            makeAction(delta);
+        makeAction(delta);
 
-            if (!isHit) {
-                applyGravity();
-                checkOnPlatform();
-                position.add(velocity.cpy().scl(delta));
-                checkOnFloor();
-            }
+        if (!isHit) {
+            applyGravity();
+            checkOnPlatform();
+            position.add(velocity.cpy().scl(delta));
+            checkOnFloor();
+        }
 
-            animationTime += delta;
+        animationTime += delta;
 
-            if (isAttacking) {
-                checkAttackFinish();
-            }
+        if (isAttacking) {
+            checkAttackFinish();
+        }
 
     }
 
@@ -194,7 +188,6 @@ public abstract class Enemy extends Entity {
             return flipAnimationCheck(animation.getIdleCase().getKeyFrame(animationTime, true));
         }
     }
-
 
 
     @Override

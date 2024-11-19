@@ -4,18 +4,14 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import io.github.maingame.design2dManager.TextureManager;
-import io.github.maingame.utilsManager.lifeCycle;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import io.github.maingame.design2dManager.TextureManager;
-
-public class Platform implements lifeCycle {
+public class Platform {
+    public static final List<Platform> platforms = new ArrayList<>();
     private final Rectangle bounds;
     private final Texture texture;
-
-    public static final List<Platform> platforms = new ArrayList<>();
 
 
     public Platform(float x, float y, float width, float height) {
@@ -37,12 +33,9 @@ public class Platform implements lifeCycle {
         return bounds;
     }
 
-    @Override
     public void render(SpriteBatch batch) {
         batch.draw(texture, bounds.x, bounds.y, bounds.width, bounds.height);
     }
 
-    @Override
-    public void update(float delta){}
 
 }

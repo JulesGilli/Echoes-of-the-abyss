@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -11,7 +12,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.graphics.Color;
 import io.github.maingame.Main;
 
 public class OptionsScreen extends ScreenAdapter {
@@ -31,18 +31,15 @@ public class OptionsScreen extends ScreenAdapter {
     private final Rectangle attackKeyBounds;
     private final Rectangle rollKeyBounds;
     private final Rectangle potionKeyBounds;
-
+    private final Preferences preferences;
     private int leftKey = Input.Keys.A;
     private int rightKey = Input.Keys.D;
     private int jumpKey = Input.Keys.SPACE;
     private int attackKey = Input.Keys.F;
     private int rollKey = Input.Keys.SHIFT_LEFT;
     private int potionKey = Input.Keys.E;
-
     private boolean waitingForNewKey = false;
     private String keyToRemap = "";
-
-    private final Preferences preferences;
 
     public OptionsScreen(Main game) {
         this.game = game;

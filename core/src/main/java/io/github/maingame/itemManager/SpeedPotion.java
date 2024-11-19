@@ -1,4 +1,5 @@
 package io.github.maingame.itemManager;
+
 import io.github.maingame.characterManager.Player;
 import io.github.maingame.utilsManager.GameStat;
 
@@ -14,14 +15,14 @@ public class SpeedPotion extends Consumable {
     }
 
     @Override
-    public  void applyItem(Player targetEntity){
+    public void applyItem(Player targetEntity) {
         setIncreaseValue(targetEntity.getSpeed() * 0.6f);
         targetEntity.setSpeedBonus(getIncreaseValue());
         System.out.println("Speed Potion give you : " + targetEntity.getSpeedBonus() + " for " + timeDuration);
     }
 
     @Override
-    public void resetItem(Player targetEntity){
+    public void resetItem(Player targetEntity) {
         targetEntity.setSpeedBonus(0);
         System.out.println("Speed Potion reset, current speedBonus: " + targetEntity.getSpeedBonus());
     }

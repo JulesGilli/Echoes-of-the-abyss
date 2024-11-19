@@ -4,10 +4,7 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import io.github.maingame.itemManager.Shop;
 import io.github.maingame.sceneManager.MainMenuScreen;
-import io.github.maingame.sceneManager.ShopScreen;
-import io.github.maingame.utilsManager.GameStat;
 
 public class Main extends Game {
     public SpriteBatch batch;
@@ -40,8 +37,6 @@ public class Main extends Game {
             setScreen(null);
         }
     }
-
-
 
 
 }

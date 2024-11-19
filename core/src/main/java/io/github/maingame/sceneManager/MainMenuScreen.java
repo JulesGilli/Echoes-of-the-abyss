@@ -21,14 +21,14 @@ public class MainMenuScreen extends ScreenAdapter {
     private final SpriteBatch batch;
     private final GameStat stat;
     private final Player player;
-    private BitmapFont font;
-    private BitmapFont titleFont;
     private final Texture backgroundTexture;
     private final Texture buttonTexture;
     private final Rectangle playButtonBounds;
     private final Rectangle quitButtonBounds;
     private final Rectangle optionButtonBounds;
     private final Rectangle shopButtonBounds;
+    private BitmapFont font;
+    private BitmapFont titleFont;
 
     public MainMenuScreen(Main game) {
         this.game = game;
@@ -36,7 +36,7 @@ public class MainMenuScreen extends ScreenAdapter {
         stat = new GameStat();
         player = new Player(new Vector2(100, 100), Platform.getPlatforms(),
             Input.Keys.A, Input.Keys.D, Input.Keys.SPACE,
-            Input.Keys.F, Input.Keys.SHIFT_LEFT,Input.Keys.E);
+            Input.Keys.F, Input.Keys.SHIFT_LEFT, Input.Keys.E);
 
         stat.loadGame();
 
@@ -50,10 +50,10 @@ public class MainMenuScreen extends ScreenAdapter {
         float screenWidth = Gdx.graphics.getWidth();
         float screenHeight = Gdx.graphics.getHeight();
 
-        playButtonBounds = new Rectangle((screenWidth - buttonWidth) / 2 , screenHeight / 2 + 150, buttonWidth, buttonHeight);
-        shopButtonBounds = new Rectangle((screenWidth - buttonWidth) / 2 , screenHeight / 2, buttonWidth, buttonHeight);
-        optionButtonBounds = new Rectangle((screenWidth - buttonWidth) / 2, screenHeight / 2 - 150 , buttonWidth, buttonHeight);
-        quitButtonBounds = new Rectangle((screenWidth - buttonWidth) / 2 , screenHeight / 2 - 300, buttonWidth, buttonHeight);
+        playButtonBounds = new Rectangle((screenWidth - buttonWidth) / 2, screenHeight / 2 + 150, buttonWidth, buttonHeight);
+        shopButtonBounds = new Rectangle((screenWidth - buttonWidth) / 2, screenHeight / 2, buttonWidth, buttonHeight);
+        optionButtonBounds = new Rectangle((screenWidth - buttonWidth) / 2, screenHeight / 2 - 150, buttonWidth, buttonHeight);
+        quitButtonBounds = new Rectangle((screenWidth - buttonWidth) / 2, screenHeight / 2 - 300, buttonWidth, buttonHeight);
 
         System.out.println("Main Menu");
     }
@@ -86,9 +86,9 @@ public class MainMenuScreen extends ScreenAdapter {
         batch.draw(buttonTexture, optionButtonBounds.x, optionButtonBounds.y, optionButtonBounds.width, optionButtonBounds.height);
         batch.draw(buttonTexture, shopButtonBounds.x, shopButtonBounds.y, shopButtonBounds.width, shopButtonBounds.height);
         font.draw(batch, "Play", playButtonBounds.x + 250, playButtonBounds.y + 125);
-        font.draw(batch, "Shop", shopButtonBounds.x + 235 , shopButtonBounds.y + 125);
-        font.draw(batch, "Option", optionButtonBounds.x + 220 , optionButtonBounds.y + 125);
-        font.draw(batch, "Quit", quitButtonBounds.x + 240 , quitButtonBounds.y + 125);
+        font.draw(batch, "Shop", shopButtonBounds.x + 235, shopButtonBounds.y + 125);
+        font.draw(batch, "Option", optionButtonBounds.x + 220, optionButtonBounds.y + 125);
+        font.draw(batch, "Quit", quitButtonBounds.x + 240, quitButtonBounds.y + 125);
         titleFont.draw(batch, "Echoes of the Abyss", 600, 950);
 
         batch.end();
@@ -110,7 +110,7 @@ public class MainMenuScreen extends ScreenAdapter {
             }
 
             if (shopButtonBounds.contains(clickPosition)) {
-                game.setScreen(new ShopScreen(game,  stat, player));
+                game.setScreen(new ShopScreen(game, stat, player));
             }
 
             if (quitButtonBounds.contains(clickPosition)) {

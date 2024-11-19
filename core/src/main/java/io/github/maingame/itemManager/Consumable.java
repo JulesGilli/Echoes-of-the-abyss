@@ -1,18 +1,18 @@
 package io.github.maingame.itemManager;
 
-import com.badlogic.gdx.Game;
 import io.github.maingame.utilsManager.GameStat;
 
 public abstract class Consumable extends Item {
     protected final GameStat stat;
     protected final int timeDuration;
-    public Consumable(int value , int timeDuration, String textureName, String textureBuyName, String textureLockName, GameStat stat) {
+
+    public Consumable(int value, int timeDuration, String textureName, String textureBuyName, String textureLockName, GameStat stat) {
         super(value, textureName, textureBuyName, textureLockName);
         this.timeDuration = timeDuration;
         this.stat = stat;
     }
 
-    protected int getTimeDuration(){
+    protected int getTimeDuration() {
         return timeDuration;
     }
 }

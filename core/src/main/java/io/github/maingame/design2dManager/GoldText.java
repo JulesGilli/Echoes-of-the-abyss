@@ -10,8 +10,8 @@ import com.badlogic.gdx.math.Vector2;
 public class GoldText {
     private final Vector2 position;
     private final float duration = 1.0f;
-    private float elapsedTime = 0f;
     private final BitmapFont font;
+    private float elapsedTime = 0f;
 
     public GoldText(String text, Vector2 position) {
         this.position = new Vector2(position.x, position.y + 50);
