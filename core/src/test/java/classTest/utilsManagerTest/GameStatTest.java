@@ -1,3 +1,5 @@
+
+package classTest.utilsManagerTest;
 import io.github.maingame.utilsManager.GameStat;
 import org.junit.Before;
 import org.junit.BeforeClass;

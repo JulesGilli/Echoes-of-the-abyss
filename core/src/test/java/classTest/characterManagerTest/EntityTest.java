@@ -1,3 +1,5 @@
+package classTest.characterManagerTest;
+import fictitiousClass.TestEntity;
 import com.badlogic.gdx.math.Vector2;
 import org.junit.Before;
 import org.junit.Test;
@@ -11,7 +13,6 @@ public class EntityTest {
 
     @Before
     public void setup() {
-        // Initialisation de l'entité de test avec des valeurs arbitraires
         testEntity = new TestEntity(new Vector2(0, 0), 100, 50, 20);
     }
 
