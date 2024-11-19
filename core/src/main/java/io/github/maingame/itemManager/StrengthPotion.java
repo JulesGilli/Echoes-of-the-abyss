@@ -3,7 +3,7 @@ package io.github.maingame.itemManager;
 import io.github.maingame.characterManager.Player;
 import io.github.maingame.utilsManager.GameStat;
 
-public class StrengthPotion extends Consumable{
+public class StrengthPotion extends Consumable {
 
     public StrengthPotion(GameStat stat) {
         super(160, 30,

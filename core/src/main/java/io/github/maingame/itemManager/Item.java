@@ -2,13 +2,13 @@ package io.github.maingame.itemManager;
 
 import com.badlogic.gdx.graphics.Texture;
 
-public abstract class Item implements ItemSolution{
+public abstract class Item implements ItemSolution {
     protected float increaseValue;
     protected String name;
     protected int gold;
     protected Texture textureAvailable;
     protected Texture textureDisabled;
-    protected  Texture textureLock;
+    protected Texture textureLock;
 
     public Item(int value, String textureName, String textureDisabledName, String textureLockName) {
         this.gold = value;
@@ -21,7 +21,7 @@ public abstract class Item implements ItemSolution{
         return Integer.toString(this.gold);
     }
 
-    public int getGold(){
+    public int getGold() {
         return this.gold;
     }
 
