@@ -5,20 +5,18 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
-import java.io.File;
-
 public class AnimationManager {
-    private Animation<TextureRegion> walkCase;
-    private Animation<TextureRegion> idleCase;
-    private Animation<TextureRegion> jumpCase;
-    private Animation<TextureRegion> attackCase;
-    private Animation<TextureRegion> deathCase;
-    private Animation<TextureRegion> rollCase;
-    private Animation<TextureRegion> hitCase;
+    private final Animation<TextureRegion> walkCase;
+    private final Animation<TextureRegion> idleCase;
+    private final Animation<TextureRegion> jumpCase;
+    private final Animation<TextureRegion> attackCase;
+    private final Animation<TextureRegion> deathCase;
+    private final Animation<TextureRegion> rollCase;
+    private final Animation<TextureRegion> hitCase;
 
-    public AnimationManager(String walkAsset, String idleAsset, String jumpAsset, String attackAsset, String deathAsset, String rollAsset, String hitAsset, int frameWidth, int frameHeight, float frameDuration,float rollFrameDuration) {
+    public AnimationManager(String walkAsset, String idleAsset, String jumpAsset, String attackAsset, String deathAsset, String rollAsset, String hitAsset, int frameWidth, int frameHeight, float frameDuration, float rollFrameDuration) {
         Texture walkSteps = new Texture(Gdx.files.internal(walkAsset));
-        Texture idleSteps= new Texture(Gdx.files.internal(idleAsset));
+        Texture idleSteps = new Texture(Gdx.files.internal(idleAsset));
         Texture jumpSteps = new Texture(Gdx.files.internal(jumpAsset));
         Texture attackSteps = new Texture(Gdx.files.internal(attackAsset));
         Texture deathSteps = new Texture(Gdx.files.internal(deathAsset));
@@ -26,7 +24,7 @@ public class AnimationManager {
         Texture hitSteps = new Texture(Gdx.files.internal(hitAsset));
 
 
-        walkCase= createAnimation(walkSteps, frameWidth, frameHeight, frameDuration);
+        walkCase = createAnimation(walkSteps, frameWidth, frameHeight, frameDuration);
         idleCase = createAnimation(idleSteps, frameWidth, frameHeight, frameDuration);
         jumpCase = createAnimation(jumpSteps, frameWidth, frameHeight, frameDuration);
         attackCase = createAnimation(attackSteps, frameWidth, frameHeight, frameDuration);
