@@ -24,19 +24,13 @@ public class Player extends Entity {
     private int potionKey;
 
     private boolean isRolling = false;
-    private float rollDuration = 0.5f;
     private float rollTimer = 0f;
-    private float rollSpeed = 700;
 
     private float stamina = 100;
-    private  float maxStamina = 100;
-
-    private final float staminaCostAttack = 20f;
-    private final float staminaCostRoll = 25f;
-    private final float staminaRegenRate = 10f;
+    private final float maxStamina = 100;
 
 
-    private Inventory inventory;
+    private final Inventory inventory;
 
     public Player(Vector2 position, List<Platform> platforms, int leftKey, int rightKey, int jumpKey, int attackKey, int rollKey, int potionKey){
         super(position,
@@ -89,11 +83,13 @@ public class Player extends Entity {
         } else if (isRolling) {
             rollTimer += delta;
             animationTime += delta;
+            float rollDuration = 0.5f;
             if (rollTimer >= rollDuration) {
                 isRolling = false;
                 rollTimer = 0f;
             } else {
-            velocity.x = isLookingRight ? rollSpeed : -rollSpeed;
+                float rollSpeed = 700;
+                velocity.x = isLookingRight ? rollSpeed : -rollSpeed;
             position.add(velocity.cpy().scl(delta));
             }
         } else {
@@ -124,6 +120,7 @@ public class Player extends Entity {
             }
         }
 
+        float staminaRegenRate = 10f;
         stamina = Math.min(maxStamina, stamina + staminaRegenRate * delta);
 
     }
@@ -170,6 +167,7 @@ public class Player extends Entity {
         }
 
         if (Gdx.input.isKeyJustPressed(attackKey) && !isAttacking && !isJumping) {
+            float staminaCostAttack = 20f;
             if (stamina >= staminaCostAttack) {
                 stamina -= staminaCostAttack;
                 isAttacking = true;
@@ -178,6 +176,7 @@ public class Player extends Entity {
         }
 
         if (Gdx.input.isKeyJustPressed(rollKey) && !isRolling && !isJumping) {
+            float staminaCostRoll = 15f;
             if (stamina >= staminaCostRoll) {
                 stamina -= staminaCostRoll;
                 isRolling = true;

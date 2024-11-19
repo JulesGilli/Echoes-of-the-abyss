@@ -14,6 +14,7 @@ public class GameStat {
     private int deaths;
     private boolean gameOver;
     private int speedPotionUse;
+    private boolean isFirstGame = true;
 
     public GameStat() {
         this.golds = 0;
@@ -51,7 +52,16 @@ public class GameStat {
             this.maxFloors = loadedData.maxFloors;
             this.gameOver = loadedData.gameOver;
             this.speedPotionUse = loadedData.speedPotionUse;
+            this.isFirstGame = loadedData.isFirstGame;
         }
+    }
+
+    public boolean isFirstGame() {
+        return isFirstGame;
+    }
+
+    public void setFirstGame(boolean firstGame) {
+        this.isFirstGame = firstGame;
     }
 
     public int getSpeedPotionUse() {

@@ -36,6 +36,8 @@ public class OptionsScreen extends ScreenAdapter {
     private int jumpKey = Input.Keys.SPACE;
     private int attackKey = Input.Keys.F;
     private int rollKey = Input.Keys.SHIFT_LEFT;
+    private int potionKey = Input.Keys.E;
+
     private boolean waitingForNewKey = false;
     private String keyToRemap = "";
 

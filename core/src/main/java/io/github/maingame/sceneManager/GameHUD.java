@@ -13,6 +13,7 @@ import com.badlogic.gdx.math.Vector2;
 import io.github.maingame.Main;
 import io.github.maingame.characterManager.Player;
 import io.github.maingame.utilsManager.GameStat;
+import org.w3c.dom.Text;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -31,8 +32,7 @@ public class GameHUD {
     private final Texture backgroundGUI;
     private final Texture goldIcon;
     private final Texture headerGUI;
-    private final Texture statBackground;
-    private final Texture statTicket;
+    private final Texture headerTuto;
     private final Map<String, Texture> potionTextures = new HashMap<>();    private final GlyphLayout layout;
     private final GameStat stat;
     private final Player player;
@@ -42,15 +42,13 @@ public class GameHUD {
     private final Rectangle quitButtonBounds;
     private final Rectangle shopButtonBounds;
 
-    private final FreeTypeFontGenerator.FreeTypeFontParameter parameter;
-
     public GameHUD(Main game, GameStat stat, Player player) {
         this.game = game;
         this.stat = stat;
         this.player = player;
 
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("assets/fonts/Jacquard12-Regular.ttf"));
-        this.parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
         parameter.size = 64;
 
         goldFont = generator.generateFont(parameter);
@@ -76,12 +74,12 @@ public class GameHUD {
         healthFrame = new Texture(Gdx.files.internal("GUI/sprite_health.png"));
         healthBar = new Texture(Gdx.files.internal("GUI/sprite_healthBar.png"));
 
+        headerTuto = new Texture(Gdx.files.internal("GUI/sprite_header_tuto.png"));
+
         buttonMenu = new Texture(Gdx.files.internal("GUI/button_basic.png"));
         backgroundGUI = new Texture(Gdx.files.internal("backgrounds/background_gamescreen_GUI.png"));
         goldIcon = new Texture(Gdx.files.internal("icons/icon_gold.png"));
         headerGUI = new Texture(Gdx.files.internal("GUI/header_floors.png"));
-        statTicket = new Texture(Gdx.files.internal("GUI/button_basic.png"));
-        statBackground = new Texture(Gdx.files.internal("backgrounds/background_gamescreen_GUI.png"));
 
 
         layout = new GlyphLayout();
@@ -155,6 +153,58 @@ public class GameHUD {
             }
         }
     }
+
+    public void renderFirstGameInstructions(SpriteBatch batch, int leftKey, int rightKey, int jumpKey, int attackKey, int rollKey) {
+        float screenWidth = Gdx.graphics.getWidth();
+        float screenHeight = Gdx.graphics.getHeight();
+
+        float instructionsX = screenWidth / 2 - 300;
+        float instructionsY = screenHeight - 200;
+
+        String instructionsMovement = String.format(
+            "To move :\nLeft: %s\nRight: %s\nJump: %s",
+            Input.Keys.toString(leftKey),
+            Input.Keys.toString(rightKey),
+            Input.Keys.toString(jumpKey)
+        );
+
+        String instructionsAction = String.format(
+            "For capacity :\nAttack: %s\nRoll: %s",
+            Input.Keys.toString(attackKey),
+            Input.Keys.toString(rollKey)
+        );
+
+
+        headerFont.setColor(Color.BROWN);
+
+
+        float headerSize = 1.8f;
+        batch.draw(backgroundGUI,
+            screenWidth / 2 - backgroundGUI.getWidth()*headerSize / 2f,
+            screenHeight / 2 - backgroundGUI.getHeight()*headerSize / 2f,
+            backgroundGUI.getWidth()*headerSize,
+            backgroundGUI.getHeight()*headerSize);
+
+        headerSize = 2;
+
+        batch.draw(headerTuto,
+            screenWidth / 2 - headerTuto.getWidth() * headerSize / 2f,
+            screenHeight / 2 + 200,
+            headerTuto.getWidth() * headerSize,
+            headerTuto.getHeight() * headerSize
+        );
+
+        headerFont.getData().setScale(1.5f);
+        headerFont.draw(batch, "Tutorial", screenWidth / 2  - 150, screenHeight - 70);
+
+        headerFont.getData().setScale(1f);
+        headerFont.draw(batch, instructionsMovement, instructionsX + 130, instructionsY - 80);
+        headerFont.draw(batch, instructionsAction, instructionsX + 130, instructionsY - 400);
+
+        headerFont.getData().setScale(1.0f);
+        headerFont.setColor(0 / 255f, 153 / 255f, 76 / 255f, 1);
+    }
+
 
     public void renderWaveTransition(SpriteBatch batch, int waveNumber, float alpha) {
         float screenWidth = Gdx.graphics.getWidth();

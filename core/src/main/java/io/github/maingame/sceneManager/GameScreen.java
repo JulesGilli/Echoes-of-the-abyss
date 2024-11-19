@@ -40,10 +40,10 @@ public class GameScreen extends ScreenAdapter {
 
     private boolean isGameOver = false;
     private boolean isPaused = false;
-
     private boolean isWaveTransition = false;
     private float waveTransitionTimer = 0f;
 
+    private boolean isTutorial = true;
 
     public GameScreen(Main game, GameStat stat, Player player) {
         this.stat = stat;
@@ -103,7 +103,10 @@ public class GameScreen extends ScreenAdapter {
         }
 
         if (isPaused) {
+            batch.setProjectionMatrix(hudCamera.combined);
+            batch.begin();
             hud.renderPauseMenu(batch);
+            batch.end();
             return;
         }
 
@@ -112,6 +115,8 @@ public class GameScreen extends ScreenAdapter {
             isGameOver = true;
             stat.saveGame();
         }
+
+
 
         if (isWaveTransition) {
             waveTransitionTimer += delta;
@@ -130,7 +135,6 @@ public class GameScreen extends ScreenAdapter {
             }
         }
 
-
         float targetCameraX = player.getPosition().x + 300;
         camera.position.x += (targetCameraX - camera.position.x) * 0.05f;
 
@@ -138,12 +142,11 @@ public class GameScreen extends ScreenAdapter {
         float maxX = 3000;
         camera.position.x = MathUtils.clamp(camera.position.x, minX + camera.viewportWidth / 2, maxX - camera.viewportWidth / 2);
         camera.position.y = (float) Gdx.graphics.getHeight() / 2;
-
         camera.update();
 
-        batch.setProjectionMatrix(camera.combined);
-
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+        batch.setProjectionMatrix(camera.combined);
         batch.begin();
 
         float screenWidth = Gdx.graphics.getWidth();
@@ -153,21 +156,35 @@ public class GameScreen extends ScreenAdapter {
         drawPlatforms();
         player.render(batch);
 
-        if (!isGameOver) {
+        if (!isTutorial && !isGameOver) {
             float rightBoundary = 3200;
             float leftBoundary = -200;
             player.update(delta, enemies, leftBoundary, rightBoundary);
             spawnEnemies(delta);
         }
 
+
         batch.end();
 
         batch.setProjectionMatrix(hudCamera.combined);
         batch.begin();
-        hud.render(batch, player, screenWidth, screenHeight, isGameOver);
+
+        if (isTutorial) {
+            hud.renderFirstGameInstructions(batch, optionsScreen.getLeftKey(), optionsScreen.getRightKey(),
+                optionsScreen.getJumpKey(), optionsScreen.getAttackKey(), optionsScreen.getRollKey());
+
+            if (Gdx.input.isKeyJustPressed(Input.Keys.ANY_KEY)) {
+                isTutorial = false;
+                stat.setFirstGame(false);
+                stat.saveGame();
+            }
+        } else {
+            hud.render(batch, player, screenWidth, screenHeight, isGameOver);
+        }
+
         batch.end();
 
-        if (spawnList.isEmpty() && enemies.isEmpty() && !isWaveTransition) {
+        if (!isTutorial && spawnList.isEmpty() && enemies.isEmpty() && !isWaveTransition) {
             onPlayerReachNewFloor();
             isWaveTransition = true;
             setupFloorEnemies();
@@ -229,8 +246,11 @@ public class GameScreen extends ScreenAdapter {
     }
 
     private void spawnEnemies(float delta) {
-        timeSinceLastSpawn += delta;
+        if (isTutorial) {
+            return;
+        }
 
+        timeSinceLastSpawn += delta;
 
         if (!spawnList.isEmpty() && timeSinceLastSpawn >= spawnDelay) {
             Enemy enemyToSpawn = spawnList.remove(0);
@@ -289,9 +309,5 @@ public class GameScreen extends ScreenAdapter {
         if (background4b != null) background4b.dispose();
         TextureManager.dispose();
     }
-
-
-
-
 
 }
