@@ -30,6 +30,7 @@ public class OptionsScreen extends ScreenAdapter {
     private final Rectangle jumpKeyBounds;
     private final Rectangle attackKeyBounds;
     private final Rectangle rollKeyBounds;
+    private final Rectangle potionKeyBounds;
 
     private int leftKey = Input.Keys.A;
     private int rightKey = Input.Keys.D;
@@ -71,11 +72,12 @@ public class OptionsScreen extends ScreenAdapter {
 
         backButtonBounds = new Rectangle((screenWidth - buttonWidth) / 2, 100, buttonWidth, buttonHeight);
 
-        leftKeyBounds = new Rectangle(screenWidth / 2 - 150, screenHeight - 400, 200, 100);
-        rightKeyBounds = new Rectangle(screenWidth / 2 - 150, screenHeight - 480, 200, 100);
-        jumpKeyBounds = new Rectangle(screenWidth / 2 - 150, screenHeight - 560, 200, 100);
-        attackKeyBounds = new Rectangle(screenWidth / 2 - 150, screenHeight - 640, 200, 100);
-        rollKeyBounds = new Rectangle(screenWidth / 2 - 150, screenHeight - 720, 200, 100);
+        leftKeyBounds = new Rectangle(screenWidth / 2 - 150, screenHeight - 320, 200, 100);
+        rightKeyBounds = new Rectangle(screenWidth / 2 - 150, screenHeight - 400, 200, 100);
+        jumpKeyBounds = new Rectangle(screenWidth / 2 - 150, screenHeight - 480, 200, 100);
+        attackKeyBounds = new Rectangle(screenWidth / 2 - 150, screenHeight - 560, 200, 100);
+        rollKeyBounds = new Rectangle(screenWidth / 2 - 150, screenHeight - 640, 200, 100);
+        potionKeyBounds = new Rectangle(screenWidth / 2 - 150, screenHeight - 720, 200, 100);
 
         preferences = Gdx.app.getPreferences("GamePreferences");
         loadKeys();
@@ -104,6 +106,7 @@ public class OptionsScreen extends ScreenAdapter {
         font.draw(batch, "Jump: " + Input.Keys.toString(jumpKey), jumpKeyBounds.x, jumpKeyBounds.y + 50);
         font.draw(batch, "Attack: " + Input.Keys.toString(attackKey), attackKeyBounds.x, attackKeyBounds.y + 50);
         font.draw(batch, "Roll: " + Input.Keys.toString(rollKey), rollKeyBounds.x, rollKeyBounds.y + 50);
+        font.draw(batch, "Potion: " + Input.Keys.toString(potionKey), potionKeyBounds.x, potionKeyBounds.y + 50);
 
         batch.end();
 
@@ -116,6 +119,7 @@ public class OptionsScreen extends ScreenAdapter {
         jumpKey = preferences.getInteger("jumpKey", Input.Keys.SPACE);
         attackKey = preferences.getInteger("attackKey", Input.Keys.F);
         rollKey = preferences.getInteger("rollKey", Input.Keys.SHIFT_LEFT);
+        potionKey = preferences.getInteger("potionKey", Input.Keys.E);
     }
 
     private void saveKeys() {
@@ -124,6 +128,7 @@ public class OptionsScreen extends ScreenAdapter {
         preferences.putInteger("jumpKey", jumpKey);
         preferences.putInteger("attackKey", attackKey);
         preferences.putInteger("rollKey", rollKey);
+        preferences.putInteger("potionKey", potionKey);
         preferences.flush();
     }
 
@@ -148,6 +153,9 @@ public class OptionsScreen extends ScreenAdapter {
             } else if (rollKeyBounds.contains(clickPosition)) {
                 waitingForNewKey = true;
                 keyToRemap = "roll";
+            } else if (potionKeyBounds.contains(clickPosition)) {
+                waitingForNewKey = true;
+                keyToRemap = "potion";
             }
 
         }
@@ -178,6 +186,9 @@ public class OptionsScreen extends ScreenAdapter {
                 break;
             case "roll":
                 rollKey = key;
+                break;
+            case "potion":
+                potionKey = key;
                 break;
         }
         keyToRemap = "";
@@ -213,5 +224,9 @@ public class OptionsScreen extends ScreenAdapter {
 
     public int getRollKey() {
         return rollKey;
+    }
+
+    public int getPotionKey() {
+        return potionKey;
     }
 }
