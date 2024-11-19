@@ -8,20 +8,13 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Vector2;
 import io.github.maingame.core.GameStat;
 import io.github.maingame.core.Main;
-import io.github.maingame.entities.Enemy;
-import io.github.maingame.entities.EnemyFactory;
 import io.github.maingame.entities.Player;
 import io.github.maingame.input.InputManager;
 import io.github.maingame.input.PlayerInputHandler;
 import io.github.maingame.utils.Platform;
 import io.github.maingame.utils.TextureManager;
-
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 
 public class GameScreen extends ScreenAdapter {
     final Player player;
@@ -29,15 +22,10 @@ public class GameScreen extends ScreenAdapter {
     private final Texture background1, background2, background3, background4a, background4b;
     private final OrthographicCamera camera;
     private final OrthographicCamera hudCamera;
-    private final List<Enemy> enemies = new ArrayList<>();
-    private final List<Enemy> spawnList = new ArrayList<>();
     private final GameStat stat;
     private final HUD hud;
-    private final OptionsScreen optionsScreen;
     private final PlayerInputHandler playerInputHandler;
-    private int baseEnemyCount = 3;
-    private float timeSinceLastSpawn = 0f;
-    private float spawnDelay = 3.0f;
+    private final EnemyManager enemyManager;
     private boolean isGameOver = false;
     private boolean isPaused = false;
     private boolean isWaveTransition = false;
@@ -48,18 +36,14 @@ public class GameScreen extends ScreenAdapter {
         this.stat = stat;
         this.player = player;
         this.isTutorial = stat.isFirstGame();
-
         this.playerInputHandler = new PlayerInputHandler(player);
-
-        this.optionsScreen = new OptionsScreen(game);
         this.batch = game.batch;
-
         this.hud = new HUD(game, stat, player);
+        this.camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        this.hudCamera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        this.enemyManager = new EnemyManager(stat, player, camera);
 
-        camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0);
-
-        hudCamera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         hudCamera.position.set(hudCamera.viewportWidth / 2, hudCamera.viewportHeight / 2, 0);
         hudCamera.update();
 
@@ -70,51 +54,57 @@ public class GameScreen extends ScreenAdapter {
         background4b = new Texture(Gdx.files.internal("backgrounds/background_gamescreen4b.png"));
 
         stat.loadGame();
-
         updatePlayerKeys();
         Platform.createPlatforms();
-
-        setupFloorEnemies();
+        enemyManager.setupFloorEnemies();
     }
-
-    private void setupFloorEnemies() {
-        spawnList.clear();
-
-        int enemyCount = baseEnemyCount + stat.getFloors();
-
-        for (int i = 0; i < enemyCount; i++) {
-            Vector2 spawnPosition = new Vector2(-200, 100);
-            Enemy enemy = EnemyFactory.createRandomEnemy(spawnPosition, Platform.getPlatforms(), player, stat);
-            enemy.updateStats(stat);
-            enemy.setScaleFactor(3f);
-            spawnList.add(enemy);
-        }
-
-        spawnDelay = Math.max(1.0f, spawnDelay * 0.95f);
-    }
-
 
     @Override
     public void render(float delta) {
+        handleInput();
+        clearScreen();
+        batch.begin();
+        if (isPaused) {
+            renderPausedState();
+            return;
+        }
+        if (handleWaveTransition(delta)) {
+            return;
+        }
+        checkGameOverState();
+        updateCamera();
+        batch.setProjectionMatrix(camera.combined);
+        renderGameElements(delta);
+        enemyManager.spawnEnemies(delta, batch);
+        batch.setProjectionMatrix(hudCamera.combined);
+        renderHUD();
+        handleNextWave();
+        batch.end();
+    }
 
+    public void resumeGame() {
+        isPaused = false;
+    }
+
+    private void handleInput() {
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
             isPaused = !isPaused;
         }
+    }
 
+    private void clearScreen() {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+    }
 
-        batch.begin();
+    private void renderPausedState() {
+        batch.setProjectionMatrix(hudCamera.combined);
+        hud.renderPauseMenu(batch);
+        batch.end();
+    }
 
-        if (isPaused) {
-            batch.setProjectionMatrix(hudCamera.combined);
-            hud.renderPauseMenu(batch);
-            batch.end();
-            return;
-        }
-
+    private boolean handleWaveTransition(float delta) {
         if (isWaveTransition) {
             waveTransitionTimer += delta;
-
             float waveTransitionDuration = 2f;
             if (waveTransitionTimer >= waveTransitionDuration) {
                 isWaveTransition = false;
@@ -124,30 +114,33 @@ public class GameScreen extends ScreenAdapter {
                 batch.setProjectionMatrix(hudCamera.combined);
                 hud.renderWaveTransition(batch, stat.getFloors(), alpha);
                 batch.end();
-                return;
+                return true;
             }
         }
+        return false;
+    }
 
+    private void checkGameOverState() {
         if (player.getHealth() <= 0 && player.isDeathAnimationFinished() && !isGameOver) {
             stat.setDeaths(stat.getDeaths() + 1);
             isGameOver = true;
             stat.saveGame();
         }
+    }
 
+    private void updateCamera() {
         float targetCameraX = player.getPosition().x + 300;
         camera.position.x += (targetCameraX - camera.position.x) * 0.05f;
-
         float minX = 0;
         float maxX = 3000;
         camera.position.x = MathUtils.clamp(camera.position.x, minX + camera.viewportWidth / 2, maxX - camera.viewportWidth / 2);
         camera.position.y = (float) Gdx.graphics.getHeight() / 2;
         camera.update();
+    }
 
-        batch.setProjectionMatrix(camera.combined);
-
+    private void renderGameElements(float delta) {
         float screenWidth = Gdx.graphics.getWidth();
         float screenHeight = Gdx.graphics.getHeight();
-
         drawBackground(screenWidth, screenHeight);
         drawPlatforms();
         player.render(batch);
@@ -155,11 +148,13 @@ public class GameScreen extends ScreenAdapter {
         if (!isTutorial && !isGameOver) {
             float rightBoundary = 3200;
             float leftBoundary = -200;
-            player.update(delta, enemies, leftBoundary, rightBoundary);
-            spawnEnemies(delta);
+            player.update(delta, enemyManager.getEnemies(), leftBoundary, rightBoundary);
         }
+    }
 
-        batch.setProjectionMatrix(hudCamera.combined);
+    private void renderHUD() {
+        float screenWidth = Gdx.graphics.getWidth();
+        float screenHeight = Gdx.graphics.getHeight();
 
         if (isTutorial) {
             hud.renderFirstGameInstructions(batch,
@@ -168,7 +163,6 @@ public class GameScreen extends ScreenAdapter {
                 InputManager.getJumpKey(),
                 InputManager.getAttackKey(),
                 InputManager.getRollKey());
-
             if (Gdx.input.isKeyJustPressed(Input.Keys.ANY_KEY)) {
                 isTutorial = false;
                 stat.setFirstGame(false);
@@ -177,48 +171,33 @@ public class GameScreen extends ScreenAdapter {
         } else {
             hud.render(batch, player, screenWidth, screenHeight, isGameOver);
         }
+    }
 
-
-        if (!isTutorial && spawnList.isEmpty() && enemies.isEmpty() && !isWaveTransition) {
-            onPlayerReachNewFloor();
+    private void handleNextWave() {
+        if (!isTutorial
+            && enemyManager.getEnemies().isEmpty()
+            && !isWaveTransition
+            && enemyManager.isSpawnListEmpty()) {
+            stat.setFloors(stat.getFloors() + 1);
+            stat.setMaxFloors(Math.max(stat.getFloors(), stat.getMaxFloors()));
+            enemyManager.setupFloorEnemies();
             isWaveTransition = true;
-            setupFloorEnemies();
         }
-
-        batch.end();
-    }
-
-    @Override
-    public void show() {
-        if (ShopScreen.comingFromShop) {
-            player.prepareForNewGame();
-            stat.setFloors(0);
-            ShopScreen.comingFromShop = false;
-            resetGame();
-        }
-    }
-
-    public void updatePlayerKeys() {
-        playerInputHandler.updateKeys();
     }
 
     private void drawBackground(float screenWidth, float screenHeight) {
-
         float parallaxFactor1 = 0.95f;
         float parallaxFactor2 = 0.9f;
         float parallaxFactor3 = 0.85f;
         float parallaxFactor4a = 0.8f;
         float parallaxFactor4b = 0.75f;
-
         float backgroundX = camera.position.x - camera.viewportWidth / 2;
         float backgroundY = camera.position.y - camera.viewportHeight / 2;
-
         float backgroundWidth1 = screenWidth / parallaxFactor1;
         float backgroundWidth2 = screenWidth / parallaxFactor2;
         float backgroundWidth3 = screenWidth / parallaxFactor3;
         float backgroundWidth4a = screenWidth / parallaxFactor4a;
         float backgroundWidth4b = screenWidth / parallaxFactor4b;
-
         batch.draw(background1, backgroundX * parallaxFactor1, backgroundY, backgroundWidth1, screenHeight);
         batch.draw(background2, backgroundX * parallaxFactor2, backgroundY, backgroundWidth2, screenHeight);
         batch.draw(background3, backgroundX * parallaxFactor3, backgroundY, backgroundWidth3, screenHeight);
@@ -232,62 +211,21 @@ public class GameScreen extends ScreenAdapter {
         }
     }
 
-    public void resumeGame() {
-        isPaused = false;
-        updatePlayerKeys();
-    }
-
-    private void spawnEnemies(float delta) {
-        if (isTutorial) {
-            return;
+    @Override
+    public void show() {
+        if (ShopScreen.comingFromShop) {
+            player.prepareForNewGame();
+            stat.setFloors(0);
+            ShopScreen.comingFromShop = false;
+            resetGame();
         }
-
-        timeSinceLastSpawn += delta;
-
-        if (!spawnList.isEmpty() && timeSinceLastSpawn >= spawnDelay) {
-            Enemy enemyToSpawn = spawnList.remove(0);
-
-            float spawnX;
-            if (MathUtils.randomBoolean()) {
-                spawnX = camera.position.x - camera.viewportWidth / 2 - 100;
-            } else {
-                spawnX = camera.position.x + camera.viewportWidth / 2 + 100;
-            }
-
-            float spawnY = 100;
-
-            enemyToSpawn.getPosition().set(spawnX, spawnY);
-            enemies.add(enemyToSpawn);
-            timeSinceLastSpawn = 0f;
-        }
-
-        for (Iterator<Enemy> iterator = enemies.iterator(); iterator.hasNext(); ) {
-            Enemy enemy = iterator.next();
-            enemy.render(batch);
-            enemy.update(delta);
-
-            if (enemy.isDeathAnimationFinished()) {
-                stat.addGolds(enemy.getGold());
-                stat.setKills(stat.getKills() + 1);
-                iterator.remove();
-            }
-
-        }
-    }
-
-    private void onPlayerReachNewFloor() {
-        stat.setFloors(stat.getFloors() + 1);
-        stat.setMaxFloors(Math.max(stat.getFloors(), stat.getMaxFloors()));
-        baseEnemyCount++;
+        enemyManager.setupFloorEnemies();
     }
 
     private void resetGame() {
         player.reset();
-        enemies.clear();
-        spawnList.clear();
-        timeSinceLastSpawn = 0f;
-        baseEnemyCount = 3;
-        setupFloorEnemies();
+        enemyManager.getEnemies().clear();
+        enemyManager.setupFloorEnemies();
         isGameOver = false;
     }
 
@@ -302,4 +240,7 @@ public class GameScreen extends ScreenAdapter {
         TextureManager.dispose();
     }
 
+    public void updatePlayerKeys() {
+        playerInputHandler.updateKeys();
+    }
 }
