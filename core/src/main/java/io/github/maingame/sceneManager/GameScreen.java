@@ -176,6 +176,12 @@ public class GameScreen extends ScreenAdapter {
             hud.render(batch, player, screenWidth, screenHeight, isGameOver);
         }
 
+        if (!isTutorial && spawnList.isEmpty() && enemies.isEmpty() && !isWaveTransition) {
+            onPlayerReachNewFloor();
+            isWaveTransition = true;
+            setupFloorEnemies(); 
+        }
+
         batch.end();
     }
 
