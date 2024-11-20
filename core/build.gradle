@@ -16,3 +16,8 @@ dependencies {
     implementation "io.github.berstanio:gdx-svmhelper-annotations:$graalHelperVersion"
   }
 }
+
+jar {
+  archiveFileName = "core.jar" // Nom fixe pour le fichier JAR de `core`
+  duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
