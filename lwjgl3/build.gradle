@@ -117,11 +117,11 @@ tasks.register('createWindowsExe', Copy) {
   group = 'distribution'
   description = 'Create a Windows EXE for the game.'
 
-  destinationDir = file("${projectDir}/dist") // Dossier de destination pour les fichiers copiés
+  destinationDir = file("${projectDir}/dist/windows") // Dossier de destination pour Windows
 
-  // Copier le JAR dans le dossier dist
-  from('build/libs') {
-    include '*.jar'
+  // Copier le JAR généré par la tâche jar
+  from(tasks.named('jar').get().archiveFile) {
+    rename { "JavaProject.jar" }
   }
 
   // Copier les assets dans le dossier dist
@@ -137,9 +137,68 @@ tasks.register('createWindowsExe', Copy) {
   }
 }
 
+tasks.register('createMacExecutable', Copy) {
+  group = 'distribution'
+  description = 'Create a macOS executable for the game.'
 
+  destinationDir = file("${projectDir}/dist/mac") // Dossier de destination pour macOS
 
+  // Copier le JAR généré par la tâche jar
+  from(tasks.named('jar').get().archiveFile) {
+    rename { "JavaProject.jar" }
+  }
 
+  // Copier les assets dans le dossier dist
+  from("${rootProject.projectDir}/assets") {
+    into 'assets' // Crée un sous-dossier 'assets' dans dist
+  }
+
+  // Créer un script de démarrage .sh pour macOS
+  doLast {
+    def macScript = new File("${destinationDir}/launch_game.sh")
+    macScript.text = """#!/bin/bash
+DIR="\$(cd "\$(dirname "\$0")" && pwd)"
+java -jar "\$DIR/JavaProject.jar"
+"""
+    macScript.setExecutable(true)
+  }
+}
+
+tasks.register('createLinuxExecutable', Copy) {
+  group = 'distribution'
+  description = 'Create a Linux executable for the game.'
+
+  destinationDir = file("${projectDir}/dist/linux") // Dossier de destination pour Linux
+
+  // Copier le JAR généré par la tâche jar
+  from(tasks.named('jar').get().archiveFile) {
+    rename { "JavaProject.jar" }
+  }
+
+  // Copier les assets dans le dossier dist
+  from("${rootProject.projectDir}/assets") {
+    into 'assets' // Crée un sous-dossier 'assets' dans dist
+  }
+
+  // Créer un script de démarrage .sh pour Linux
+  doLast {
+    def linuxScript = new File("${destinationDir}/launch_game.sh")
+    linuxScript.text = """#!/bin/bash
+DIR="\$(cd "\$(dirname "\$0")" && pwd)"
+java -jar "\$DIR/JavaProject.jar"
+"""
+    linuxScript.setExecutable(true)
+  }
+}
+
+tasks.register('createExecutables') {
+  group = 'distribution'
+  description = 'Create executables for Windows, macOS, and Linux.'
+
+  dependsOn 'createWindowsExe'
+  dependsOn 'createMacExecutable'
+  dependsOn 'createLinuxExecutable'
+}
 
 distributions {
   main {
