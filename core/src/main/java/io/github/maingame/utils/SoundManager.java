@@ -35,6 +35,7 @@ public class SoundManager {
         loadSound("sound_hitSword3", "assets/Sound/sound_hitSword3.wav");
         loadSound("sound_hitSword4", "assets/Sound/sound_hitSword4.wav");
         loadSound("enemy_spawn", "assets/Sound/sound_monsterScream.wav");
+        loadSound("passWave", "assets/Sound/sound_wavePassed.wav");
     }
 
     // Charger un son
@@ -59,6 +60,12 @@ public class SoundManager {
             music.setVolume(volume);
         }
     }
+
+    public void setVolume(String name, float volume) {
+            Music music = musicTracks.get(name);
+            music.setVolume(volume);
+    }
+
 
     // Jouer une musique
     public void playMusic(String name, boolean loop, float volume) {
