@@ -111,6 +111,7 @@ public class MainMenuScreen extends ScreenAdapter {
             Vector2 clickPosition = new Vector2(Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY());
 
             if (playButtonBounds.contains(clickPosition)) {
+                game.getSoundManager().stopMusic("menu");
                 game.setScreen(new GameScreen(game, stat, player));
             }
 
@@ -124,16 +125,11 @@ public class MainMenuScreen extends ScreenAdapter {
             }
 
             if (quitButtonBounds.contains(clickPosition)) {
+                game.getSoundManager().stopMusic("menu");
                 Gdx.app.exit();
             }
         }
     }
-
-    @Override
-    public void hide() {
-        game.getSoundManager().stopMusic("menu");
-    }
-
 
     @Override
     public void dispose() {

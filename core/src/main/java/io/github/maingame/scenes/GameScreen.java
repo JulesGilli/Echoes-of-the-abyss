@@ -31,10 +31,12 @@ public class GameScreen extends ScreenAdapter {
     private boolean isWaveTransition = false;
     private float waveTransitionTimer = 0f;
     private boolean isTutorial = true;
+    private Main game;
 
     public GameScreen(Main game, GameStat stat, Player player) {
         this.stat = stat;
         this.player = player;
+        this.game = game;
         this.isTutorial = stat.isFirstGame();
         this.playerInputHandler = new PlayerInputHandler(player);
         this.batch = game.batch;
@@ -57,6 +59,9 @@ public class GameScreen extends ScreenAdapter {
         updatePlayerKeys();
         Platform.createPlatforms();
         enemyManager.setupFloorEnemies();
+
+        game.getSoundManager().loadMusic("gameplay", "assets/Music/music_fightMusic.mp3");
+        game.getSoundManager().playMusic("gameplay", true, 0.5f);
     }
 
     @Override
@@ -210,6 +215,14 @@ public class GameScreen extends ScreenAdapter {
             platform.render(batch);
         }
     }
+
+    @Override
+    public void hide() {
+        super.hide();
+        Gdx.app.log("GameScreen", "Stopping gameplay music");
+        game.getSoundManager().stopMusic("gameplay");
+    }
+
 
     @Override
     public void show() {

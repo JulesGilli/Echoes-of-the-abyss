@@ -111,6 +111,7 @@ public class ShopScreen extends ScreenAdapter {
             if (playButtonBounds.contains(clickPosition)) {
                 comingFromShop = true;
                 stat.saveGame();
+                game.getSoundManager().stopMusic("menu");
                 game.setScreen(new GameScreen(game, stat, player));
             }
             if (mainMenuButtonBounds.contains(clickPosition)) {

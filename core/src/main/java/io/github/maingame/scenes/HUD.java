@@ -311,6 +311,7 @@ public class HUD {
             } else if (quitButtonBounds.contains(clickPosition)) {
                 Gdx.app.exit();
             } else if (shopButtonBounds.contains(clickPosition)) {
+                game.getSoundManager().playMusic("menu", true, 0.5f);
                 game.setScreen(new ShopScreen(game, stat, ((GameScreen) game.getScreen()).player)); // Passez le joueur
             }
         }
