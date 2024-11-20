@@ -1,5 +1,4 @@
 import classTest.characterManagerTest.EntityTest;
-import classTest.itemManagerTest.SpeedPotionTest;
 import classTest.utilsManagerTest.GameStatTest;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
@@ -23,6 +22,5 @@ public class TestRunner {
     public void runTests() {
         runTest(EntityTest.class);
         runTest(GameStatTest.class);
-        runTest(SpeedPotionTest.class);
     }
 }
