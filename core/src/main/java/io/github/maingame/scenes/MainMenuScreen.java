@@ -67,6 +67,7 @@ public class MainMenuScreen extends ScreenAdapter {
         game.getSoundManager().playMusic("menu", true, 0.5f);
 
         game.getSoundManager().loadSound("select", "assets/Sound/sound_select.wav");
+        game.getSoundManager().loadSound("buy", "assets/Sound/sound_gold.wav");
 
     }
 
