@@ -149,6 +149,7 @@ public class HUD {
                 game.getSoundManager().playSound("select");
                 ((GameScreen) game.getScreen()).resumeGame();
             } else if (mainMenuButtonBounds.contains(clickPosition)) {
+                game.getSoundManager().stopMusic("fight");
                 game.getSoundManager().playSound("select");
                 game.setScreen(new MainMenuScreen(game));
             } else if (quitButtonBounds.contains(clickPosition)) {

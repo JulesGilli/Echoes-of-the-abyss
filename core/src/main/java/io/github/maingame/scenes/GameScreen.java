@@ -14,6 +14,7 @@ import io.github.maingame.entities.Player;
 import io.github.maingame.input.InputManager;
 import io.github.maingame.input.PlayerInputHandler;
 import io.github.maingame.utils.Platform;
+import io.github.maingame.utils.SoundManager;
 import io.github.maingame.utils.TextureManager;
 
 public class GameScreen extends ScreenAdapter {
@@ -43,7 +44,7 @@ public class GameScreen extends ScreenAdapter {
         this.hud = new HUD(game, stat, player);
         this.camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         this.hudCamera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        this.enemyManager = new EnemyManager(stat, player, camera);
+        this.enemyManager = new EnemyManager(stat, player, camera, game.getSoundManager());
 
         camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0);
         hudCamera.position.set(hudCamera.viewportWidth / 2, hudCamera.viewportHeight / 2, 0);
@@ -60,7 +61,7 @@ public class GameScreen extends ScreenAdapter {
         Platform.createPlatforms();
         enemyManager.setupFloorEnemies();
 
-        game.getSoundManager().playMusic("fight", true, 0.5f);
+        game.getSoundManager().playMusic("fight", true, 0.3f);
     }
 
     @Override

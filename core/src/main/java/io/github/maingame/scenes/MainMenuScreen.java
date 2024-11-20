@@ -67,7 +67,7 @@ public class MainMenuScreen extends ScreenAdapter {
 
         System.out.println("Main Menu");
 
-        game.getSoundManager().playMusic("menu", true, 0.5f);
+        game.getSoundManager().playMusic("menu", true, 0.3f);
 
     }
 

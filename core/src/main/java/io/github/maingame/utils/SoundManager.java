@@ -34,6 +34,7 @@ public class SoundManager {
         loadSound("sound_hitSword2", "assets/Sound/sound_hitSword2.wav");
         loadSound("sound_hitSword3", "assets/Sound/sound_hitSword3.wav");
         loadSound("sound_hitSword4", "assets/Sound/sound_hitSword4.wav");
+        loadSound("enemy_spawn", "assets/Sound/sound_monsterScream.wav");
     }
 
     // Charger un son
