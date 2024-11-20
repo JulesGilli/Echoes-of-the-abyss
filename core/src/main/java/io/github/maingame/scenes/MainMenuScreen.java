@@ -67,22 +67,7 @@ public class MainMenuScreen extends ScreenAdapter {
 
         System.out.println("Main Menu");
 
-        game.getSoundManager().loadMusic("menu", "assets/Music/music_mainMenu.mp3");
         game.getSoundManager().playMusic("menu", true, 0.5f);
-
-        game.getSoundManager().loadSound("select", "assets/Sound/sound_select.wav");
-        game.getSoundManager().loadSound("buy", "assets/Sound/sound_gold.wav");
-
-        game.getSoundManager().loadSound("sound_playerScream1", "assets/Sound/sound_playerScream1.wav");
-        game.getSoundManager().loadSound("sound_playerScream2", "assets/Sound/sound_playerScream2.wav");
-        game.getSoundManager().loadSound("sound_playerScream3", "assets/Sound/sound_playerScream3.wav");
-        game.getSoundManager().loadSound("sound_playerScream4", "assets/Sound/sound_playerScream4.wav");
-
-        game.getSoundManager().loadSound("sound_hitSword1", "assets/Sound/sound_hitSword1.wav");
-        game.getSoundManager().loadSound("sound_hitSword2", "assets/Sound/sound_hitSword2.wav");
-        game.getSoundManager().loadSound("sound_hitSword3", "assets/Sound/sound_hitSword3.wav");
-        game.getSoundManager().loadSound("sound_hitSword4", "assets/Sound/sound_hitSword4.wav");
-
 
     }
 

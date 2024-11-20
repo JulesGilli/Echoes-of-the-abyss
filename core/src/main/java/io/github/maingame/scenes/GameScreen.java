@@ -60,8 +60,7 @@ public class GameScreen extends ScreenAdapter {
         Platform.createPlatforms();
         enemyManager.setupFloorEnemies();
 
-        game.getSoundManager().loadMusic("gameplay", "assets/Music/music_fightMusic.mp3");
-        game.getSoundManager().playMusic("gameplay", true, 0.5f);
+        game.getSoundManager().playMusic("fight", true, 0.5f);
     }
 
     @Override

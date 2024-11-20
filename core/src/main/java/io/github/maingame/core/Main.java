@@ -16,11 +16,11 @@ public class Main extends Game {
     public void create() {
         batch = new SpriteBatch();
         soundManager = new SoundManager();
+        soundManager.initialize();
         camera = new OrthographicCamera();
         camera.setToOrtho(false, 1920, 1080);
 
         this.setScreen(new MainMenuScreen(this));
-
     }
 
     public SoundManager getSoundManager() {

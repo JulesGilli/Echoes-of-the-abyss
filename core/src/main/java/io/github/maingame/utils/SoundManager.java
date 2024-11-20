@@ -18,6 +18,24 @@ public class SoundManager {
         musicTracks = new HashMap<>();
     }
 
+    public void initialize() {
+        // Musiques
+        loadMusic("menu", "assets/Music/music_mainMenu.mp3");
+        loadMusic("fight", "assets/Music/music_fightMusic.mp3");
+
+        // Sons
+        loadSound("select", "assets/Sound/sound_select.wav");
+        loadSound("buy", "assets/Sound/sound_gold.wav");
+        loadSound("sound_playerScream1", "assets/Sound/sound_playerScream1.wav");
+        loadSound("sound_playerScream2", "assets/Sound/sound_playerScream2.wav");
+        loadSound("sound_playerScream3", "assets/Sound/sound_playerScream3.wav");
+        loadSound("sound_playerScream4", "assets/Sound/sound_playerScream4.wav");
+        loadSound("sound_hitSword1", "assets/Sound/sound_hitSword1.wav");
+        loadSound("sound_hitSword2", "assets/Sound/sound_hitSword2.wav");
+        loadSound("sound_hitSword3", "assets/Sound/sound_hitSword3.wav");
+        loadSound("sound_hitSword4", "assets/Sound/sound_hitSword4.wav");
+    }
+
     // Charger un son
     public void loadSound(String name, String filePath) {
         assetManager.load(filePath, Sound.class);
