@@ -50,7 +50,7 @@ public class Player extends Entity {
         this.initialGold = gold;
         this.initialAttack = attackDamage;
 
-        this.speed = 500;
+        this.speed = 350;
         this.jumpVelocity = 1000;
         this.gravity = -25;
         this.platforms = platforms;
@@ -238,8 +238,8 @@ public class Player extends Entity {
     }
 
     public void attack() {
-        if (stamina >= 20f) {
-            stamina -= 20f;
+        if (stamina >= 15f) {
+            stamina -= 15f;
             isAttacking = true;
             animationTime = 0f;
 
@@ -255,8 +255,8 @@ public class Player extends Entity {
 
 
     public void roll() {
-        if (stamina >= 15f) {
-            stamina -= 15f;
+        if (stamina >= 10f) {
+            stamina -= 10f;
             isRolling = true;
             animationTime = 0f;
         }

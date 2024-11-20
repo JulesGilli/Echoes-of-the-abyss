@@ -191,7 +191,8 @@ public class GameScreen extends ScreenAdapter {
                 InputManager.getRightKey(),
                 InputManager.getJumpKey(),
                 InputManager.getAttackKey(),
-                InputManager.getRollKey());
+                InputManager.getRollKey(),
+                InputManager.getPotionKey());
             if (Gdx.input.isKeyJustPressed(Input.Keys.ANY_KEY)) {
                 isTutorial = false;
                 stat.setFirstGame(false);

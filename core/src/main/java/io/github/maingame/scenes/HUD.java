@@ -159,7 +159,7 @@ public class HUD {
         }
     }
 
-    public void renderFirstGameInstructions(SpriteBatch batch, int leftKey, int rightKey, int jumpKey, int attackKey, int rollKey) {
+    public void renderFirstGameInstructions(SpriteBatch batch, int leftKey, int rightKey, int jumpKey, int attackKey, int rollKey, int potionKey) {
         float screenWidth = Gdx.graphics.getWidth();
         float screenHeight = Gdx.graphics.getHeight();
 
@@ -174,9 +174,11 @@ public class HUD {
         );
 
         String instructionsAction = String.format(
-            "For capacity :\nAttack: %s\nRoll: %s",
+            "For capacity :\nAttack: %s\nRoll: %s\nPotion: %s",
             Input.Keys.toString(attackKey),
-            Input.Keys.toString(rollKey)
+            Input.Keys.toString(rollKey),
+            Input.Keys.toString(potionKey)
+
         );
 
 
