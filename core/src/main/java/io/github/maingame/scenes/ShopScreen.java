@@ -1,0 +1,174 @@
+package io.github.maingame.scenes;
+
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
+import io.github.maingame.core.GameStat;
+import io.github.maingame.core.Main;
+import io.github.maingame.entities.Player;
+import io.github.maingame.items.Item;
+import io.github.maingame.items.Shop;
+
+import java.util.ArrayList;
+import java.util.List;
+
+
+public class ShopScreen extends ScreenAdapter {
+    public static boolean comingFromShop = false; // Flag pour indiquer un retour au jeu
+    private final Main game;
+    private final SpriteBatch batch;
+    private final Texture backgroundTexture;
+    private final Texture shopTexture;
+    private final float shopSize = 1.2F;
+    private final Shop shop;
+    private final List<Item> items;
+    private final GameStat stat;
+    private final int buttonWidth = 600;
+    private final int buttonHeight = 200;
+    private final int itemCardWidth = 200;
+    private final int itemCardHeight = 200;
+    private final float shopWidth;
+    private final float shopHeight;
+    private final int screenWidth = Gdx.graphics.getWidth();
+    private final int screenHeight = Gdx.graphics.getHeight();
+    private final float centerShopWidth;
+    private final float centerShopHeight;
+    private final Texture buttonTexture;
+    private final com.badlogic.gdx.math.Rectangle playButtonBounds;
+    private final com.badlogic.gdx.math.Rectangle mainMenuButtonBounds;
+
+    private final Player player;
+    private BitmapFont font;
+
+    public ShopScreen(Main game, GameStat stat, Player player) {
+        this.game = game;
+        this.stat = stat;
+        this.player = player;
+        this.batch = new SpriteBatch();
+        this.shop = new Shop(stat, player);
+        this.items = shop.getItems();
+        shopWidth = 876 * shopSize;
+        shopHeight = 641 * shopSize;
+        centerShopWidth = screenWidth / 2f - shopWidth / 2f;
+        centerShopHeight = screenHeight / 2f - shopHeight / 2f;
+        backgroundTexture = new Texture(Gdx.files.internal("backgrounds/background_menuscreen.png"));
+        shopTexture = new Texture(Gdx.files.internal("backgrounds/background_shop.png"));
+        initFonts();
+        buttonTexture = new Texture(Gdx.files.internal("GUI/button_basic.png"));
+        playButtonBounds = new com.badlogic.gdx.math.Rectangle((screenWidth - buttonWidth) / 2 + buttonWidth / 2, screenHeight - shopHeight - 250, buttonWidth, buttonHeight);
+        mainMenuButtonBounds = new com.badlogic.gdx.math.Rectangle((screenWidth - buttonWidth) / 2 - buttonWidth / 2, screenHeight - shopHeight - 250, buttonWidth, buttonHeight);
+        System.out.println("ShopScreen");
+    }
+
+    public Vector2 getItemAssetPosition(int number) {
+        return new Vector2(centerShopWidth + 180 + number % 4 * 200, centerShopHeight + 728 - number / 4 * 200);
+    }
+
+    public Vector2 getItemGoldPosition(int number) {
+        return new Vector2(centerShopWidth + 200 + number % 4 * 200, centerShopHeight + 628 - number / 4 * 200);
+    }
+
+    public Rectangle drawItem(int number) {
+        Item item = items.get(number);
+        if (!item.isUnlocked(stat)) {
+            batch.draw(item.getTextureLock(), getItemAssetPosition(number).x + 10, getItemAssetPosition(number).y - 67, 75, 75);
+        } else if (shop.isAvailable(item)) {
+            batch.draw(item.getTextureAvailable(), getItemAssetPosition(number).x + 10, getItemAssetPosition(number).y - 67, 75, 75);
+
+        } else {
+            batch.draw(item.getTextureDisabled(), getItemAssetPosition(number).x + 10, getItemAssetPosition(number).y - 67, 75, 75);
+        }
+        if (player.getInventory().inInventory(item)) {
+            font.draw(batch, "bought", getItemGoldPosition(number).x - 50, getItemGoldPosition(number).y);
+
+        } else {
+            font.draw(batch, item.getStrGold(), getItemGoldPosition(number).x, getItemGoldPosition(number).y);
+        }
+        Rectangle rectangle = new Rectangle(getItemGoldPosition(0).x - 50 + number % 4 * 200, getItemGoldPosition(0).y - 50 - number / 4 * 200, 200, 200);
+        return rectangle;
+    }
+
+    public List<Rectangle> createButtons() {
+        List<Rectangle> buttons = new ArrayList<>();
+        for (int i = 0; i < 12; i++) {
+            buttons.add(drawItem(i));
+        }
+        return buttons;
+    }
+
+    public void input(List<Rectangle> listButtons) {
+        if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
+            Vector2 clickPosition = new Vector2(Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY());
+
+            if (playButtonBounds.contains(clickPosition)) {
+                comingFromShop = true;
+                stat.saveGame();
+                game.setScreen(new GameScreen(game, stat, player));
+            }
+            if (mainMenuButtonBounds.contains(clickPosition)) {
+                game.setScreen(new MainMenuScreen(game));
+            }
+            for (int i = 0; i < 12; i++) {
+                if (listButtons.get(i).contains(clickPosition)) {
+                    if (shop.buyItem(stat, items.get(i))) {
+                        batch.draw(items.get(i).getTextureDisabled(), getItemAssetPosition(i).x + 10, getItemAssetPosition(i).y - 67, 75, 75);
+                        font.draw(batch, "bought", getItemGoldPosition(i).x - 50, getItemGoldPosition(i).y);
+                    }
+                }
+            }
+        }
+    }
+
+    private void initFonts() {
+        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("assets/fonts/Jacquard12-Regular.ttf"));
+        FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        parameter.size = 50;
+        font = generator.generateFont(parameter);
+        font.setColor(Color.BROWN);
+        parameter.size = 96;
+        generator.dispose();
+    }
+
+    @Override
+    public void render(float delta) {
+        Gdx.gl.glClearColor(0, 0, 0, 1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        batch.begin();
+        batch.draw(backgroundTexture, 0, 0, screenWidth, screenHeight);
+        batch.draw(shopTexture, centerShopWidth + 40, centerShopHeight + 150, shopWidth, shopHeight);
+        batch.draw(buttonTexture, playButtonBounds.x, playButtonBounds.y, playButtonBounds.width, playButtonBounds.height);
+        batch.draw(buttonTexture, mainMenuButtonBounds.x, mainMenuButtonBounds.y, mainMenuButtonBounds.width, mainMenuButtonBounds.height);
+        font.draw(batch, "Play", playButtonBounds.x + 250, playButtonBounds.y + 115);
+        font.draw(batch, "Main Menu", mainMenuButtonBounds.x + 200, mainMenuButtonBounds.y + 115);
+        font.draw(batch, "Shop", screenWidth / 2 - 48, screenHeight - 48);
+        font.draw(batch, Integer.toString(stat.getGolds()), centerShopWidth + 960, centerShopHeight + 790);
+        List<Rectangle> listButtons = createButtons();
+        input(listButtons);
+        batch.end();
+    }
+
+    @Override
+    public void dispose() {
+        if (batch != null) {
+            batch.dispose();
+        }
+        if (shopTexture != null) {
+            shopTexture.dispose();
+        }
+        if (backgroundTexture != null) {
+            backgroundTexture.dispose();
+        }
+        if (font != null) {
+            font.dispose();
+        }
+    }
+
+}
