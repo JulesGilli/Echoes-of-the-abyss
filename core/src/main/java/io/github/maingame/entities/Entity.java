@@ -64,7 +64,7 @@ public abstract class Entity {
 
     public void applyGravity() {
         if (isJumping) {
-            velocity.y += gravity;
+            velocity.y -= gravity;
         }
     }
 
@@ -97,8 +97,8 @@ public abstract class Entity {
         }
     }
 
-    protected void checkOnFloor() {
-        if (position.y <= 0) {
+    public void checkOnFloor() {
+        if (position.y < 0) {
             position.y = 0;
             isJumping = false;
         }
@@ -141,8 +141,17 @@ public abstract class Entity {
 
     public void moveLaterally(float SPEED) {
         velocity.x = SPEED;
-        isLookingRight = SPEED > 0;
+        isLookingRight = velocity.x > 0;
         isWalking = true;
+    }
+
+    public boolean isHorizontallyAligned(float thisLeft, float thisRight, float otherLeft, float otherRight, float attackRange) {
+        return (isLookingRight && otherLeft <= thisRight + attackRange && otherRight >= thisRight) ||
+            (!isLookingRight && otherRight >= thisLeft - attackRange && otherLeft <= thisLeft);
+    }
+
+    public boolean isVerticallyAligned(float thisBottom, float thisTop, float otherBottom, float otherTop) {
+        return (thisBottom <= otherTop && thisTop >= otherBottom);
     }
 
     public boolean isCollidingWith(Entity other, float attackRange) {
@@ -155,12 +164,7 @@ public abstract class Entity {
         float otherRight = other.getPosition().x + other.renderWidth * 0.5f;
         float otherTop = other.getPosition().y + other.renderHeight * 0.5f;
         float otherBottom = other.getPosition().y;
-
-        boolean isHorizontallyAligned = (isLookingRight && otherLeft <= thisRight + attackRange && otherRight >= thisRight) ||
-            (!isLookingRight && otherRight >= thisLeft - attackRange && otherLeft <= thisLeft);
-        boolean isVerticallyAligned = (thisBottom <= otherTop && thisTop >= otherBottom);
-
-        return isHorizontallyAligned && isVerticallyAligned;
+        return isHorizontallyAligned(thisLeft,thisRight,otherLeft,otherRight, attackRange) && isVerticallyAligned(thisBottom,thisTop,otherBottom,otherTop);
     }
 
     public boolean isAlive() {
@@ -204,7 +208,8 @@ public abstract class Entity {
     }
 
     public void receiveDamage(float damage) {
-        this.health -= damage - armor;
+        float burst =Math.max(damage - armor , 0);
+        this.health -= burst;
     }
 
     public float getAttackBonus() {
@@ -239,12 +244,48 @@ public abstract class Entity {
         return velocity;
     }
 
+    public float getJumpVelocity() {
+        return jumpVelocity;
+    }
+
+    public void setPosition(Vector2 position) {
+        this.position = position;
+    }
+
+    public boolean isLookingRight() {
+        return isLookingRight;
+    }
+
+    public void setSpeed(float speed) {
+        this.speed = speed;
+    }
+
+    public boolean isWalking() {
+        return isWalking;
+    }
+
+    public float getGravity() {
+        return gravity;
+    }
+
+    public void setJumpVelocity(float jumpVelocity) {
+        this.jumpVelocity = jumpVelocity;
+    }
+
+    public void setGravity(float gravity) {
+        this.gravity = gravity;
+    }
+
     public void setVelocity(Vector2 velocity) {
         this.velocity = velocity;
     }
 
     public boolean isJumping() {
         return isJumping;
+    }
+
+    public void setLookingRight(boolean lookingRight) {
+        isLookingRight = lookingRight;
     }
 
     public void dispose() {

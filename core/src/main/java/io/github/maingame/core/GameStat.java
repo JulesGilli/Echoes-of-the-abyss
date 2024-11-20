@@ -120,4 +120,8 @@ public class GameStat {
     public void setMaxFloors(int maxFloors) {
         this.maxFloors = maxFloors;
     }
+
+    public boolean isGameOver() {
+        return gameOver;
+    }
 }

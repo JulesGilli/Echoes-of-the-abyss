@@ -1,14 +1,16 @@
 
 package classTest.utilsManagerTest;
-import io.github.maingame.utilsManager.GameStat;
+import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
+import io.github.maingame.core.GameStat;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class GameStatTest {
 

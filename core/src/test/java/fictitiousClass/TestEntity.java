@@ -11,6 +11,7 @@ public class TestEntity extends Entity {
     }
 
     public void render(SpriteBatch batch) {
+
         // Implémentation vide pour les tests
     }
 }
