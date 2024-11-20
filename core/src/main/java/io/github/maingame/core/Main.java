@@ -5,19 +5,26 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import io.github.maingame.scenes.MainMenuScreen;
+import io.github.maingame.utils.SoundManager;
 
 public class Main extends Game {
     public SpriteBatch batch;
     public OrthographicCamera camera;
+    private SoundManager soundManager;
 
     @Override
     public void create() {
         batch = new SpriteBatch();
+        soundManager = new SoundManager();
         camera = new OrthographicCamera();
         camera.setToOrtho(false, 1920, 1080);
 
         this.setScreen(new MainMenuScreen(this));
 
+    }
+
+    public SoundManager getSoundManager() {
+        return soundManager;
     }
 
     @Override

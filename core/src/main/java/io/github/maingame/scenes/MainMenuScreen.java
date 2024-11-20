@@ -16,6 +16,7 @@ import io.github.maingame.core.Main;
 import io.github.maingame.entities.Player;
 import io.github.maingame.input.PlayerInputHandler;
 import io.github.maingame.utils.Platform;
+import com.badlogic.gdx.audio.Music;
 
 public class MainMenuScreen extends ScreenAdapter {
     private final Main game;
@@ -31,6 +32,8 @@ public class MainMenuScreen extends ScreenAdapter {
     private BitmapFont font;
     private BitmapFont titleFont;
 
+    private Music menuMusic;
+
     public MainMenuScreen(Main game) {
         this.game = game;
         this.batch = new SpriteBatch();
@@ -40,7 +43,6 @@ public class MainMenuScreen extends ScreenAdapter {
 
         PlayerInputHandler inputHandler = new PlayerInputHandler(player);
         player.setInputHandler(inputHandler);
-
 
         stat.loadGame();
 
@@ -60,6 +62,10 @@ public class MainMenuScreen extends ScreenAdapter {
         quitButtonBounds = new Rectangle((screenWidth - buttonWidth) / 2, screenHeight / 2 - 300, buttonWidth, buttonHeight);
 
         System.out.println("Main Menu");
+
+        game.getSoundManager().loadMusic("menu", "assets/Music/music_mainMenu.mp3");
+        game.getSoundManager().playMusic("menu", true, 0.5f);
+
     }
 
     private void initFonts() {
@@ -122,6 +128,12 @@ public class MainMenuScreen extends ScreenAdapter {
             }
         }
     }
+
+    @Override
+    public void hide() {
+        game.getSoundManager().stopMusic("menu");
+    }
+
 
     @Override
     public void dispose() {
