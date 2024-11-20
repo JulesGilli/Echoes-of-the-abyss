@@ -66,6 +66,8 @@ public class MainMenuScreen extends ScreenAdapter {
         game.getSoundManager().loadMusic("menu", "assets/Music/music_mainMenu.mp3");
         game.getSoundManager().playMusic("menu", true, 0.5f);
 
+        game.getSoundManager().loadSound("select", "assets/Sound/sound_select.wav");
+
     }
 
     private void initFonts() {
@@ -111,20 +113,24 @@ public class MainMenuScreen extends ScreenAdapter {
             Vector2 clickPosition = new Vector2(Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY());
 
             if (playButtonBounds.contains(clickPosition)) {
+                game.getSoundManager().playSound("select");
                 game.getSoundManager().stopMusic("menu");
                 game.setScreen(new GameScreen(game, stat, player));
             }
 
 
             if (optionButtonBounds.contains(clickPosition)) {
+                game.getSoundManager().playSound("select");
                 game.setScreen(new OptionsScreen(game));
             }
 
             if (shopButtonBounds.contains(clickPosition)) {
+                game.getSoundManager().playSound("select");
                 game.setScreen(new ShopScreen(game, stat, player));
             }
 
             if (quitButtonBounds.contains(clickPosition)) {
+                game.getSoundManager().playSound("select");
                 game.getSoundManager().stopMusic("menu");
                 Gdx.app.exit();
             }

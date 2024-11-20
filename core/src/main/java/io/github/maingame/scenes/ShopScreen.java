@@ -111,10 +111,12 @@ public class ShopScreen extends ScreenAdapter {
             if (playButtonBounds.contains(clickPosition)) {
                 comingFromShop = true;
                 stat.saveGame();
+                game.getSoundManager().playSound("select");
                 game.getSoundManager().stopMusic("menu");
                 game.setScreen(new GameScreen(game, stat, player));
             }
             if (mainMenuButtonBounds.contains(clickPosition)) {
+                game.getSoundManager().playSound("select");
                 game.setScreen(new MainMenuScreen(game));
             }
             for (int i = 0; i < 12; i++) {

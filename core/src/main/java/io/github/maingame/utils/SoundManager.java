@@ -53,6 +53,15 @@ public class SoundManager {
         }
     }
 
+    // Jouer un son
+    public void playSound(String name) {
+        if (sounds.containsKey(name)) {
+            sounds.get(name).play();
+        } else {
+            System.out.println("Sound not found: " + name);
+        }
+    }
+
     // Arrêter une musique
     public void stopMusic(String name) {
         if (musicTracks.containsKey(name)) {

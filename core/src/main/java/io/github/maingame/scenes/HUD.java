@@ -146,10 +146,13 @@ public class HUD {
             Vector2 clickPosition = new Vector2(Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY());
 
             if (resumeButtonBounds.contains(clickPosition)) {
+                game.getSoundManager().playSound("select");
                 ((GameScreen) game.getScreen()).resumeGame();
             } else if (mainMenuButtonBounds.contains(clickPosition)) {
+                game.getSoundManager().playSound("select");
                 game.setScreen(new MainMenuScreen(game));
             } else if (quitButtonBounds.contains(clickPosition)) {
+                game.getSoundManager().playSound("select");
                 Gdx.app.exit();
             }
         }
@@ -312,7 +315,7 @@ public class HUD {
                 Gdx.app.exit();
             } else if (shopButtonBounds.contains(clickPosition)) {
                 game.getSoundManager().playMusic("menu", true, 0.5f);
-                game.setScreen(new ShopScreen(game, stat, ((GameScreen) game.getScreen()).player)); // Passez le joueur
+                game.setScreen(new ShopScreen(game, stat, ((GameScreen) game.getScreen()).player));
             }
         }
     }
