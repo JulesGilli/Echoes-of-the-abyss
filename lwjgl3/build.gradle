@@ -78,6 +78,10 @@ jar {
   }
 
   duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+
+  tasks.named('jar') {
+    dependsOn(':core:jar') // Ensure 'core' jar is built
+  }
 }
 
 construo {
