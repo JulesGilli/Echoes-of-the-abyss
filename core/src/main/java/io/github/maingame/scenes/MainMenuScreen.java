@@ -17,6 +17,7 @@ import io.github.maingame.entities.Player;
 import io.github.maingame.input.PlayerInputHandler;
 import io.github.maingame.utils.Platform;
 import com.badlogic.gdx.audio.Music;
+import io.github.maingame.utils.SoundManager;
 
 public class MainMenuScreen extends ScreenAdapter {
     private final Main game;
@@ -32,14 +33,17 @@ public class MainMenuScreen extends ScreenAdapter {
     private BitmapFont font;
     private BitmapFont titleFont;
 
-    private Music menuMusic;
+    private SoundManager soundManager;
 
     public MainMenuScreen(Main game) {
         this.game = game;
         this.batch = new SpriteBatch();
         stat = new GameStat();
 
-        player = new Player(new Vector2(100, 100), Platform.getPlatforms());
+        this.soundManager = game.getSoundManager();
+
+
+        player = new Player(new Vector2(100, 100), Platform.getPlatforms(), soundManager);
 
         PlayerInputHandler inputHandler = new PlayerInputHandler(player);
         player.setInputHandler(inputHandler);
@@ -68,6 +72,17 @@ public class MainMenuScreen extends ScreenAdapter {
 
         game.getSoundManager().loadSound("select", "assets/Sound/sound_select.wav");
         game.getSoundManager().loadSound("buy", "assets/Sound/sound_gold.wav");
+
+        game.getSoundManager().loadSound("sound_playerScream1", "assets/Sound/sound_playerScream1.wav");
+        game.getSoundManager().loadSound("sound_playerScream2", "assets/Sound/sound_playerScream2.wav");
+        game.getSoundManager().loadSound("sound_playerScream3", "assets/Sound/sound_playerScream3.wav");
+        game.getSoundManager().loadSound("sound_playerScream4", "assets/Sound/sound_playerScream4.wav");
+
+        game.getSoundManager().loadSound("sound_hitSword1", "assets/Sound/sound_hitSword1.wav");
+        game.getSoundManager().loadSound("sound_hitSword2", "assets/Sound/sound_hitSword2.wav");
+        game.getSoundManager().loadSound("sound_hitSword3", "assets/Sound/sound_hitSword3.wav");
+        game.getSoundManager().loadSound("sound_hitSword4", "assets/Sound/sound_hitSword4.wav");
+
 
     }
 
