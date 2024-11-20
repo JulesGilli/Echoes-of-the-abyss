@@ -9,6 +9,7 @@ import io.github.maingame.entities.Enemy;
 import io.github.maingame.entities.EnemyFactory;
 import io.github.maingame.entities.Player;
 import io.github.maingame.utils.Platform;
+import io.github.maingame.utils.SoundManager;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -20,13 +21,15 @@ public class EnemyManager {
     private final GameStat stat;
     private final Player player;
     private final OrthographicCamera camera;
+    private final SoundManager soundManager;
     private float timeSinceLastSpawn;
     private float spawnDelay;
 
-    public EnemyManager(GameStat stat, Player player, OrthographicCamera camera) {
+    public EnemyManager(GameStat stat, Player player, OrthographicCamera camera, SoundManager soundManager) {
         this.stat = stat;
         this.player = player;
         this.camera = camera;
+        this.soundManager = soundManager;
         this.spawnDelay = 3.0f;
     }
 
@@ -62,6 +65,10 @@ public class EnemyManager {
             enemyToSpawn.getPosition().set(spawnX, spawnY);
             enemies.add(enemyToSpawn);
             timeSinceLastSpawn = 0f;
+
+            if (MathUtils.random() < 0.3f) {
+                soundManager.playSound("enemy_spawn");
+            }
         }
 
         for (Iterator<Enemy> iterator = enemies.iterator(); iterator.hasNext(); ) {

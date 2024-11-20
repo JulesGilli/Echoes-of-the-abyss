@@ -16,6 +16,8 @@ import io.github.maingame.core.Main;
 import io.github.maingame.entities.Player;
 import io.github.maingame.input.PlayerInputHandler;
 import io.github.maingame.utils.Platform;
+import com.badlogic.gdx.audio.Music;
+import io.github.maingame.utils.SoundManager;
 
 public class MainMenuScreen extends ScreenAdapter {
     private final Main game;
@@ -31,16 +33,20 @@ public class MainMenuScreen extends ScreenAdapter {
     private BitmapFont font;
     private BitmapFont titleFont;
 
+    private SoundManager soundManager;
+
     public MainMenuScreen(Main game) {
         this.game = game;
         this.batch = new SpriteBatch();
         stat = new GameStat();
 
-        player = new Player(new Vector2(100, 100), Platform.getPlatforms());
+        this.soundManager = game.getSoundManager();
+
+
+        player = new Player(new Vector2(100, 100), Platform.getPlatforms(), soundManager);
 
         PlayerInputHandler inputHandler = new PlayerInputHandler(player);
         player.setInputHandler(inputHandler);
-
 
         stat.loadGame();
 
@@ -60,6 +66,9 @@ public class MainMenuScreen extends ScreenAdapter {
         quitButtonBounds = new Rectangle((screenWidth - buttonWidth) / 2, screenHeight / 2 - 300, buttonWidth, buttonHeight);
 
         System.out.println("Main Menu");
+
+        game.getSoundManager().playMusic("menu", true, 0.3f);
+
     }
 
     private void initFonts() {
@@ -105,19 +114,25 @@ public class MainMenuScreen extends ScreenAdapter {
             Vector2 clickPosition = new Vector2(Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY());
 
             if (playButtonBounds.contains(clickPosition)) {
+                game.getSoundManager().playSound("select");
+                game.getSoundManager().stopMusic("menu");
                 game.setScreen(new GameScreen(game, stat, player));
             }
 
 
             if (optionButtonBounds.contains(clickPosition)) {
+                game.getSoundManager().playSound("select");
                 game.setScreen(new OptionsScreen(game));
             }
 
             if (shopButtonBounds.contains(clickPosition)) {
+                game.getSoundManager().playSound("select");
                 game.setScreen(new ShopScreen(game, stat, player));
             }
 
             if (quitButtonBounds.contains(clickPosition)) {
+                game.getSoundManager().playSound("select");
+                game.getSoundManager().stopMusic("menu");
                 Gdx.app.exit();
             }
         }

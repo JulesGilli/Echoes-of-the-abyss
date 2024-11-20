@@ -14,6 +14,7 @@ import io.github.maingame.entities.Player;
 import io.github.maingame.input.InputManager;
 import io.github.maingame.input.PlayerInputHandler;
 import io.github.maingame.utils.Platform;
+import io.github.maingame.utils.SoundManager;
 import io.github.maingame.utils.TextureManager;
 
 public class GameScreen extends ScreenAdapter {
@@ -29,19 +30,22 @@ public class GameScreen extends ScreenAdapter {
     private boolean isGameOver = false;
     private boolean isPaused = false;
     private boolean isWaveTransition = false;
+    private boolean hasPlayedPassWaveSound = false;
     private float waveTransitionTimer = 0f;
     private boolean isTutorial = true;
+    private Main game;
 
     public GameScreen(Main game, GameStat stat, Player player) {
         this.stat = stat;
         this.player = player;
+        this.game = game;
         this.isTutorial = stat.isFirstGame();
         this.playerInputHandler = new PlayerInputHandler(player);
         this.batch = game.batch;
         this.hud = new HUD(game, stat, player);
         this.camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         this.hudCamera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        this.enemyManager = new EnemyManager(stat, player, camera);
+        this.enemyManager = new EnemyManager(stat, player, camera, game.getSoundManager());
 
         camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0);
         hudCamera.position.set(hudCamera.viewportWidth / 2, hudCamera.viewportHeight / 2, 0);
@@ -57,6 +61,8 @@ public class GameScreen extends ScreenAdapter {
         updatePlayerKeys();
         Platform.createPlatforms();
         enemyManager.setupFloorEnemies();
+
+        game.getSoundManager().playMusic("fight", true, 0.2f);
     }
 
     @Override
@@ -64,7 +70,15 @@ public class GameScreen extends ScreenAdapter {
         handleInput();
         clearScreen();
         batch.begin();
+
+        if (isTutorial) {
+            game.getSoundManager().playMusic("fight", true, 0.1f);
+        } else {
+            game.getSoundManager().playMusic("fight", true, 0.2f);
+        }
+
         if (isPaused) {
+            game.getSoundManager().setVolume("fight",0.1f);
             renderPausedState();
             return;
         }
@@ -75,7 +89,11 @@ public class GameScreen extends ScreenAdapter {
         updateCamera();
         batch.setProjectionMatrix(camera.combined);
         renderGameElements(delta);
-        enemyManager.spawnEnemies(delta, batch);
+
+        if (!isTutorial) {
+            enemyManager.spawnEnemies(delta, batch);
+        }
+
         batch.setProjectionMatrix(hudCamera.combined);
         renderHUD();
         handleNextWave();
@@ -106,11 +124,21 @@ public class GameScreen extends ScreenAdapter {
         if (isWaveTransition) {
             waveTransitionTimer += delta;
             float waveTransitionDuration = 2f;
+
+            if (!hasPlayedPassWaveSound) {
+                game.getSoundManager().playSound("passWave");
+                hasPlayedPassWaveSound = true;
+            }
+
             if (waveTransitionTimer >= waveTransitionDuration) {
                 isWaveTransition = false;
                 waveTransitionTimer = 0f;
+
+                hasPlayedPassWaveSound = false;
             } else {
-                float alpha = MathUtils.clamp(1.0f - Math.abs(waveTransitionTimer - waveTransitionDuration / 2) / (waveTransitionDuration / 2), 0, 1);
+                float alpha = MathUtils.clamp(
+                    1.0f - Math.abs(waveTransitionTimer - waveTransitionDuration / 2) / (waveTransitionDuration / 2), 0, 1
+                );
                 batch.setProjectionMatrix(hudCamera.combined);
                 hud.renderWaveTransition(batch, stat.getFloors(), alpha);
                 batch.end();
@@ -119,6 +147,7 @@ public class GameScreen extends ScreenAdapter {
         }
         return false;
     }
+
 
     private void checkGameOverState() {
         if (player.getHealth() <= 0 && player.isDeathAnimationFinished() && !isGameOver) {
@@ -162,7 +191,8 @@ public class GameScreen extends ScreenAdapter {
                 InputManager.getRightKey(),
                 InputManager.getJumpKey(),
                 InputManager.getAttackKey(),
-                InputManager.getRollKey());
+                InputManager.getRollKey(),
+                InputManager.getPotionKey());
             if (Gdx.input.isKeyJustPressed(Input.Keys.ANY_KEY)) {
                 isTutorial = false;
                 stat.setFirstGame(false);
@@ -210,6 +240,14 @@ public class GameScreen extends ScreenAdapter {
             platform.render(batch);
         }
     }
+
+    @Override
+    public void hide() {
+        super.hide();
+        Gdx.app.log("GameScreen", "Stopping gameplay music");
+        game.getSoundManager().stopMusic("gameplay");
+    }
+
 
     @Override
     public void show() {

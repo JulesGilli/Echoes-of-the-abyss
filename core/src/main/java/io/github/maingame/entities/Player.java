@@ -10,8 +10,11 @@ import io.github.maingame.items.Inventory;
 import io.github.maingame.items.Item;
 import io.github.maingame.utils.AnimationManager;
 import io.github.maingame.utils.Platform;
+import io.github.maingame.utils.SoundManager;
 
 import java.util.List;
+
+import static com.badlogic.gdx.math.MathUtils.random;
 
 public class Player extends Entity {
     private final float maxStamina = 100;
@@ -22,8 +25,14 @@ public class Player extends Entity {
     private float stamina = 100;
     private PlayerInputHandler inputHandler;
 
+    private SoundManager soundManager;
+
+    private final String[] playerScreams = {"sound_playerScream1", "sound_playerScream2", "sound_playerScream3", "sound_playerScream4", "sound_playerScream5"};
+    private final String[] hitSwords = {"sound_hitSword1", "sound_hitSword2", "sound_hitSword3", "sound_hitSword4"};
+
+
     // Constructor
-    public Player(Vector2 position, List<Platform> platforms) {
+    public Player(Vector2 position, List<Platform> platforms, SoundManager soundManager) {
         super(position,
             new AnimationManager(
                 "atlas/player/sprite_player_walk.png",
@@ -41,7 +50,7 @@ public class Player extends Entity {
         this.initialGold = gold;
         this.initialAttack = attackDamage;
 
-        this.speed = 500;
+        this.speed = 350;
         this.jumpVelocity = 1000;
         this.gravity = 25;
         this.platforms = platforms;
@@ -50,6 +59,8 @@ public class Player extends Entity {
         this.attackRange = 50;
 
         this.inputHandler = new PlayerInputHandler(this);
+
+        this.soundManager = soundManager;
     }
 
     // Update Method
@@ -227,16 +238,25 @@ public class Player extends Entity {
     }
 
     public void attack() {
-        if (stamina >= 20f) {
-            stamina -= 20f;
+        if (stamina >= 15f) {
+            stamina -= 15f;
             isAttacking = true;
             animationTime = 0f;
+
+            if (soundManager != null) {
+                String randomScream = playerScreams[MathUtils.random(playerScreams.length - 1)];
+                soundManager.playSound(randomScream);
+
+                String randomSwordHit = hitSwords[MathUtils.random(hitSwords.length - 1)];
+                soundManager.playSound(randomSwordHit);
+            }
         }
     }
 
+
     public void roll() {
-        if (stamina >= 15f) {
-            stamina -= 15f;
+        if (stamina >= 10f) {
+            stamina -= 10f;
             isRolling = true;
             animationTime = 0f;
         }

@@ -146,16 +146,20 @@ public class HUD {
             Vector2 clickPosition = new Vector2(Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY());
 
             if (resumeButtonBounds.contains(clickPosition)) {
+                game.getSoundManager().playSound("select");
                 ((GameScreen) game.getScreen()).resumeGame();
             } else if (mainMenuButtonBounds.contains(clickPosition)) {
+                game.getSoundManager().stopMusic("fight");
+                game.getSoundManager().playSound("select");
                 game.setScreen(new MainMenuScreen(game));
             } else if (quitButtonBounds.contains(clickPosition)) {
+                game.getSoundManager().playSound("select");
                 Gdx.app.exit();
             }
         }
     }
 
-    public void renderFirstGameInstructions(SpriteBatch batch, int leftKey, int rightKey, int jumpKey, int attackKey, int rollKey) {
+    public void renderFirstGameInstructions(SpriteBatch batch, int leftKey, int rightKey, int jumpKey, int attackKey, int rollKey, int potionKey) {
         float screenWidth = Gdx.graphics.getWidth();
         float screenHeight = Gdx.graphics.getHeight();
 
@@ -170,9 +174,11 @@ public class HUD {
         );
 
         String instructionsAction = String.format(
-            "For capacity :\nAttack: %s\nRoll: %s",
+            "For capacity :\nAttack: %s\nRoll: %s\nPotion: %s",
             Input.Keys.toString(attackKey),
-            Input.Keys.toString(rollKey)
+            Input.Keys.toString(rollKey),
+            Input.Keys.toString(potionKey)
+
         );
 
 
@@ -311,7 +317,8 @@ public class HUD {
             } else if (quitButtonBounds.contains(clickPosition)) {
                 Gdx.app.exit();
             } else if (shopButtonBounds.contains(clickPosition)) {
-                game.setScreen(new ShopScreen(game, stat, ((GameScreen) game.getScreen()).player)); // Passez le joueur
+                game.getSoundManager().playMusic("menu", true, 0.5f);
+                game.setScreen(new ShopScreen(game, stat, ((GameScreen) game.getScreen()).player));
             }
         }
     }

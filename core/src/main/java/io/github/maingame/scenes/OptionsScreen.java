@@ -104,23 +104,30 @@ public class OptionsScreen extends ScreenAdapter {
             Vector2 clickPosition = new Vector2(Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY());
 
             if (backButtonBounds.contains(clickPosition)) {
+                game.getSoundManager().playSound("select");
                 game.setScreen(new MainMenuScreen(game));
             } else if (leftKeyBounds.contains(clickPosition)) {
+                game.getSoundManager().playSound("select");
                 waitingForNewKey = true;
                 keyToRemap = "leftKey";
             } else if (rightKeyBounds.contains(clickPosition)) {
+                game.getSoundManager().playSound("select");
                 waitingForNewKey = true;
                 keyToRemap = "rightKey";
             } else if (jumpKeyBounds.contains(clickPosition)) {
+                game.getSoundManager().playSound("select");
                 waitingForNewKey = true;
                 keyToRemap = "jumpKey";
             } else if (attackKeyBounds.contains(clickPosition)) {
+                game.getSoundManager().playSound("select");
                 waitingForNewKey = true;
                 keyToRemap = "attackKey";
             } else if (rollKeyBounds.contains(clickPosition)) {
+                game.getSoundManager().playSound("select");
                 waitingForNewKey = true;
                 keyToRemap = "rollKey";
             } else if (potionKeyBounds.contains(clickPosition)) {
+                game.getSoundManager().playSound("select");
                 waitingForNewKey = true;
                 keyToRemap = "potionKey";
             }
