@@ -1,5 +1,6 @@
 package io.github.maingame.items;
 
+import io.github.maingame.entities.Entity;
 import io.github.maingame.entities.Player;
 import io.github.maingame.core.GameStat;
 
@@ -14,7 +15,7 @@ public class ArmorPotion extends Consumable {
     }
 
     @Override
-    public void applyItem(Player targetEntity) {
+    public void applyItem(Entity targetEntity) {
         setIncreaseValue(10 * stat.getFloors());
         targetEntity.setArmor(targetEntity.getArmor() + getIncreaseValue());
         System.out.println("applying Armor potion, current armor: " + targetEntity.getArmor());
@@ -22,7 +23,7 @@ public class ArmorPotion extends Consumable {
     }
 
     @Override
-    public void resetItem(Player targetEntity) {
+    public void resetItem(Entity targetEntity) {
         targetEntity.setArmor(0);
         System.out.println("reset Armor potion, current armor : " + targetEntity.getArmor());
     }

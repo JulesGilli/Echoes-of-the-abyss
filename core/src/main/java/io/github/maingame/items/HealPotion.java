@@ -1,5 +1,6 @@
 package io.github.maingame.items;
 
+import io.github.maingame.entities.Entity;
 import io.github.maingame.entities.Player;
 import io.github.maingame.core.GameStat;
 
@@ -14,7 +15,7 @@ public class HealPotion extends Consumable {
     }
 
     @Override
-    public void applyItem(Player targetEntity) {
+    public void applyItem(Entity targetEntity) {
         setIncreaseValue(50 + 10 * stat.getFloors());
         targetEntity.setMaxHealth(targetEntity.getHealth() + getIncreaseValue());
         targetEntity.setHealth(targetEntity.getMaxHealth());
@@ -22,7 +23,7 @@ public class HealPotion extends Consumable {
     }
 
     @Override
-    public void resetItem(Player targetEntity) {
+    public void resetItem(Entity targetEntity) {
         if (targetEntity.getHealth() > targetEntity.getMaxHealth() - getIncreaseValue()) {
             targetEntity.setMaxHealth(targetEntity.getHealth() - getIncreaseValue());
             targetEntity.setHealth(targetEntity.getMaxHealth());
