@@ -1,33 +1,80 @@
-# JavaProject
+# Echoes of the Abyss
 
-A [libGDX](https://libgdx.com/) project generated with [gdx-liftoff](https://github.com/libgdx/gdx-liftoff).
+**Echoes of the Abyss** est un jeu 2D action rogue-lite développé avec [libGDX](https://libgdx.com/). Le joueur explore un donjon mystérieux rempli d’ennemis, avec pour objectif de progresser étage après étage tout en collectant des ressources et en renforçant son personnage.
 
-This project was generated with a template including simple application launchers and an `ApplicationAdapter` extension that draws libGDX logo.
+## 📋 Prérequis
 
-## Platforms
+- **OS** : Windows 10 ou Linux  
+- **Carte graphique** : NVIDIA GeForce RTX 2070 ou équivalent  
+- **Processeur** : Intel Core i5-8300H ou équivalent  
+- **Java** : JDK 8 ou supérieur  
+- **Gradle** : Intégré avec le projet, aucun besoin d'installation externe  
 
-- `core`: Main module with the application logic shared by all platforms.
-- `lwjgl3`: Primary desktop platform using LWJGL3; was called 'desktop' in older docs.
+## 🚀 Installation
 
-## Gradle
+1. **Cloner le dépôt** :
+   ```bash
+   git clone <repository_url>
+   cd echoes-of-the-abyss
+2. **Nettoyer les fichiers précédents (optionnel) :** :
+   Si vous souhaitez repartir sur une base propre, exécutez la commande suivante :
+   ```bash
+   ./gradlew clean
+3. **Construire le projet** :
+   Utilisez le wrapper Gradle intégré :
+   ```bash
+   ./gradlew build
+4. **Générer un fichier exécutable** :
+   Pour créer un exécutable .jar :
+   ```bash
+   ./gradlew lwjgl3:jar
+5. Générer un fichier exécutable :
+   Pour créer un exécutable `.jar` qui contient toutes les ressources nécessaires au jeu, exécutez la commande suivante :
+    ```bash
+    ./gradlew lwjgl3:jar
+    ```
+    
+    Une fois la tâche terminée, le fichier exécutable sera généré dans le dossier suivant :
+    ```
+    lwjgl3/build/libs/JavaProject.jar
+    ```
+    
+    Ce fichier peut être utilisé pour lancer le jeu avec la commande :
+    ```bash
+    java -jar lwjgl3/build/libs/JavaProject.jar
+    ```
+    
+    Assurez-vous que le système dispose de Java 8 ou supérieur installé pour exécuter ce fichier.
+6. **Lancer le jeu** :
+   Sur Windows, exécutez launch_game.bat dans le dossier dist/windows.
+   Sur macOS ou Linux, exécutez launch_game.sh dans le dossier correspondant : 
+    ```bash
+   ./launch_game.sh
+   
+## 🛠️ Structure du projet
 
-This project uses [Gradle](https://gradle.org/) to manage dependencies.
-The Gradle wrapper was included, so you can run Gradle tasks using `gradlew.bat` or `./gradlew` commands.
-Useful Gradle tasks and flags:
+- **core** : Contient la logique principale et les mécaniques de jeu, partagées entre toutes les plateformes.
+- **lwjgl3** : Plateforme principale pour desktop, basée sur LWJGL3.
 
-- `--continue`: when using this flag, errors will not stop the tasks from running.
-- `--daemon`: thanks to this flag, Gradle daemon will be used to run chosen tasks.
-- `--offline`: when using this flag, cached dependency archives will be used.
-- `--refresh-dependencies`: this flag forces validation of all dependencies. Useful for snapshot versions.
-- `build`: builds sources and archives of every project.
-- `cleanEclipse`: removes Eclipse project data.
-- `cleanIdea`: removes IntelliJ project data.
-- `clean`: removes `build` folders, which store compiled classes and built archives.
-- `eclipse`: generates Eclipse project data.
-- `idea`: generates IntelliJ project data.
-- `lwjgl3:jar`: builds application's runnable jar, which can be found at `lwjgl3/build/libs`.
-- `lwjgl3:run`: starts the application.
-- `test`: runs unit tests (if any).
+## 📦 Déploiement
 
-Note that most tasks that are not specific to a single project can be run with `name:` prefix, where the `name` should be replaced with the ID of a specific project.
-For example, `core:clean` removes `build` folder only from the `core` project.
+- **Exécutable Desktop** :
+    - Le fichier `.jar` généré dans `lwjgl3/build/libs` peut être utilisé pour distribuer le jeu.
+    - Assurez-vous que le système cible dispose de Java 8 ou supérieur installé.
+
+- **Configuration multiplateforme** : Le projet est extensible pour d'autres plateformes (mobile, navigateur) via les modules supplémentaires de libGDX.
+
+## 🧪 Gradle - Tâches Utiles
+
+- `build` : Compile le code source et génère les fichiers nécessaires.
+- `clean` : Supprime les dossiers `build`.
+- `lwjgl3:run` : Exécute directement le jeu.
+- `createExecutables` : Génère des exécutables pour Windows, macOS et Linux.
+
+## 🎮 À propos du jeu
+
+- **Titre** : Echoes of the Abyss
+- **Genre** : Rogue-lite, Beat 'em all, Action 2D
+- **Plateforme cible** : PC
+- **Style graphique** : Pixel art 2D sombre et immersif
+- **Objectif principal** : Descendre le plus profondément possible dans un donjon rempli d'ennemis et de défis.  
