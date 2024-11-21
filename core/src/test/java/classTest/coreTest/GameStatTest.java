@@ -1,8 +1,5 @@
 
-package classTest.utilsManagerTest;
-import com.badlogic.gdx.Game;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.files.FileHandle;
+package classTest.coreTest;
 import io.github.maingame.core.GameStat;
 import org.junit.Before;
 import org.junit.BeforeClass;

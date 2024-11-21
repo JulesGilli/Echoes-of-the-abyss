@@ -1,5 +1,5 @@
-import classTest.characterManagerTest.EntityTest;
-import classTest.utilsManagerTest.GameStatTest;
+import classTest.entitiesTest.EntityTest;
+import classTest.coreTest.GameStatTest;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
 import org.junit.runner.notification.Failure;
