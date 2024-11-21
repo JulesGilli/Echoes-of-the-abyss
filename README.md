@@ -24,29 +24,18 @@
    Utilisez le wrapper Gradle intégré :
    ```bash
    ./gradlew build
-4. **Générer un fichier exécutable** :
-   Pour créer un exécutable .jar :
-   ```bash
-   ./gradlew lwjgl3:jar
-5. Générer un fichier exécutable :
+4. Générer un fichier exécutable :
    Pour créer un exécutable `.jar` qui contient toutes les ressources nécessaires au jeu, exécutez la commande suivante :
     ```bash
-    ./gradlew lwjgl3:jar
+    ./gradlew createExecutables
     ```
     
-    Une fois la tâche terminée, le fichier exécutable sera généré dans le dossier suivant :
+    Une fois la tâche terminée, 3 fichiers exécutables seront généré dans le dossier suivant :
     ```
-    lwjgl3/build/libs/JavaProject.jar
+    lwjgl3/dist
     ```
-    
-    Ce fichier peut être utilisé pour lancer le jeu avec la commande :
-    ```bash
-    java -jar lwjgl3/build/libs/JavaProject.jar
-    ```
-    
-    Assurez-vous que le système dispose de Java 8 ou supérieur installé pour exécuter ce fichier.
-6. **Lancer le jeu** :
-   Sur Windows, exécutez launch_game.bat dans le dossier dist/windows.
+5. **Lancer le jeu** :
+   Sur Windows, exécutez launch_game ".bat" dans le dossier dist/windows.
    Sur macOS ou Linux, exécutez launch_game.sh dans le dossier correspondant : 
     ```bash
    ./launch_game.sh
