@@ -6,15 +6,15 @@ public abstract class Item implements ItemSolution {
     protected float increaseValue;
     protected String name;
     protected int gold;
-    protected Texture textureAvailable;
-    protected Texture textureDisabled;
-    protected Texture textureLock;
+    protected String  textureAvailable;
+    protected String textureDisabled;
+    protected String textureLock;
 
     public Item(int value, String textureName, String textureDisabledName, String textureLockName) {
         this.gold = value;
-        this.textureAvailable = new Texture(textureName);
-        this.textureDisabled = new Texture(textureDisabledName);
-        this.textureLock = new Texture(textureLockName);
+        this.textureAvailable = textureName;
+        this.textureDisabled = textureDisabledName;
+        this.textureLock = textureLockName;
     }
 
     public String getStrGold() {
@@ -25,15 +25,15 @@ public abstract class Item implements ItemSolution {
         return this.gold;
     }
 
-    public Texture getTextureAvailable() {
+    public String getTextureAvailable() {
         return textureAvailable;
     }
 
-    public Texture getTextureDisabled() {
+    public String  getTextureDisabled() {
         return textureDisabled;
     }
 
-    public Texture getTextureLock() {
+    public String getTextureLock() {
         return textureLock;
     }
 

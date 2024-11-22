@@ -1,5 +1,6 @@
 package io.github.maingame.items;
 
+import io.github.maingame.entities.Entity;
 import io.github.maingame.entities.Player;
 import io.github.maingame.core.GameStat;
 
@@ -16,7 +17,7 @@ public class Armor extends Gear {
     }
 
     @Override
-    public void applyItem(Player targetEntity) {
+    public void applyItem(Entity targetEntity) {
         setIncreaseValue((int) (10 * Math.pow(2, lvl - 1)));
         targetEntity.setArmor(getIncreaseValue());
         targetEntity.setMaxHealth(targetEntity.getMaxHealth() + getIncreaseValue() * 10);
@@ -25,7 +26,7 @@ public class Armor extends Gear {
     }
 
     @Override
-    public void resetItem(Player targetEntity) {
+    public void resetItem(Entity targetEntity) {
         targetEntity.setArmor(0);
         targetEntity.setMaxHealth(targetEntity.getMaxHealth() - getIncreaseValue() * 10);
         targetEntity.setHealth(targetEntity.getMaxHealth());
