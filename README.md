@@ -28,14 +28,9 @@
    Pour créer un exécutable `.jar` qui contient toutes les ressources nécessaires au jeu, exécutez la commande suivante :
     ```bash
     ./gradlew createExecutables
-    ```
-    
-    Une fois la tâche terminée, 3 fichiers exécutables seront généré dans le dossier suivant :
-    ```
-    lwjgl3/dist
-    ```
+ 
 5. **Lancer le jeu** :
-   Sur Windows, exécutez launch_game ".bat" dans le dossier dist/windows.
+   Sur Windows, exécutez `launch_game.bat` dans le dossier dist/windows.
    Sur macOS ou Linux, exécutez launch_game.sh dans le dossier correspondant : 
     ```bash
    ./launch_game.sh
