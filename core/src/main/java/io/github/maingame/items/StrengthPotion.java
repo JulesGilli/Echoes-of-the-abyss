@@ -12,6 +12,8 @@ public class StrengthPotion extends Consumable {
             "icons/items/potion/icon_potionStrength_bought.png",
             "icons/items/potion/icon_potionStrength_lock.png",
             stat);
+
+        this.unlockFloor = 3;
     }
 
     @Override
@@ -31,6 +33,6 @@ public class StrengthPotion extends Consumable {
 
     @Override
     public boolean isUnlocked(GameStat stat) {
-        return stat.getMaxFloors() >= 3;
+        return stat.getMaxFloors() >= unlockFloor;
     }
 }

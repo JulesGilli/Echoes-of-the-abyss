@@ -1,5 +1,6 @@
 package io.github.maingame.items;
 
+import com.badlogic.gdx.Game;
 import io.github.maingame.entities.Player;
 import io.github.maingame.core.GameStat;
 
@@ -58,6 +59,10 @@ public class Shop {
             System.out.println("achat impossible");
             return false;
         }
+    }
+
+    public String unlockCondition(GameStat stat, Item item){
+        return "in " + (item.unlockFloor - stat.getMaxFloors()) + " floors";
     }
 
     public List<Item> getItems() {

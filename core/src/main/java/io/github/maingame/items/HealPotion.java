@@ -11,7 +11,7 @@ public class HealPotion extends Consumable {
             "icons/items/potion/icon_potionHealth_bought.png",
             "icons/items/potion/icon_potionHealth_lock.png",
             stat);
-
+        this.unlockFloor = 1;
     }
 
     @Override

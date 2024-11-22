@@ -9,6 +9,7 @@ public abstract class Item implements ItemSolution {
     protected String  textureAvailable;
     protected String textureDisabled;
     protected String textureLock;
+    protected int unlockFloor;
 
     public Item(int value, String textureName, String textureDisabledName, String textureLockName) {
         this.gold = value;
@@ -35,6 +36,10 @@ public abstract class Item implements ItemSolution {
 
     public String getTextureLock() {
         return textureLock;
+    }
+
+    public int getUnlockFloor() {
+        return unlockFloor;
     }
 
     public float getIncreaseValue() {

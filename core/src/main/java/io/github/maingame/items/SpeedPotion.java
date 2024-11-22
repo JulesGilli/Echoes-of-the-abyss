@@ -13,6 +13,8 @@ public class SpeedPotion extends Consumable {
             stat);
 
         stat.setSpeedPotionUse(stat.getSpeedPotionUse() + 1);
+
+        this.unlockFloor = 5;
     }
 
     @Override

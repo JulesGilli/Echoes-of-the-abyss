@@ -14,6 +14,7 @@ public class Armor extends Gear {
             "icons/items/armor/icon_armor" + lvl + "_lock.png",
             lvl);
         this.reductionDamage = 5;
+        this.unlockFloor = 3 * lvl;
     }
 
     @Override
@@ -37,7 +38,7 @@ public class Armor extends Gear {
     @Override
     public boolean isUnlocked(GameStat stat) {
 
-        return stat.getMaxFloors() >= 3 * lvl;
+        return stat.getMaxFloors() >= unlockFloor;
     }
 
     public int getReductionDamage() {

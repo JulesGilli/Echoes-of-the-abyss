@@ -27,14 +27,9 @@ public class ShopScreen extends ScreenAdapter {
     private final SpriteBatch batch;
     private final Texture backgroundTexture;
     private final Texture shopTexture;
-    private final float shopSize = 1.2F;
     private final Shop shop;
     private final List<Item> items;
     private final GameStat stat;
-    private final int buttonWidth = 600;
-    private final int buttonHeight = 200;
-    private final int itemCardWidth = 200;
-    private final int itemCardHeight = 200;
     private final float shopWidth;
     private final float shopHeight;
     private final int screenWidth = Gdx.graphics.getWidth();
@@ -55,6 +50,7 @@ public class ShopScreen extends ScreenAdapter {
         this.batch = new SpriteBatch();
         this.shop = new Shop(stat, player);
         this.items = shop.getItems();
+        float shopSize = 1.2F;
         shopWidth = 876 * shopSize;
         shopHeight = 641 * shopSize;
         centerShopWidth = screenWidth / 2f - shopWidth / 2f;
@@ -63,6 +59,8 @@ public class ShopScreen extends ScreenAdapter {
         shopTexture = new Texture(Gdx.files.internal("backgrounds/background_shop.png"));
         initFonts();
         buttonTexture = new Texture(Gdx.files.internal("GUI/button_basic.png"));
+        int buttonWidth = 600;
+        int buttonHeight = 200;
         playButtonBounds = new com.badlogic.gdx.math.Rectangle((screenWidth - buttonWidth) / 2 + buttonWidth / 2, screenHeight - shopHeight - 250, buttonWidth, buttonHeight);
         mainMenuButtonBounds = new com.badlogic.gdx.math.Rectangle((screenWidth - buttonWidth) / 2 - buttonWidth / 2, screenHeight - shopHeight - 250, buttonWidth, buttonHeight);
         System.out.println("ShopScreen");
@@ -92,8 +90,13 @@ public class ShopScreen extends ScreenAdapter {
         if (player.getInventory().inInventory(item)) {
             font.draw(batch, "bought", getItemGoldPosition(number).x - 50, getItemGoldPosition(number).y);
 
-        } else {
-            font.draw(batch, item.getStrGold(), getItemGoldPosition(number).x, getItemGoldPosition(number).y);
+        } else if (!item.isUnlocked(stat)){
+            font.getData().setScale(0.7f);
+            font.draw(batch, shop.unlockCondition(stat,item), getItemGoldPosition(number).x - 30, getItemGoldPosition(number).y - 10);
+            font.getData().setScale(1f);
+        }
+        else {
+            font.draw(batch, item.getStrGold() , getItemGoldPosition(number).x, getItemGoldPosition(number).y);
         }
         Rectangle rectangle = new Rectangle(getItemGoldPosition(0).x - 50 + number % 4 * 200, getItemGoldPosition(0).y - 50 - number / 4 * 200, 200, 200);
         return rectangle;
@@ -141,7 +144,6 @@ public class ShopScreen extends ScreenAdapter {
         parameter.size = 50;
         font = generator.generateFont(parameter);
         font.setColor(Color.BROWN);
-        parameter.size = 96;
         generator.dispose();
     }
 

@@ -14,6 +14,7 @@ public class Weapon extends Gear {
             "icons/items/weapon/icon_weapon" + lvl + "_lock.png",
             lvl);
         this.attackIncrease = 5;
+        this.unlockFloor = 2 * lvl;
     }
 
     @Override
@@ -32,7 +33,7 @@ public class Weapon extends Gear {
     @Override
     public boolean isUnlocked(GameStat stat) {
 
-        return stat.getMaxFloors() >= 2 * lvl;
+        return stat.getMaxFloors() >= unlockFloor;
 
     }
 }
