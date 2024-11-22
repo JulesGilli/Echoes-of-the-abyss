@@ -51,12 +51,13 @@ public abstract class Enemy extends Entity {
 
         this.attackDamage = this.baseAttackDamage * multiplier;
 
-        this.attackCooldown = this.attackCooldown * multiplier;
+        this.attackCooldown = this.attackCooldown / multiplier;
 
+        this.gold = Math.round(this.gold * multiplier);
 
         this.speed = this.baseSpeed * (1 + (level - 1) * 0.1f);
 
-        float animationSpeedMultiplier = 1 / (1 + (level - 1) * 0.1f);
+        float animationSpeedMultiplier = (float) Math.pow(0.95, level - 1);
         animation.updateFrameDurations(animationSpeedMultiplier);
     }
 
@@ -89,7 +90,7 @@ public abstract class Enemy extends Entity {
             if (health <= 0) {
                 isDying = true;
                 animationTime = 0f;
-                goldTexts.add(new GoldText("+10", new Vector2(position.x, position.y)));
+                goldTexts.add(new GoldText("" + this.gold, new Vector2(position.x, position.y)));
             } else {
                 isHit = true;
                 hitAnimationTime = 0f;
