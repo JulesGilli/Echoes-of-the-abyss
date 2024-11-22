@@ -1,5 +1,6 @@
 import classTest.entitiesTest.EntityTest;
 import classTest.coreTest.GameStatTest;
+import classTest.itemsTest.ItemTest;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
 import org.junit.runner.notification.Failure;
@@ -22,5 +23,6 @@ public class TestRunner {
     public void runTests() {
         runTest(EntityTest.class);
         runTest(GameStatTest.class);
+        runTest(ItemTest.class);
     }
 }

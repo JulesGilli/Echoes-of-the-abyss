@@ -79,12 +79,15 @@ public class ShopScreen extends ScreenAdapter {
     public Rectangle drawItem(int number) {
         Item item = items.get(number);
         if (!item.isUnlocked(stat)) {
-            batch.draw(item.getTextureLock(), getItemAssetPosition(number).x + 10, getItemAssetPosition(number).y - 67, 75, 75);
+            Texture lock = new Texture(item.getTextureLock());
+            batch.draw(lock, getItemAssetPosition(number).x + 10, getItemAssetPosition(number).y - 67, 75, 75);
         } else if (shop.isAvailable(item)) {
-            batch.draw(item.getTextureAvailable(), getItemAssetPosition(number).x + 10, getItemAssetPosition(number).y - 67, 75, 75);
+            Texture available = new Texture(item.getTextureAvailable());
+            batch.draw(available, getItemAssetPosition(number).x + 10, getItemAssetPosition(number).y - 67, 75, 75);
 
         } else {
-            batch.draw(item.getTextureDisabled(), getItemAssetPosition(number).x + 10, getItemAssetPosition(number).y - 67, 75, 75);
+            Texture disabled = new Texture(item.getTextureDisabled());
+            batch.draw(disabled, getItemAssetPosition(number).x + 10, getItemAssetPosition(number).y - 67, 75, 75);
         }
         if (player.getInventory().inInventory(item)) {
             font.draw(batch, "bought", getItemGoldPosition(number).x - 50, getItemGoldPosition(number).y);
@@ -123,7 +126,8 @@ public class ShopScreen extends ScreenAdapter {
                 if (listButtons.get(i).contains(clickPosition)) {
                     if (shop.buyItem(stat, items.get(i))) {
                         game.getSoundManager().playSound("buy");
-                        batch.draw(items.get(i).getTextureDisabled(), getItemAssetPosition(i).x + 10, getItemAssetPosition(i).y - 67, 75, 75);
+                        Texture disabled = new Texture(items.get(i).getTextureDisabled());
+                        batch.draw(disabled, getItemAssetPosition(i).x + 10, getItemAssetPosition(i).y - 67, 75, 75);
                         font.draw(batch, "bought", getItemGoldPosition(i).x - 50, getItemGoldPosition(i).y);
                     }
                 }

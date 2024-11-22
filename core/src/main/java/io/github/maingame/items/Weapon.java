@@ -1,5 +1,6 @@
 package io.github.maingame.items;
 
+import io.github.maingame.entities.Entity;
 import io.github.maingame.entities.Player;
 import io.github.maingame.core.GameStat;
 
@@ -16,14 +17,14 @@ public class Weapon extends Gear {
     }
 
     @Override
-    public void applyItem(Player targetEntity) {
+    public void applyItem(Entity targetEntity) {
         setIncreaseValue(attackIncrease + 10 * lvl);
         targetEntity.setAttackDamage(targetEntity.getAttack() + (this).getIncreaseValue());
         System.out.println("applying weapon gear, currentAttack : " + targetEntity.getAttack());
     }
 
     @Override
-    public void resetItem(Player targetEntity) {
+    public void resetItem(Entity targetEntity) {
         targetEntity.setAttackDamage(targetEntity.getAttack() - getIncreaseValue());
         System.out.println("reset weapon gear, current attack : " + targetEntity.getAttack());
     }
