@@ -52,7 +52,7 @@ public class Player extends Entity {
 
         this.speed = 350;
         this.jumpVelocity = 1000;
-        this.gravity = 25;
+        this.gravity = 50;
         this.platforms = platforms;
         this.renderWidth = 450;
         this.renderHeight = 300;
