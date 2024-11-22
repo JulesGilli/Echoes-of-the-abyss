@@ -53,11 +53,12 @@ dependencies {
 def os = System.properties['os.name'].toLowerCase()
 
 run {
-  workingDir = rootProject.file('assets').path
+  workingDir = rootProject.file('.').path
   setIgnoreExitValue(true)
 
   if (os.contains('mac')) jvmArgs += "-XstartOnFirstThread"
 }
+
 
 application {
   mainClass = 'io.github.maingame.lwjgl3.Lwjgl3Launcher' // Chemin complet vers ta classe principale
