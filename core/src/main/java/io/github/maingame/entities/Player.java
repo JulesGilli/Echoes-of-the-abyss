@@ -97,6 +97,9 @@ public class Player extends Entity {
         isAttacking = false;
         isRolling = false;
         animationTime = 0f;
+
+        inventory.clear(this);
+
         reset();
     }
 
