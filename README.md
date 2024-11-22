@@ -57,7 +57,9 @@
 
 - `build` : Compile le code source et génère les fichiers nécessaires.
 - `clean` : Supprime les dossiers `build`.
-- `lwjgl3:run` : Exécute directement le jeu.
+- `test` : Exécute tout les tests unitaires.
+- `run` : Exécute directement le jeu.
+- `test run` : Exécute les tests et lance le jeu uniquement si les différents tests unitaires passent.
 - `createExecutables` : Génère des exécutables pour Windows, macOS et Linux.
 
 ## 🎮 À propos du jeu
