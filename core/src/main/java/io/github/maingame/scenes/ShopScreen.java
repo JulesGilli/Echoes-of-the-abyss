@@ -74,11 +74,11 @@ public class ShopScreen extends ScreenAdapter {
     }
 
     public Vector2 getItemAssetPosition(int number) {
-        return new Vector2(centerShopWidth * 2.3f + number % 4 * centerShopWidth * 1.2f, centerShopHeight * 7.35f - number / 4f * centerShopHeight * 2.05f);
+        return new Vector2(centerShopWidth * 2.3f + number % 4 * centerShopWidth * 1.2f, centerShopHeight * 7.35f - number / 4 * centerShopHeight * 2.05f);
     }
 
     public Vector2 getItemGoldPosition(int number) {
-        return new Vector2(centerShopWidth * 2.4f + number % 4 * centerShopWidth * 1.18f, centerShopHeight * 6.9f - number / 4f * centerShopHeight * 2f);
+        return new Vector2(centerShopWidth * 2.4f + number % 4 * centerShopWidth * 1.18f, centerShopHeight * 6.9f - number / 4 * centerShopHeight * 2f);
     }
 
     public Rectangle drawItem(int number) {
@@ -107,7 +107,7 @@ public class ShopScreen extends ScreenAdapter {
         }
         float clickAreaWidth = screenWidth * 0.10f;
         float clickAreaHeight = screenHeight * 0.20f;
-        return new Rectangle(getItemGoldPosition(0).x - itemWidth/0.97f + number % 4 * clickAreaWidth * 1.45f, getItemGoldPosition(0).y -itemHeight/1.8f - number / 4f * clickAreaHeight, clickAreaWidth, clickAreaHeight);
+        return new Rectangle(getItemGoldPosition(0).x - itemWidth/0.97f + number % 4 * clickAreaWidth * 1.45f, getItemGoldPosition(0).y -itemHeight/1.8f - number / 4 * clickAreaHeight, clickAreaWidth, clickAreaHeight);
     }
 
     public List<Rectangle> createButtons() {
@@ -176,15 +176,6 @@ public class ShopScreen extends ScreenAdapter {
 
         input(listButtons);
         batch.end();
-
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-        shapeRenderer.setColor(Color.RED);
-        shapeRenderer.rect(playButtonBounds.x, playButtonBounds.y, playButtonBounds.width, playButtonBounds.height);
-        shapeRenderer.rect(mainMenuButtonBounds.x, mainMenuButtonBounds.y, mainMenuButtonBounds.width, mainMenuButtonBounds.height);
-        for (Rectangle rectangle : listButtons) {
-            shapeRenderer.rect(rectangle.x, rectangle.y, rectangle.width, rectangle.height);
-        }
-        shapeRenderer.end();
     }
 
     @Override
