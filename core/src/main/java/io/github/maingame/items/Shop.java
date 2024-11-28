@@ -31,19 +31,41 @@ public class Shop {
     }
 
     public boolean isAvailable(Item item) {
-        if (gameStat.getGolds() < item.getGold())
+        // Débogage : Vérification de l'état de l'inventaire
+        if (player.getInventory().getItems().isEmpty()) {
+            System.out.println("Debug: L'inventaire du joueur est vide.");
+        } else {
+            System.out.println("Debug: L'inventaire contient des objets :");
+            for (Item inventoryItem : player.getInventory().getItems()) {
+                System.out.println("- " + inventoryItem.getClass().getSimpleName() + " (gold: " + inventoryItem.getGold() + ")");
+            }
+        }
+
+        // Vérification classique de la disponibilité
+        if (gameStat.getGolds() < item.getGold()) {
+            System.out.println("Debug: Pas assez de gold pour acheter " + item.getClass().getSimpleName());
             return false;
+        }
         if (item instanceof Weapon) {
-            return !player.getInventory().containWeapon();
+            boolean hasWeapon = player.getInventory().containWeapon();
+            System.out.println("Debug: Le joueur " + (hasWeapon ? "possède déjà" : "ne possède pas") + " une arme.");
+            return !hasWeapon;
         }
         if (item instanceof Armor) {
-            return !player.getInventory().containArmor();
+            boolean hasArmor = player.getInventory().containArmor();
+            System.out.println("Debug: Le joueur " + (hasArmor ? "possède déjà" : "ne possède pas") + " une armure.");
+            return !hasArmor;
         }
         if (item instanceof Consumable) {
-            return !player.getInventory().containConsumable();
+            boolean hasConsumable = player.getInventory().containConsumable();
+            System.out.println("Debug: Le joueur " + (hasConsumable ? "possède déjà" : "ne possède pas") + " un consommable.");
+            return !hasConsumable;
         }
+
+        // Retourne vrai si aucune condition spécifique ne bloque l'achat
         return true;
     }
+
 
     public boolean buyItem(GameStat stat, Item item) {
         if (player == null) {

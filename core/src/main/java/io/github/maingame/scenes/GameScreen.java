@@ -151,9 +151,9 @@ public class GameScreen extends ScreenAdapter {
 
     private void checkGameOverState() {
         if (player.getHealth() <= 0 && player.isDeathAnimationFinished() && !isGameOver) {
+            stat.saveGame();
             stat.setDeaths(stat.getDeaths() + 1);
             isGameOver = true;
-            stat.saveGame();
         }
     }
 

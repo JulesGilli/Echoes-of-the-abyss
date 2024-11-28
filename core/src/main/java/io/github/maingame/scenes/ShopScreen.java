@@ -15,6 +15,7 @@ import com.badlogic.gdx.math.Vector2;
 import io.github.maingame.core.GameStat;
 import io.github.maingame.core.Main;
 import io.github.maingame.entities.Player;
+import io.github.maingame.items.Inventory;
 import io.github.maingame.items.Item;
 import io.github.maingame.items.Shop;
 
@@ -57,6 +58,7 @@ public class ShopScreen extends ScreenAdapter {
         this.batch = new SpriteBatch();
         this.shop = new Shop(stat, player);
         this.items = shop.getItems();
+        this.player.setInventory(new Inventory());
         shopWidth = 0.76f * screenWidth;
         shopHeight = 0.8f * screenHeight;
         centerShopWidth = screenWidth / 2f - shopWidth / 2f;

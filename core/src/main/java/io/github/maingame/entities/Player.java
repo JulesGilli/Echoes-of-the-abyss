@@ -18,7 +18,7 @@ import static com.badlogic.gdx.math.MathUtils.random;
 
 public class Player extends Entity {
     private final float maxStamina = 100;
-    private final Inventory inventory;
+    private Inventory inventory;
     private boolean isDead = false;
     private boolean isRolling = false;
     private float rollTimer = 0f;
@@ -93,14 +93,13 @@ public class Player extends Entity {
     }
 
     private void handleDeath() {
+        inventory.clear(this);
+
         isDead = true;
         isAttacking = false;
         isRolling = false;
         animationTime = 0f;
 
-        inventory.clear(this);
-
-        reset();
     }
 
     private void handleRolling(float delta) {
@@ -291,5 +290,9 @@ public class Player extends Entity {
 
     public void setLookingRight(boolean b) {
         isLookingRight = b;
+    }
+
+    public void setInventory(Inventory inventory) {
+        this.inventory = inventory;
     }
 }
