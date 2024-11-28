@@ -17,6 +17,9 @@ plugins {
 
 apply plugin: 'io.github.fourlastor.construo'
 
+
+import io.github.fourlastor.construo.Target
+
 sourceSets.main.resources.srcDirs += [ rootProject.file('assets').path ]
 mainClassName = 'io.github.maingame.lwjgl3.Lwjgl3Launcher'
 application.setMainClass(mainClassName)
@@ -47,23 +50,25 @@ dependencies {
   }
 }
 
+def os = System.properties['os.name'].toLowerCase()
+
 run {
   workingDir = rootProject.file('.').path
   setIgnoreExitValue(true)
 
-  def os = System.properties['os.name'].toLowerCase()
   if (os.contains('mac')) jvmArgs += "-XstartOnFirstThread"
 }
 
+
 application {
-  mainClass = 'io.github.maingame.lwjgl3.Lwjgl3Launcher'
+  mainClass = 'io.github.maingame.lwjgl3.Lwjgl3Launcher' // Chemin complet vers ta classe principale
 }
 
 jar {
-  archiveFileName = "JavaProject.jar"
+  archiveFileName = "JavaProject.jar" // Nom du JAR généré
   manifest {
     attributes(
-      'Main-Class': application.mainClass.get()
+      'Main-Class': application.mainClass.get() // Référence à la classe principale
     )
   }
   from {
@@ -72,22 +77,144 @@ jar {
   from {
     fileTree(dir: "${rootProject.projectDir}/assets", include: "**/*")
   }
+
   duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+
+  tasks.named('jar') {
+    dependsOn(':core:jar') // Ensure 'core' jar is built
+  }
 }
 
-tasks.named('jar') {
-  dependsOn(':core:jar')
+construo {
+  name.set(appName)
+  humanName.set(appName)
+  version.set("$projectVersion")
+
+  targets.configure {
+    create("linuxX64", Target.Linux) {
+      architecture.set(Target.Architecture.X86_64)
+      jdkUrl.set("https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.12%2B7/OpenJDK17U-jdk_x64_linux_hotspot_17.0.12_7.tar.gz")
+    }
+    create("macM1", Target.MacOs) {
+      architecture.set(Target.Architecture.AARCH64)
+      jdkUrl.set("https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.12%2B7/OpenJDK17U-jdk_aarch64_mac_hotspot_17.0.12_7.tar.gz")
+      identifier.set("io.github.maingame." + appName)
+      macIcon.set(project.file("icons/logo.icns"))
+    }
+    create("macX64", Target.MacOs) {
+      architecture.set(Target.Architecture.X86_64)
+      jdkUrl.set("https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.12%2B7/OpenJDK17U-jdk_x64_mac_hotspot_17.0.12_7.tar.gz")
+      identifier.set("io.github.maingame." + appName)
+      macIcon.set(project.file("icons/logo.icns"))
+    }
+    create("winX64", Target.Windows) {
+      architecture.set(Target.Architecture.X86_64)
+      jdkUrl.set("https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.12%2B7/OpenJDK17U-jdk_x64_windows_hotspot_17.0.12_7.zip")
+    }
+  }
+}
+
+tasks.register('dist') {
+  dependsOn 'jar'
+}
+
+tasks.register('createWindowsExe', Copy) {
+  group = 'distribution'
+  description = 'Create a Windows EXE for the game.'
+
+  destinationDir = file("${projectDir}/dist/windows") // Dossier de destination pour Windows
+
+  // Copier le JAR généré par la tâche jar
+  from(tasks.named('jar').get().archiveFile) {
+    rename { "JavaProject.jar" }
+  }
+
+  // Copier les assets dans le dossier dist
+  from("${rootProject.projectDir}/assets") {
+    into 'assets' // Crée un sous-dossier 'assets' dans dist
+  }
+
+  // Créer un script de démarrage .bat pour Windows
+  doLast {
+    def exeScript = new File("${destinationDir}/launch_game.bat")
+    exeScript.text = "@echo off\njava -jar JavaProject.jar\npause"
+    exeScript.setExecutable(true)
+  }
+}
+
+tasks.register('createMacExecutable', Copy) {
+  group = 'distribution'
+  description = 'Create a macOS executable for the game.'
+
+  destinationDir = file("${projectDir}/dist/mac") // Dossier de destination pour macOS
+
+  // Copier le JAR généré par la tâche jar
+  from(tasks.named('jar').get().archiveFile) {
+    rename { "JavaProject.jar" }
+  }
+
+  // Copier les assets dans le dossier dist
+  from("${rootProject.projectDir}/assets") {
+    into 'assets' // Crée un sous-dossier 'assets' dans dist
+  }
+
+  // Créer un script de démarrage .sh pour macOS
+  doLast {
+    def macScript = new File("${destinationDir}/launch_game.sh")
+    macScript.text = """#!/bin/bash
+DIR="\$(cd "\$(dirname "\$0")" && pwd)"
+java -jar "\$DIR/JavaProject.jar"
+"""
+    macScript.setExecutable(true)
+  }
+}
+
+tasks.register('createLinuxExecutable', Copy) {
+  group = 'distribution'
+  description = 'Create a Linux executable for the game.'
+
+  destinationDir = file("${projectDir}/dist/linux") // Dossier de destination pour Linux
+
+  // Copier le JAR généré par la tâche jar
+  from(tasks.named('jar').get().archiveFile) {
+    rename { "JavaProject.jar" }
+  }
+
+  // Copier les assets dans le dossier dist
+  from("${rootProject.projectDir}/assets") {
+    into 'assets' // Crée un sous-dossier 'assets' dans dist
+  }
+
+  // Créer un script de démarrage .sh pour Linux
+  doLast {
+    def linuxScript = new File("${destinationDir}/launch_game.sh")
+    linuxScript.text = """#!/bin/bash
+DIR="\$(cd "\$(dirname "\$0")" && pwd)"
+java -jar "\$DIR/JavaProject.jar"
+"""
+    linuxScript.setExecutable(true)
+  }
+}
+
+tasks.register('createExecutables') {
+  group = 'distribution'
+  description = 'Create executables for Windows, macOS, and Linux.'
+
+  dependsOn 'createWindowsExe'
+  dependsOn 'createMacExecutable'
+  dependsOn 'createLinuxExecutable'
 }
 
 distributions {
   main {
     contents {
       from("${rootProject.projectDir}/assets") {
-        into "assets"
+        into "assets" // Copie les fichiers dans le dossier `assets`
       }
     }
   }
 }
+
 
 startScripts.dependsOn(':lwjgl3:jar')
 startScripts.classpath = project.tasks.jar.outputs.files
