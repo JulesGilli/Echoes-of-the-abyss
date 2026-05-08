@@ -15,6 +15,16 @@ public class HealPotion extends Consumable {
     }
 
     @Override
+    public String getDisplayName() {
+        return "Heal Potion";
+    }
+
+    @Override
+    public String getStatDescription() {
+        return "HP +" + (50 + 10 * stat.getFloors());
+    }
+
+    @Override
     public void applyItem(Entity targetEntity) {
         setIncreaseValue(50 + 10 * stat.getFloors());
         targetEntity.setMaxHealth(targetEntity.getHealth() + getIncreaseValue());

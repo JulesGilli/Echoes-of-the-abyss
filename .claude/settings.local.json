@@ -5,7 +5,13 @@
       "PowerShell(Get-ChildItem \"C:\\\\Program Files\" -Directory | Where-Object { $_.Name -match \"java|jdk|jre|adoptium|corretto|temurin|zulu|liberica\" } | Select-Object FullName)",
       "PowerShell(New-Item -ItemType Directory -Path \"C:\\\\Work\\\\Echoes-of-the-abyss\\\\html\\\\src\\\\main\\\\java\\\\io\\\\github\\\\maingame\\\\html\" -Force)",
       "PowerShell(New-Item -ItemType Directory -Path \"C:\\\\Work\\\\Echoes-of-the-abyss\\\\html\\\\webapp\" -Force)",
-      "PowerShell([System.Environment]::SetEnvironmentVariable\\(\"JAVA_HOME\", \"C:\\\\Program Files\\\\Eclipse Adoptium\\\\jdk-17.0.19.10-hotspot\", \"User\"\\); $env:JAVA_HOME = \"C:\\\\Program Files\\\\Eclipse Adoptium\\\\jdk-17.0.19.10-hotspot\"; $env:Path = \"$env:JAVA_HOME\\\\bin;$env:Path\"; java -version)"
+      "PowerShell([System.Environment]::SetEnvironmentVariable\\(\"JAVA_HOME\", \"C:\\\\Program Files\\\\Eclipse Adoptium\\\\jdk-17.0.19.10-hotspot\", \"User\"\\); $env:JAVA_HOME = \"C:\\\\Program Files\\\\Eclipse Adoptium\\\\jdk-17.0.19.10-hotspot\"; $env:Path = \"$env:JAVA_HOME\\\\bin;$env:Path\"; java -version)",
+      "Bash(Get-ChildItem -Path \"C:\\\\Work\\\\Echoes-of-the-abyss\" -Recurse -Directory)",
+      "Bash(Select-Object -ExpandProperty FullName)",
+      "Bash(Sort-Object)",
+      "Bash(find \"C:\\\\Work\\\\Echoes-of-the-abyss\" -path \"*/\\\\\\\\.git\" -prune -o -type d -print)",
+      "Bash(.\\\\gradlew.bat core:compileJava)",
+      "Bash(gradlew.bat html:build)"
     ]
   }
 }

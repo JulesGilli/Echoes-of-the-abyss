@@ -18,6 +18,17 @@ public class Weapon extends Gear {
     }
 
     @Override
+    public String getDisplayName() {
+        return "Weapon Lv." + lvl;
+    }
+
+    @Override
+    public String getStatDescription() {
+        float value = (attackIncrease + 10 * lvl) * rarity.getStatMultiplier();
+        return "ATK +" + (int) value;
+    }
+
+    @Override
     public void applyItem(Entity targetEntity) {
         setIncreaseValue((attackIncrease + 10 * lvl) * rarity.getStatMultiplier());
         targetEntity.setAttackDamage(targetEntity.getAttack() + getIncreaseValue());

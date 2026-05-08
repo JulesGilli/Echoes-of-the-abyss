@@ -18,6 +18,16 @@ public class SpeedPotion extends Consumable {
     }
 
     @Override
+    public String getDisplayName() {
+        return "Speed Potion";
+    }
+
+    @Override
+    public String getStatDescription() {
+        return "SPD +60%";
+    }
+
+    @Override
     public void applyItem(Entity targetEntity) {
         setIncreaseValue(targetEntity.getSpeed() * 0.6f);
         targetEntity.setSpeedBonus(getIncreaseValue());

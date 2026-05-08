@@ -10,7 +10,6 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import io.github.maingame.utils.FontManager;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.FitViewport;
@@ -50,8 +49,7 @@ public class ShopScreen extends ScreenAdapter {
     private final float itemHeight = screenHeight * 0.08f;
     private final Texture buttonTexture;
     private final Rectangle playButtonBounds;
-    private final Rectangle mainMenuButtonBounds;
-    private ShapeRenderer shapeRenderer;
+    private BitmapFont tooltipFont;
 
     private final OrthographicCamera camera;
     private final FitViewport viewport;
@@ -81,9 +79,9 @@ public class ShopScreen extends ScreenAdapter {
         shopTexture = new Texture(Gdx.files.internal("backgrounds/background_shop.png"));
         initFonts();
         buttonTexture = new Texture(Gdx.files.internal("GUI/button_basic.png"));
-        playButtonBounds = new Rectangle((screenWidth - buttonWidth) / 2 + buttonWidth / 2, screenHeight * 0.03f, buttonWidth, buttonHeight);
-        mainMenuButtonBounds = new Rectangle((screenWidth - buttonWidth) / 2 - buttonWidth / 2, screenHeight * 0.03f, buttonWidth, buttonHeight);
-        shapeRenderer = new ShapeRenderer();
+        playButtonBounds = new Rectangle((screenWidth - buttonWidth) / 2, screenHeight * 0.03f, buttonWidth, buttonHeight);
+        tooltipFont = FontManager.getFont(50);
+        tooltipFont.setColor(Color.WHITE);
         game.getSoundManager().playMusic("shop", true, 0.3f);
     }
 
@@ -151,10 +149,6 @@ public class ShopScreen extends ScreenAdapter {
                 game.getSoundManager().stopMusic("shop");
                 game.setScreen(new GameScreen(game, stat, player));
             }
-            if (mainMenuButtonBounds.contains(clickPosition)) {
-                game.getSoundManager().playSound("select");
-                game.setScreen(new MainMenuScreen(game));
-            }
             for (int i = 0; i < 12; i++) {
                 if (listButtons.get(i).contains(clickPosition)) {
                     if (shop.buyItem(stat, items.get(i))) {
@@ -186,21 +180,69 @@ public class ShopScreen extends ScreenAdapter {
         batch.draw(shopTexture, screenWidth / 1.85f - shopWidth / 2f, screenHeight / 1.65f - shopHeight / 2, shopWidth, shopHeight);
 
         UIHelper.drawButton(batch, buttonTexture, playButtonBounds, UIHelper.isHovered(playButtonBounds, mousePos));
-        UIHelper.drawButton(batch, buttonTexture, mainMenuButtonBounds, UIHelper.isHovered(mainMenuButtonBounds, mousePos));
 
         font.getData().setScale(1.2f);
         font.draw(batch, "Play", playButtonBounds.x + buttonWidth / 2.5f, playButtonBounds.y + buttonHeight / 1.7f);
-        font.draw(batch, "Main Menu", mainMenuButtonBounds.x + buttonWidth / 3f, mainMenuButtonBounds.y + buttonHeight / 1.7f);
         font.getData().setScale(1.5f);
         font.draw(batch, "Shop", screenWidth / 2.1f, screenHeight * 0.96f);
         font.getData().setScale(1f);
         font.draw(batch, Integer.toString(stat.getGolds()), centerShopWidth * 7f, centerShopHeight * 8.6f);
         List<Rectangle> listButtons = createButtons();
 
+        renderTooltip(mousePos, listButtons);
+
         input(listButtons);
 
         UIHelper.drawFadeOverlay(batch, fadeAlpha, screenWidth, screenHeight);
         batch.end();
+    }
+
+    private void renderTooltip(Vector2 mousePos, List<Rectangle> itemBounds) {
+        int hoveredIndex = -1;
+        for (int i = 0; i < itemBounds.size(); i++) {
+            if (itemBounds.get(i).contains(mousePos)) {
+                hoveredIndex = i;
+                break;
+            }
+        }
+        if (hoveredIndex < 0) return;
+
+        Item item = items.get(hoveredIndex);
+        if (!item.isUnlocked(stat)) return;
+
+        String name = item.getDisplayName();
+        String stats = item.getStatDescription();
+        Texture pixel = TextureManager.getWhitePixel();
+
+        float tooltipW = 280f;
+        float tooltipH = 90f;
+        float tooltipX = mousePos.x + 20;
+        float tooltipY = mousePos.y + 10;
+
+        if (tooltipX + tooltipW > screenWidth) tooltipX = mousePos.x - tooltipW - 10;
+        if (tooltipY + tooltipH > screenHeight) tooltipY = mousePos.y - tooltipH - 10;
+
+        batch.setColor(0.1f, 0.1f, 0.15f, 0.92f);
+        batch.draw(pixel, tooltipX, tooltipY, tooltipW, tooltipH);
+
+        Color borderColor = (item.getRarity() != null && item.getRarity() != io.github.maingame.items.Rarity.COMMON)
+            ? item.getRarity().getColor() : new Color(0.5f, 0.5f, 0.5f, 0.9f);
+        batch.setColor(borderColor);
+        batch.draw(pixel, tooltipX, tooltipY, tooltipW, 2);
+        batch.draw(pixel, tooltipX, tooltipY + tooltipH - 2, tooltipW, 2);
+        batch.draw(pixel, tooltipX, tooltipY, 2, tooltipH);
+        batch.draw(pixel, tooltipX + tooltipW - 2, tooltipY, 2, tooltipH);
+        batch.setColor(Color.WHITE);
+
+        tooltipFont.getData().setScale(0.7f);
+        tooltipFont.setColor(borderColor);
+        tooltipFont.draw(batch, name, tooltipX + 12, tooltipY + tooltipH - 14);
+
+        tooltipFont.setColor(0.9f, 0.9f, 0.9f, 1f);
+        tooltipFont.draw(batch, stats, tooltipX + 12, tooltipY + tooltipH - 50);
+
+        tooltipFont.getData().setScale(1f);
+        tooltipFont.setColor(Color.WHITE);
     }
 
     @Override
@@ -213,5 +255,6 @@ public class ShopScreen extends ScreenAdapter {
         if (shopTexture != null) shopTexture.dispose();
         if (backgroundTexture != null) backgroundTexture.dispose();
         if (font != null) font.dispose();
+        if (tooltipFont != null) tooltipFont.dispose();
     }
 }

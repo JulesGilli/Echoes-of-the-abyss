@@ -18,6 +18,17 @@ public class Armor extends Gear {
     }
 
     @Override
+    public String getDisplayName() {
+        return "Armor Lv." + lvl;
+    }
+
+    @Override
+    public String getStatDescription() {
+        float armorVal = (float) (10 * Math.pow(2, lvl - 1) * rarity.getStatMultiplier());
+        return "DEF +" + (int) armorVal + "  HP +" + (int) (armorVal * 10);
+    }
+
+    @Override
     public void applyItem(Entity targetEntity) {
         setIncreaseValue((float) (10 * Math.pow(2, lvl - 1) * rarity.getStatMultiplier()));
         targetEntity.setArmor(getIncreaseValue());

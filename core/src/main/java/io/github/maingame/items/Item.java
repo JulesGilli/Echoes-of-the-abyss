@@ -51,6 +51,9 @@ public abstract class Item implements ItemSolution {
         this.increaseValue = increaseValue;
     }
 
+    public abstract String getDisplayName();
+    public abstract String getStatDescription();
+
     public Rarity getRarity() {
         return rarity;
     }

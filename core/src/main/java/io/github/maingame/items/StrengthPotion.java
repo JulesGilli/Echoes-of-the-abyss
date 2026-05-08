@@ -17,6 +17,16 @@ public class StrengthPotion extends Consumable {
     }
 
     @Override
+    public String getDisplayName() {
+        return "Strength Potion";
+    }
+
+    @Override
+    public String getStatDescription() {
+        return "ATK +" + (10 * stat.getFloors());
+    }
+
+    @Override
     public void applyItem(Entity targetEntity) {
         setIncreaseValue(10 * stat.getFloors());
         targetEntity.setAttackBonus(getIncreaseValue());

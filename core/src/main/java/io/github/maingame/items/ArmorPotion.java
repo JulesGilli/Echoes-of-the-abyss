@@ -15,6 +15,16 @@ public class ArmorPotion extends Consumable {
     }
 
     @Override
+    public String getDisplayName() {
+        return "Armor Potion";
+    }
+
+    @Override
+    public String getStatDescription() {
+        return "DEF +" + (10 * stat.getFloors());
+    }
+
+    @Override
     public void applyItem(Entity targetEntity) {
         setIncreaseValue(10 * stat.getFloors());
         targetEntity.setArmor(targetEntity.getArmor() + getIncreaseValue());
