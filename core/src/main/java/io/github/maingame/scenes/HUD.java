@@ -88,7 +88,7 @@ public class HUD {
 
         resumeButtonBounds = new Rectangle(VIRTUAL_WIDTH / 2 - buttonWidth / 2, VIRTUAL_HEIGHT / 2 + 120, buttonWidth, buttonHeight);
         mainMenuButtonBounds = new Rectangle(VIRTUAL_WIDTH / 2 - buttonWidth / 2, VIRTUAL_HEIGHT / 2, buttonWidth, buttonHeight);
-        quitButtonBounds = new Rectangle(VIRTUAL_WIDTH / 2 - buttonWidth / 2, VIRTUAL_HEIGHT / 2 - 120, buttonWidth, buttonHeight);
+        quitButtonBounds = new Rectangle(VIRTUAL_WIDTH / 2 - buttonWidth / 2, VIRTUAL_HEIGHT / 2 - 240, buttonWidth, buttonHeight);
     }
 
     private void drawPotion(SpriteBatch batch, Player player) {
