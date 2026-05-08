@@ -5,18 +5,27 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.FitViewport;
+
+import java.util.ArrayList;
+import java.util.List;
 import io.github.maingame.core.GameStat;
 import io.github.maingame.core.Main;
 import io.github.maingame.entities.Player;
 import io.github.maingame.input.InputManager;
 import io.github.maingame.input.PlayerInputHandler;
+import io.github.maingame.utils.ComboSystem;
+import io.github.maingame.utils.DeathParticle;
 import io.github.maingame.utils.Platform;
+import io.github.maingame.utils.ScreenShake;
 import io.github.maingame.utils.SoundManager;
 import io.github.maingame.utils.TextureManager;
+import io.github.maingame.utils.UIHelper;
 
 import static io.github.maingame.core.Main.VIRTUAL_HEIGHT;
 import static io.github.maingame.core.Main.VIRTUAL_WIDTH;
@@ -40,6 +49,11 @@ public class GameScreen extends ScreenAdapter {
     private float waveTransitionTimer = 0f;
     private boolean isTutorial = true;
     private Main game;
+    private final ScreenShake screenShake = new ScreenShake();
+    private final ComboSystem comboSystem = new ComboSystem();
+    private final List<DeathParticle> deathParticles = new ArrayList<>();
+    private float fadeAlpha = 1f;
+    private float previousPlayerHealth;
 
     public GameScreen(Main game, GameStat stat, Player player) {
         this.stat = stat;
@@ -61,6 +75,7 @@ public class GameScreen extends ScreenAdapter {
         hudViewport.apply(true);
 
         this.enemyManager = new EnemyManager(stat, player, camera, game.getSoundManager());
+        player.setComboSystem(comboSystem);
 
         camera.position.set(VIRTUAL_WIDTH / 2, VIRTUAL_HEIGHT / 2, 0);
         camera.update();
@@ -75,12 +90,15 @@ public class GameScreen extends ScreenAdapter {
         updatePlayerKeys();
         Platform.createPlatforms();
         enemyManager.setupFloorEnemies();
+        previousPlayerHealth = player.getHealth();
 
         game.getSoundManager().playMusic("fight", true, 0.2f);
     }
 
     @Override
     public void render(float delta) {
+        if (fadeAlpha > 0) fadeAlpha = Math.max(0, fadeAlpha - delta * 2f);
+
         handleInput();
         clearScreen();
 
@@ -97,18 +115,24 @@ public class GameScreen extends ScreenAdapter {
             return;
         }
         checkGameOverState();
+        screenShake.update(delta);
+        comboSystem.update(delta);
+        detectPlayerHit();
         updateCamera();
         batch.setProjectionMatrix(camera.combined);
         renderGameElements(delta);
 
         if (!isTutorial) {
-            enemyManager.spawnEnemies(delta, batch);
+            enemyManager.spawnEnemies(delta, batch, screenShake, comboSystem, deathParticles);
         }
+
+        DeathParticle.updateAndRender(deathParticles, delta, batch, TextureManager.getWhitePixel());
 
         // Switch to HUD viewport for overlay
         hudViewport.apply();
         batch.setProjectionMatrix(hudCamera.combined);
         renderHUD();
+        UIHelper.drawFadeOverlay(batch, fadeAlpha, VIRTUAL_WIDTH, VIRTUAL_HEIGHT);
         handleNextWave();
         batch.end();
     }
@@ -174,6 +198,17 @@ public class GameScreen extends ScreenAdapter {
         }
     }
 
+    private void detectPlayerHit() {
+        float currentHealth = player.getHealth();
+        if (currentHealth < previousPlayerHealth) {
+            float damageTaken = previousPlayerHealth - currentHealth;
+            if (damageTaken >= 15f) {
+                screenShake.trigger(12f, 0.3f);
+            }
+        }
+        previousPlayerHealth = currentHealth;
+    }
+
     private void updateCamera() {
         float targetCameraX = player.getPosition().x + 300;
         camera.position.x += (targetCameraX - camera.position.x) * 0.05f;
@@ -181,6 +216,11 @@ public class GameScreen extends ScreenAdapter {
         float maxX = 3000;
         camera.position.x = MathUtils.clamp(camera.position.x, minX + camera.viewportWidth / 2, maxX - camera.viewportWidth / 2);
         camera.position.y = VIRTUAL_HEIGHT / 2;
+
+        Vector2 shakeOffset = screenShake.getOffset();
+        camera.position.x += shakeOffset.x;
+        camera.position.y += shakeOffset.y;
+
         camera.update();
     }
 
@@ -211,7 +251,7 @@ public class GameScreen extends ScreenAdapter {
                 stat.saveGame();
             }
         } else {
-            hud.render(batch, player, VIRTUAL_WIDTH, VIRTUAL_HEIGHT, isGameOver, hudViewport);
+            hud.render(batch, player, VIRTUAL_WIDTH, VIRTUAL_HEIGHT, isGameOver, hudViewport, comboSystem);
         }
     }
 

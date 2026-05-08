@@ -1,5 +1,6 @@
 package io.github.maingame.items;
 
+import com.badlogic.gdx.graphics.Color;
 import io.github.maingame.entities.Player;
 
 import java.util.ArrayList;
@@ -104,9 +105,17 @@ public class Inventory {
     }
 
 
+    public Color getActivePotionAuraColor() {
+        if (activeConsumable == null) return null;
+        String name = activeConsumable.getClass().getSimpleName();
+        if ("StrengthPotion".equals(name)) return new Color(1f, 0.2f, 0.1f, 1f);
+        if ("SpeedPotion".equals(name)) return new Color(0.2f, 0.5f, 1f, 1f);
+        if ("ArmorPotion".equals(name)) return new Color(0.8f, 0.8f, 0.2f, 1f);
+        if ("HealPotion".equals(name)) return new Color(0.2f, 1f, 0.3f, 1f);
+        return null;
+    }
+
     public List<Item> getItems() {
         return items;
     }
-
-
 }

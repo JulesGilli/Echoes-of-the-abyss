@@ -13,7 +13,9 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import io.github.maingame.core.GameStat;
 import io.github.maingame.core.Main;
 import io.github.maingame.entities.Player;
+import io.github.maingame.utils.ComboSystem;
 import io.github.maingame.utils.FontManager;
+import io.github.maingame.utils.UIHelper;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -46,7 +48,6 @@ public class HUD {
     private final Rectangle mainMenuButtonBounds;
     private final Rectangle resumeButtonBounds;
     private final Rectangle quitButtonBounds;
-    private final Rectangle shopButtonBounds;
 
     public HUD(Main game, GameStat stat, Player player) {
         this.game = game;
@@ -87,8 +88,7 @@ public class HUD {
 
         resumeButtonBounds = new Rectangle(VIRTUAL_WIDTH / 2 - buttonWidth / 2, VIRTUAL_HEIGHT / 2 + 120, buttonWidth, buttonHeight);
         mainMenuButtonBounds = new Rectangle(VIRTUAL_WIDTH / 2 - buttonWidth / 2, VIRTUAL_HEIGHT / 2, buttonWidth, buttonHeight);
-        quitButtonBounds = new Rectangle(VIRTUAL_WIDTH / 2 - buttonWidth / 2, VIRTUAL_HEIGHT / 2 - 240, buttonWidth, buttonHeight);
-        shopButtonBounds = new Rectangle(VIRTUAL_WIDTH / 2 - buttonWidth / 2, VIRTUAL_HEIGHT / 2 - 120, buttonWidth, buttonHeight);
+        quitButtonBounds = new Rectangle(VIRTUAL_WIDTH / 2 - buttonWidth / 2, VIRTUAL_HEIGHT / 2 - 120, buttonWidth, buttonHeight);
     }
 
     private void drawPotion(SpriteBatch batch, Player player) {
@@ -111,14 +111,16 @@ public class HUD {
     }
 
     public void renderPauseMenu(SpriteBatch batch, FitViewport viewport) {
+        Vector2 mousePos = viewport.unproject(new Vector2(Gdx.input.getX(), Gdx.input.getY()));
+
         batch.draw(backgroundTexture, 0, 0, VIRTUAL_WIDTH, VIRTUAL_HEIGHT);
         batch.draw(backgroundGUI, VIRTUAL_WIDTH / 2 - backgroundGUI.getWidth() / 1.4f, VIRTUAL_HEIGHT / 2 - backgroundGUI.getHeight() / 1.4f, 600, 800);
 
         menuFont.draw(batch, "Options", VIRTUAL_WIDTH / 2 - 100, VIRTUAL_HEIGHT - 200);
 
-        batch.draw(buttonMenu, resumeButtonBounds.x, resumeButtonBounds.y, resumeButtonBounds.width, resumeButtonBounds.height);
-        batch.draw(buttonMenu, mainMenuButtonBounds.x, mainMenuButtonBounds.y, mainMenuButtonBounds.width, mainMenuButtonBounds.height);
-        batch.draw(buttonMenu, quitButtonBounds.x, quitButtonBounds.y, quitButtonBounds.width, quitButtonBounds.height);
+        UIHelper.drawButton(batch, buttonMenu, resumeButtonBounds, UIHelper.isHovered(resumeButtonBounds, mousePos));
+        UIHelper.drawButton(batch, buttonMenu, mainMenuButtonBounds, UIHelper.isHovered(mainMenuButtonBounds, mousePos));
+        UIHelper.drawButton(batch, buttonMenu, quitButtonBounds, UIHelper.isHovered(quitButtonBounds, mousePos));
 
         menuFont.draw(batch, "Resume", resumeButtonBounds.x + 120, resumeButtonBounds.y + 120);
         menuFont.draw(batch, "Main Menu", mainMenuButtonBounds.x + 100, mainMenuButtonBounds.y + 120);
@@ -199,15 +201,16 @@ public class HUD {
         headerFont.setColor(0 / 255f, 153 / 255f, 76 / 255f, 1);
     }
 
-    public void render(SpriteBatch batch, Player player, float screenWidth, float screenHeight, boolean isGameOver, FitViewport viewport) {
+    public void render(SpriteBatch batch, Player player, float screenWidth, float screenHeight, boolean isGameOver, FitViewport viewport, ComboSystem comboSystem) {
         drawHealthBar(batch, player, screenHeight);
         drawStaminaBar(batch, player, screenHeight);
         drawGold(batch, player, screenWidth, screenHeight);
         drawFloor(batch, screenWidth, screenHeight);
         drawPotion(batch, player);
+        drawCombo(batch, comboSystem, screenWidth, screenHeight);
 
         if (isGameOver) {
-            displayGameOverMenu(batch, screenWidth, screenHeight);
+            displayGameOverMenu(batch, screenWidth, screenHeight, viewport);
             handleGameOverInput(viewport);
         }
     }
@@ -253,20 +256,40 @@ public class HUD {
         batch.draw(goldIcon, screenWidth - 270, screenHeight - 90, goldIcon.getWidth() * 3, goldIcon.getHeight() * 3);
     }
 
-    private void displayGameOverMenu(SpriteBatch batch, float screenWidth, float screenHeight) {
+    private void drawCombo(SpriteBatch batch, ComboSystem comboSystem, float screenWidth, float screenHeight) {
+        if (comboSystem == null || !comboSystem.shouldDisplay()) return;
+
+        int combo = comboSystem.getComboCount();
+        String comboText = combo + "x COMBO!";
+        float scale = 1.0f + Math.min(combo * 0.1f, 1.0f);
+
+        goldFont.getData().setScale(scale);
+        Color prevColor = goldFont.getColor().cpy();
+        float r = Math.min(1f, 0.5f + combo * 0.1f);
+        goldFont.setColor(r, 0.9f - combo * 0.05f, 0.1f, Math.min(1f, comboSystem.getDisplayTimer()));
+        layout.setText(goldFont, comboText);
+        goldFont.draw(batch, comboText, screenWidth / 2f - layout.width / 2, screenHeight - 120);
+        goldFont.setColor(prevColor);
+        goldFont.getData().setScale(1f);
+    }
+
+    private void displayGameOverMenu(SpriteBatch batch, float screenWidth, float screenHeight, FitViewport viewport) {
+        Vector2 mousePos = viewport.unproject(new Vector2(Gdx.input.getX(), Gdx.input.getY()));
+
         batch.draw(backgroundGUI, screenWidth / 2 - backgroundGUI.getWidth() / 1.4f, screenHeight / 2 - backgroundGUI.getHeight() / 1.4f, 600, 800);
 
         String gameOverText = "Game Over";
         layout.setText(menuFont, gameOverText);
         menuFont.draw(batch, gameOverText, screenWidth / 2f - layout.width / 2, screenHeight / 2f + 250);
 
-        batch.draw(buttonMenu, mainMenuButtonBounds.x, mainMenuButtonBounds.y + 5, mainMenuButtonBounds.width, mainMenuButtonBounds.height);
-        batch.draw(buttonMenu, quitButtonBounds.x, quitButtonBounds.y + 5, quitButtonBounds.width, quitButtonBounds.height);
-        batch.draw(buttonMenu, shopButtonBounds.x, shopButtonBounds.y + 5, shopButtonBounds.width, shopButtonBounds.height);
+        Rectangle mmBounds = new Rectangle(mainMenuButtonBounds.x, mainMenuButtonBounds.y + 5, mainMenuButtonBounds.width, mainMenuButtonBounds.height);
+        Rectangle qBounds = new Rectangle(quitButtonBounds.x, quitButtonBounds.y + 5, quitButtonBounds.width, quitButtonBounds.height);
+
+        UIHelper.drawButton(batch, buttonMenu, mmBounds, UIHelper.isHovered(mmBounds, mousePos));
+        UIHelper.drawButton(batch, buttonMenu, qBounds, UIHelper.isHovered(qBounds, mousePos));
 
         menuFont.draw(batch, "Main Menu", mainMenuButtonBounds.x + 100, mainMenuButtonBounds.y + 125);
         menuFont.draw(batch, "Quit", quitButtonBounds.x + 160, quitButtonBounds.y + 125);
-        menuFont.draw(batch, "Shop", shopButtonBounds.x + 160, shopButtonBounds.y + 125);
     }
 
     private void handleGameOverInput(FitViewport viewport) {
@@ -278,11 +301,6 @@ public class HUD {
                 game.setScreen(new MainMenuScreen(game));
             } else if (quitButtonBounds.contains(clickPosition)) {
                 Gdx.app.exit();
-            } else if (shopButtonBounds.contains(clickPosition)) {
-                game.getSoundManager().stopMusic("fight");
-                game.getSoundManager().playMusic("menu", true, 0.5f);
-                stat.loadGame();
-                game.setScreen(new ShopScreen(game, stat, player));
             }
         }
     }

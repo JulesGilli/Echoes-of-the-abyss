@@ -1,14 +1,19 @@
 package io.github.maingame.entities;
 
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import io.github.maingame.utils.TextureManager;
 import io.github.maingame.input.PlayerInputHandler;
 import io.github.maingame.items.Gear;
 import io.github.maingame.items.Inventory;
 import io.github.maingame.items.Item;
 import io.github.maingame.utils.AnimationManager;
+import io.github.maingame.utils.ComboSystem;
 import io.github.maingame.utils.Platform;
 import io.github.maingame.utils.SoundManager;
 
@@ -26,6 +31,7 @@ public class Player extends Entity {
     private PlayerInputHandler inputHandler;
 
     private SoundManager soundManager;
+    private ComboSystem comboSystem;
 
     private final String[] playerScreams = {"sound_playerScream1", "sound_playerScream2", "sound_playerScream3", "sound_playerScream4"};
     private final String[] hitSwords = {"sound_hitSword1", "sound_hitSword2", "sound_hitSword3", "sound_hitSword4"};
@@ -91,6 +97,7 @@ public class Player extends Entity {
 
         regenerateStamina(delta);
         inventory.updateConsumableTimer(delta);
+        updateFlash(delta);
     }
 
     private void handleDeath() {
@@ -118,9 +125,13 @@ public class Player extends Entity {
     }
 
     private void handleAttack(List<Enemy> enemies) {
+        float comboDamage = getAttack();
+        if (comboSystem != null) {
+            comboDamage *= comboSystem.getDamageMultiplier();
+        }
         for (Enemy enemy : enemies) {
             if (isCollidingWith(enemy, attackRange) && isEnemyInFront(enemy)) {
-                enemy.receiveDamage(getAttack());
+                enemy.receiveDamage(comboDamage);
             }
         }
         checkAttackFinish();
@@ -172,8 +183,35 @@ public class Player extends Entity {
 
     @Override
     public void render(SpriteBatch batch) {
+        renderPotionAura(batch);
+
         TextureRegion currentFrame = getCurrentFrame();
         batch.draw(currentFrame, position.x, position.y, renderWidth, renderHeight);
+
+        if (flashTimer > 0) {
+            batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE);
+            batch.setColor(1f, 1f, 1f, flashTimer / 0.1f);
+            batch.draw(currentFrame, position.x, position.y, renderWidth, renderHeight);
+            batch.setColor(1f, 1f, 1f, 1f);
+            batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+        }
+    }
+
+    private void renderPotionAura(SpriteBatch batch) {
+        Color auraColor = inventory.getActivePotionAuraColor();
+        if (auraColor == null) return;
+
+        Texture pixel = TextureManager.getWhitePixel();
+        float pulse = 0.4f + 0.2f * MathUtils.sin(animationTime * 4f);
+        float auraSize = renderWidth * 0.6f;
+        float centerX = position.x + renderWidth / 2f - auraSize / 2f;
+        float centerY = position.y + renderHeight * 0.2f;
+
+        batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE);
+        batch.setColor(auraColor.r, auraColor.g, auraColor.b, pulse);
+        batch.draw(pixel, centerX, centerY, auraSize, auraSize * 0.8f);
+        batch.setColor(1f, 1f, 1f, 1f);
+        batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
     }
 
     @Override
@@ -182,6 +220,7 @@ public class Player extends Entity {
 
         float reducedDamage = Math.max(0, damage - armor);
         health -= reducedDamage;
+        flashTimer = 0.1f;
 
         if (health <= 0) {
             health = 0;
@@ -291,6 +330,10 @@ public class Player extends Entity {
 
     public void setLookingRight(boolean b) {
         isLookingRight = b;
+    }
+
+    public void setComboSystem(ComboSystem comboSystem) {
+        this.comboSystem = comboSystem;
     }
 
     public void setInventory(Inventory inventory) {

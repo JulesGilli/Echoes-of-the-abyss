@@ -19,7 +19,7 @@ public class Armor extends Gear {
 
     @Override
     public void applyItem(Entity targetEntity) {
-        setIncreaseValue((int) (10 * Math.pow(2, lvl - 1)));
+        setIncreaseValue((float) (10 * Math.pow(2, lvl - 1) * rarity.getStatMultiplier()));
         targetEntity.setArmor(getIncreaseValue());
         targetEntity.setMaxHealth(targetEntity.getMaxHealth() + getIncreaseValue() * 10);
         targetEntity.setHealth(targetEntity.getMaxHealth());

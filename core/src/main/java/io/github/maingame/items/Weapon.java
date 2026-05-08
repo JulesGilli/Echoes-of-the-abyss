@@ -19,8 +19,8 @@ public class Weapon extends Gear {
 
     @Override
     public void applyItem(Entity targetEntity) {
-        setIncreaseValue(attackIncrease + 10 * lvl);
-        targetEntity.setAttackDamage(targetEntity.getAttack() + (this).getIncreaseValue());
+        setIncreaseValue((attackIncrease + 10 * lvl) * rarity.getStatMultiplier());
+        targetEntity.setAttackDamage(targetEntity.getAttack() + getIncreaseValue());
     }
 
     @Override

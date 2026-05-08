@@ -21,6 +21,7 @@ import io.github.maingame.items.Inventory;
 import io.github.maingame.items.Item;
 import io.github.maingame.items.Shop;
 import io.github.maingame.utils.TextureManager;
+import io.github.maingame.utils.UIHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,6 +58,7 @@ public class ShopScreen extends ScreenAdapter {
 
     private final Player player;
     private BitmapFont font;
+    private float fadeAlpha = 1f;
 
     public ShopScreen(Main game, GameStat stat, Player player) {
         this.game = game;
@@ -100,7 +102,12 @@ public class ShopScreen extends ScreenAdapter {
             batch.draw(lock, getItemAssetPosition(number).x, getItemAssetPosition(number).y, itemWidth, itemHeight);
         } else if (shop.isAvailable(item)) {
             Texture available = TextureManager.getTexture(item.getTextureAvailable());
+            if (item.getRarity() != null && item.getRarity() != io.github.maingame.items.Rarity.COMMON) {
+                Color rarityColor = item.getRarity().getColor();
+                batch.setColor(rarityColor);
+            }
             batch.draw(available, getItemAssetPosition(number).x, getItemAssetPosition(number).y, itemWidth, itemHeight);
+            batch.setColor(Color.WHITE);
         } else {
             Texture disabled = TextureManager.getTexture(item.getTextureDisabled());
             batch.draw(disabled, getItemAssetPosition(number).x, getItemAssetPosition(number).y, itemWidth, itemHeight);
@@ -112,6 +119,12 @@ public class ShopScreen extends ScreenAdapter {
             font.draw(batch, shop.unlockCondition(stat, item), getItemGoldPosition(number).x - itemWidth / 2, getItemGoldPosition(number).y - itemHeight / 10);
             font.getData().setScale(1f);
         } else {
+            if (item.getRarity() != null && item.getRarity() != io.github.maingame.items.Rarity.COMMON) {
+                Color prevColor = font.getColor().cpy();
+                font.setColor(item.getRarity().getColor());
+                font.draw(batch, item.getRarity().getDisplayName(), getItemGoldPosition(number).x - itemWidth / 2, getItemGoldPosition(number).y + itemHeight * 0.6f);
+                font.setColor(prevColor);
+            }
             font.draw(batch, item.getStrGold(), getItemGoldPosition(number).x, getItemGoldPosition(number).y);
         }
         float clickAreaWidth = screenWidth * 0.10f;
@@ -135,7 +148,7 @@ public class ShopScreen extends ScreenAdapter {
                 comingFromShop = true;
                 stat.saveGame();
                 game.getSoundManager().playSound("select");
-                game.getSoundManager().stopMusic("menu");
+                game.getSoundManager().stopMusic("shop");
                 game.setScreen(new GameScreen(game, stat, player));
             }
             if (mainMenuButtonBounds.contains(clickPosition)) {
@@ -159,17 +172,22 @@ public class ShopScreen extends ScreenAdapter {
 
     @Override
     public void render(float delta) {
+        if (fadeAlpha > 0) fadeAlpha = Math.max(0, fadeAlpha - delta * 2f);
+
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         viewport.apply();
         batch.setProjectionMatrix(camera.combined);
+        Vector2 mousePos = viewport.unproject(new Vector2(Gdx.input.getX(), Gdx.input.getY()));
 
         batch.begin();
         batch.draw(backgroundTexture, 0, 0, screenWidth, screenHeight);
         batch.draw(shopTexture, screenWidth / 1.85f - shopWidth / 2f, screenHeight / 1.65f - shopHeight / 2, shopWidth, shopHeight);
-        batch.draw(buttonTexture, playButtonBounds.x, playButtonBounds.y, playButtonBounds.width, playButtonBounds.height);
-        batch.draw(buttonTexture, mainMenuButtonBounds.x, mainMenuButtonBounds.y, mainMenuButtonBounds.width, mainMenuButtonBounds.height);
+
+        UIHelper.drawButton(batch, buttonTexture, playButtonBounds, UIHelper.isHovered(playButtonBounds, mousePos));
+        UIHelper.drawButton(batch, buttonTexture, mainMenuButtonBounds, UIHelper.isHovered(mainMenuButtonBounds, mousePos));
+
         font.getData().setScale(1.2f);
         font.draw(batch, "Play", playButtonBounds.x + buttonWidth / 2.5f, playButtonBounds.y + buttonHeight / 1.7f);
         font.draw(batch, "Main Menu", mainMenuButtonBounds.x + buttonWidth / 3f, mainMenuButtonBounds.y + buttonHeight / 1.7f);
@@ -180,6 +198,8 @@ public class ShopScreen extends ScreenAdapter {
         List<Rectangle> listButtons = createButtons();
 
         input(listButtons);
+
+        UIHelper.drawFadeOverlay(batch, fadeAlpha, screenWidth, screenHeight);
         batch.end();
     }
 

@@ -1,6 +1,7 @@
 package io.github.maingame.items;
 
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.math.MathUtils;
 import io.github.maingame.entities.Player;
 import io.github.maingame.core.GameStat;
 
@@ -18,16 +19,27 @@ public class Shop {
         this.gameStat = gameStat;
 
         for (int i = 1; i < 6; i++) {
-            items.add(new Weapon(i));
+            Weapon w = new Weapon(i);
+            w.setRarity(rollRarity());
+            items.add(w);
         }
         for (int i = 1; i < 4; i++) {
-            items.add(new Armor(i));
+            Armor a = new Armor(i);
+            a.setRarity(rollRarity());
+            items.add(a);
         }
         items.add(new SpeedPotion(gameStat));
         items.add(new HealPotion(gameStat));
         items.add(new StrengthPotion(gameStat));
         items.add(new ArmorPotion(gameStat));
         this.gameStat = gameStat;
+    }
+
+    private Rarity rollRarity() {
+        float roll = MathUtils.random();
+        if (roll < 0.1f) return Rarity.LEGENDARY;
+        if (roll < 0.35f) return Rarity.RARE;
+        return Rarity.COMMON;
     }
 
     public boolean isAvailable(Item item) {

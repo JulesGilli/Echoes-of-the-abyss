@@ -10,6 +10,7 @@ public abstract class Item implements ItemSolution {
     protected String textureDisabled;
     protected String textureLock;
     protected int unlockFloor;
+    protected Rarity rarity = Rarity.COMMON;
 
     public Item(int value, String textureName, String textureDisabledName, String textureLockName) {
         this.gold = value;
@@ -48,5 +49,16 @@ public abstract class Item implements ItemSolution {
 
     public void setIncreaseValue(float increaseValue) {
         this.increaseValue = increaseValue;
+    }
+
+    public Rarity getRarity() {
+        return rarity;
+    }
+
+    public void setRarity(Rarity rarity) {
+        this.rarity = rarity;
+        if (rarity != Rarity.COMMON) {
+            this.gold = (int) (this.gold * rarity.getStatMultiplier());
+        }
     }
 }

@@ -1,5 +1,6 @@
 package io.github.maingame.entities;
 
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
@@ -39,6 +40,8 @@ public abstract class Entity {
     protected boolean isHit = false;
     protected float hitAnimationTime = 0f;
     protected float hitDuration = 0.3f;
+    protected float flashTimer = 0f;
+    private static final float FLASH_DURATION = 0.1f;
 
 
     public Entity(Vector2 position, AnimationManager animation, float health, int gold, float attack) {
@@ -60,6 +63,18 @@ public abstract class Entity {
             renderWidth,
             renderHeight
         );
+
+        if (flashTimer > 0) {
+            batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE);
+            batch.setColor(1f, 1f, 1f, flashTimer / FLASH_DURATION);
+            batch.draw(currentFrame, position.x, position.y, renderWidth, renderHeight);
+            batch.setColor(1f, 1f, 1f, 1f);
+            batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+        }
+    }
+
+    public void updateFlash(float delta) {
+        if (flashTimer > 0) flashTimer -= delta;
     }
 
     public void applyGravity() {
@@ -100,6 +115,7 @@ public abstract class Entity {
     public void checkOnFloor() {
         if (position.y < 0) {
             position.y = 0;
+            velocity.y = 0;
             isJumping = false;
         }
     }
@@ -156,15 +172,15 @@ public abstract class Entity {
 
     public boolean isCollidingWith(Entity other, float attackRange) {
         float thisLeft = position.x;
-        float thisRight = position.x + other.renderWidth * 0.5f;
-        float thisTop = position.y + other.renderHeight * 0.5f;
+        float thisRight = position.x + this.renderWidth * 0.5f;
+        float thisTop = position.y + this.renderHeight * 0.5f;
         float thisBottom = position.y;
 
         float otherLeft = other.getPosition().x;
         float otherRight = other.getPosition().x + other.renderWidth * 0.5f;
         float otherTop = other.getPosition().y + other.renderHeight * 0.5f;
         float otherBottom = other.getPosition().y;
-        return isHorizontallyAligned(thisLeft,thisRight,otherLeft,otherRight, attackRange) && isVerticallyAligned(thisBottom,thisTop,otherBottom,otherTop);
+        return isHorizontallyAligned(thisLeft, thisRight, otherLeft, otherRight, attackRange) && isVerticallyAligned(thisBottom, thisTop, otherBottom, otherTop);
     }
 
     public boolean isAlive() {
@@ -208,8 +224,9 @@ public abstract class Entity {
     }
 
     public void receiveDamage(float damage) {
-        float burst =Math.max(damage - armor , 0);
+        float burst = Math.max(damage - armor, 0);
         this.health -= burst;
+        flashTimer = FLASH_DURATION;
     }
 
     public float getAttackBonus() {

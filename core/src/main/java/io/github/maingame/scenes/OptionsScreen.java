@@ -14,6 +14,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import io.github.maingame.core.Main;
 import io.github.maingame.input.InputManager;
+import io.github.maingame.utils.UIHelper;
 
 import static io.github.maingame.core.Main.VIRTUAL_HEIGHT;
 import static io.github.maingame.core.Main.VIRTUAL_WIDTH;
@@ -39,6 +40,7 @@ public class OptionsScreen extends ScreenAdapter {
 
     private boolean waitingForNewKey = false;
     private String keyToRemap = "";
+    private float fadeAlpha = 1f;
 
     public OptionsScreen(Main game) {
         this.game = game;
@@ -72,17 +74,20 @@ public class OptionsScreen extends ScreenAdapter {
 
     @Override
     public void render(float delta) {
+        if (fadeAlpha > 0) fadeAlpha = Math.max(0, fadeAlpha - delta * 2f);
+
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         viewport.apply();
         game.batch.setProjectionMatrix(camera.combined);
+        Vector2 mousePos = viewport.unproject(new Vector2(Gdx.input.getX(), Gdx.input.getY()));
 
         game.batch.begin();
 
         game.batch.draw(backgroundTexture, 0, 0, VIRTUAL_WIDTH, VIRTUAL_HEIGHT);
         game.batch.draw(backgroundGUI, VIRTUAL_WIDTH / 2 - backgroundGUI.getWidth() / 1.4f, VIRTUAL_HEIGHT / 2 - backgroundGUI.getHeight() / 1.4f, 600, 800);
-        game.batch.draw(buttonTexture, backButtonBounds.x, backButtonBounds.y, backButtonBounds.width, backButtonBounds.height);
+        UIHelper.drawButton(game.batch, buttonTexture, backButtonBounds, UIHelper.isHovered(backButtonBounds, mousePos));
 
         titleFont.draw(game.batch, "Options", VIRTUAL_WIDTH / 2 - 150, VIRTUAL_HEIGHT - 180);
         font.draw(game.batch, "Back", backButtonBounds.x + 170, backButtonBounds.y + 90);
@@ -93,6 +98,8 @@ public class OptionsScreen extends ScreenAdapter {
         font.draw(game.batch, "Attack: " + Input.Keys.toString(InputManager.getKey("attackKey")), attackKeyBounds.x, attackKeyBounds.y + 50);
         font.draw(game.batch, "Roll: " + Input.Keys.toString(InputManager.getKey("rollKey")), rollKeyBounds.x, rollKeyBounds.y + 50);
         font.draw(game.batch, "Potion: " + Input.Keys.toString(InputManager.getKey("potionKey")), potionKeyBounds.x, potionKeyBounds.y + 50);
+
+        UIHelper.drawFadeOverlay(game.batch, fadeAlpha, VIRTUAL_WIDTH, VIRTUAL_HEIGHT);
 
         game.batch.end();
 

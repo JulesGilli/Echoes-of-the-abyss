@@ -18,6 +18,7 @@ import io.github.maingame.entities.Player;
 import io.github.maingame.input.PlayerInputHandler;
 import io.github.maingame.utils.Platform;
 import io.github.maingame.utils.SoundManager;
+import io.github.maingame.utils.UIHelper;
 
 import static io.github.maingame.core.Main.VIRTUAL_HEIGHT;
 import static io.github.maingame.core.Main.VIRTUAL_WIDTH;
@@ -30,12 +31,13 @@ public class MainMenuScreen extends ScreenAdapter {
     private final Rectangle playButtonBounds;
     private final Rectangle quitButtonBounds;
     private final Rectangle optionButtonBounds;
-    private final Rectangle shopButtonBounds;
     private Player player = null;
     private BitmapFont font;
     private BitmapFont titleFont;
     private final OrthographicCamera camera;
     private final FitViewport viewport;
+    private Vector2 mousePos = new Vector2();
+    private float fadeAlpha = 1f;
 
     private SoundManager soundManager;
 
@@ -64,10 +66,9 @@ public class MainMenuScreen extends ScreenAdapter {
         float buttonWidth = 600;
         float buttonHeight = 200;
 
-        playButtonBounds = new Rectangle((VIRTUAL_WIDTH - buttonWidth) / 2, VIRTUAL_HEIGHT / 2 + 150, buttonWidth, buttonHeight);
-        shopButtonBounds = new Rectangle((VIRTUAL_WIDTH - buttonWidth) / 2, VIRTUAL_HEIGHT / 2, buttonWidth, buttonHeight);
-        optionButtonBounds = new Rectangle((VIRTUAL_WIDTH - buttonWidth) / 2, VIRTUAL_HEIGHT / 2 - 150, buttonWidth, buttonHeight);
-        quitButtonBounds = new Rectangle((VIRTUAL_WIDTH - buttonWidth) / 2, VIRTUAL_HEIGHT / 2 - 300, buttonWidth, buttonHeight);
+        playButtonBounds = new Rectangle((VIRTUAL_WIDTH - buttonWidth) / 2, VIRTUAL_HEIGHT / 2 + 50, buttonWidth, buttonHeight);
+        optionButtonBounds = new Rectangle((VIRTUAL_WIDTH - buttonWidth) / 2, VIRTUAL_HEIGHT / 2 - 100, buttonWidth, buttonHeight);
+        quitButtonBounds = new Rectangle((VIRTUAL_WIDTH - buttonWidth) / 2, VIRTUAL_HEIGHT / 2 - 250, buttonWidth, buttonHeight);
 
         game.getSoundManager().playMusic("menu", true, 0.3f);
     }
@@ -82,24 +83,29 @@ public class MainMenuScreen extends ScreenAdapter {
 
     @Override
     public void render(float delta) {
+        if (fadeAlpha > 0) fadeAlpha = Math.max(0, fadeAlpha - delta * 2f);
+
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         viewport.apply();
         game.batch.setProjectionMatrix(camera.combined);
+        mousePos = viewport.unproject(new Vector2(Gdx.input.getX(), Gdx.input.getY()));
 
         game.batch.begin();
 
         game.batch.draw(backgroundTexture, 0, 0, VIRTUAL_WIDTH, VIRTUAL_HEIGHT);
-        game.batch.draw(buttonTexture, playButtonBounds.x, playButtonBounds.y, playButtonBounds.width, playButtonBounds.height);
-        game.batch.draw(buttonTexture, quitButtonBounds.x, quitButtonBounds.y, quitButtonBounds.width, quitButtonBounds.height);
-        game.batch.draw(buttonTexture, optionButtonBounds.x, optionButtonBounds.y, optionButtonBounds.width, optionButtonBounds.height);
-        game.batch.draw(buttonTexture, shopButtonBounds.x, shopButtonBounds.y, shopButtonBounds.width, shopButtonBounds.height);
+
+        UIHelper.drawButton(game.batch, buttonTexture, playButtonBounds, UIHelper.isHovered(playButtonBounds, mousePos));
+        UIHelper.drawButton(game.batch, buttonTexture, optionButtonBounds, UIHelper.isHovered(optionButtonBounds, mousePos));
+        UIHelper.drawButton(game.batch, buttonTexture, quitButtonBounds, UIHelper.isHovered(quitButtonBounds, mousePos));
+
         font.draw(game.batch, "Play", playButtonBounds.x + 250, playButtonBounds.y + 125);
-        font.draw(game.batch, "Shop", shopButtonBounds.x + 235, shopButtonBounds.y + 125);
         font.draw(game.batch, "Option", optionButtonBounds.x + 220, optionButtonBounds.y + 125);
         font.draw(game.batch, "Quit", quitButtonBounds.x + 240, quitButtonBounds.y + 125);
         titleFont.draw(game.batch, "Echoes of the Abyss", 600, 950);
+
+        UIHelper.drawFadeOverlay(game.batch, fadeAlpha, VIRTUAL_WIDTH, VIRTUAL_HEIGHT);
 
         game.batch.end();
 
@@ -113,17 +119,12 @@ public class MainMenuScreen extends ScreenAdapter {
             if (playButtonBounds.contains(clickPosition)) {
                 game.getSoundManager().playSound("select");
                 game.getSoundManager().stopMusic("menu");
-                game.setScreen(new GameScreen(game, stat, player));
+                game.setScreen(new ShopScreen(game, stat, player));
             }
 
             if (optionButtonBounds.contains(clickPosition)) {
                 game.getSoundManager().playSound("select");
                 game.setScreen(new OptionsScreen(game));
-            }
-
-            if (shopButtonBounds.contains(clickPosition)) {
-                game.getSoundManager().playSound("select");
-                game.setScreen(new ShopScreen(game, stat, player));
             }
 
             if (quitButtonBounds.contains(clickPosition)) {
