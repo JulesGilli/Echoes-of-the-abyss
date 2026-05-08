@@ -61,7 +61,16 @@ run {
 
 
 application {
-  mainClass = 'io.github.maingame.lwjgl3.Lwjgl3Launcher' // Chemin complet vers ta classe principale
+  mainClass = 'io.github.maingame.lwjgl3.Lwjgl3Launcher'
+}
+
+tasks.register('generateFonts', JavaExec) {
+  group = 'tools'
+  description = 'Generate BitmapFont files from TTF for HTML5 compatibility'
+  classpath = sourceSets.main.runtimeClasspath
+  mainClass = 'io.github.maingame.lwjgl3.FontGenerator'
+  workingDir = rootProject.file('.')
+  if (os.contains('mac')) jvmArgs += "-XstartOnFirstThread"
 }
 
 jar {

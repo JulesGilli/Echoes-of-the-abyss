@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 import io.github.maingame.core.GameStat;
 import io.github.maingame.core.Main;
 import io.github.maingame.entities.Player;
@@ -17,12 +18,17 @@ import io.github.maingame.utils.Platform;
 import io.github.maingame.utils.SoundManager;
 import io.github.maingame.utils.TextureManager;
 
+import static io.github.maingame.core.Main.VIRTUAL_HEIGHT;
+import static io.github.maingame.core.Main.VIRTUAL_WIDTH;
+
 public class GameScreen extends ScreenAdapter {
     final Player player;
     private final SpriteBatch batch;
     private final Texture background1, background2, background3, background4a, background4b;
     private final OrthographicCamera camera;
+    private final FitViewport gameViewport;
     private final OrthographicCamera hudCamera;
+    private final FitViewport hudViewport;
     private final GameStat stat;
     private final HUD hud;
     private final PlayerInputHandler playerInputHandler;
@@ -43,13 +49,21 @@ public class GameScreen extends ScreenAdapter {
         this.playerInputHandler = new PlayerInputHandler(player);
         this.batch = game.batch;
         this.hud = new HUD(game, stat, player);
-        this.camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        this.hudCamera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+
+        // Game camera — follows the player
+        this.camera = new OrthographicCamera();
+        this.gameViewport = new FitViewport(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, camera);
+        gameViewport.apply();
+
+        // HUD camera — fixed overlay
+        this.hudCamera = new OrthographicCamera();
+        this.hudViewport = new FitViewport(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, hudCamera);
+        hudViewport.apply(true);
+
         this.enemyManager = new EnemyManager(stat, player, camera, game.getSoundManager());
 
-        camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0);
-        hudCamera.position.set(hudCamera.viewportWidth / 2, hudCamera.viewportHeight / 2, 0);
-        hudCamera.update();
+        camera.position.set(VIRTUAL_WIDTH / 2, VIRTUAL_HEIGHT / 2, 0);
+        camera.update();
 
         background1 = new Texture(Gdx.files.internal("backgrounds/background_gamescreen1.png"));
         background2 = new Texture(Gdx.files.internal("backgrounds/background_gamescreen2.png"));
@@ -69,16 +83,13 @@ public class GameScreen extends ScreenAdapter {
     public void render(float delta) {
         handleInput();
         clearScreen();
+
+        // Apply game viewport for world rendering
+        gameViewport.apply();
         batch.begin();
 
-        if (isTutorial) {
-            game.getSoundManager().playMusic("fight", true, 0.1f);
-        } else {
-            game.getSoundManager().playMusic("fight", true, 0.2f);
-        }
-
         if (isPaused) {
-            game.getSoundManager().setVolume("fight",0.1f);
+            game.getSoundManager().setVolume("fight", 0.1f);
             renderPausedState();
             return;
         }
@@ -94,6 +105,8 @@ public class GameScreen extends ScreenAdapter {
             enemyManager.spawnEnemies(delta, batch);
         }
 
+        // Switch to HUD viewport for overlay
+        hudViewport.apply();
         batch.setProjectionMatrix(hudCamera.combined);
         renderHUD();
         handleNextWave();
@@ -102,6 +115,10 @@ public class GameScreen extends ScreenAdapter {
 
     public void resumeGame() {
         isPaused = false;
+    }
+
+    public FitViewport getHudViewport() {
+        return hudViewport;
     }
 
     private void handleInput() {
@@ -115,8 +132,9 @@ public class GameScreen extends ScreenAdapter {
     }
 
     private void renderPausedState() {
+        hudViewport.apply();
         batch.setProjectionMatrix(hudCamera.combined);
-        hud.renderPauseMenu(batch);
+        hud.renderPauseMenu(batch, hudViewport);
         batch.end();
     }
 
@@ -133,12 +151,12 @@ public class GameScreen extends ScreenAdapter {
             if (waveTransitionTimer >= waveTransitionDuration) {
                 isWaveTransition = false;
                 waveTransitionTimer = 0f;
-
                 hasPlayedPassWaveSound = false;
             } else {
                 float alpha = MathUtils.clamp(
                     1.0f - Math.abs(waveTransitionTimer - waveTransitionDuration / 2) / (waveTransitionDuration / 2), 0, 1
                 );
+                hudViewport.apply();
                 batch.setProjectionMatrix(hudCamera.combined);
                 hud.renderWaveTransition(batch, stat.getFloors(), alpha);
                 batch.end();
@@ -147,7 +165,6 @@ public class GameScreen extends ScreenAdapter {
         }
         return false;
     }
-
 
     private void checkGameOverState() {
         if (player.getHealth() <= 0 && player.isDeathAnimationFinished() && !isGameOver) {
@@ -163,14 +180,12 @@ public class GameScreen extends ScreenAdapter {
         float minX = 0;
         float maxX = 3000;
         camera.position.x = MathUtils.clamp(camera.position.x, minX + camera.viewportWidth / 2, maxX - camera.viewportWidth / 2);
-        camera.position.y = (float) Gdx.graphics.getHeight() / 2;
+        camera.position.y = VIRTUAL_HEIGHT / 2;
         camera.update();
     }
 
     private void renderGameElements(float delta) {
-        float screenWidth = Gdx.graphics.getWidth();
-        float screenHeight = Gdx.graphics.getHeight();
-        drawBackground(screenWidth, screenHeight);
+        drawBackground(VIRTUAL_WIDTH, VIRTUAL_HEIGHT);
         drawPlatforms();
         player.render(batch);
 
@@ -182,9 +197,6 @@ public class GameScreen extends ScreenAdapter {
     }
 
     private void renderHUD() {
-        float screenWidth = Gdx.graphics.getWidth();
-        float screenHeight = Gdx.graphics.getHeight();
-
         if (isTutorial) {
             hud.renderFirstGameInstructions(batch,
                 InputManager.getLeftKey(),
@@ -199,7 +211,7 @@ public class GameScreen extends ScreenAdapter {
                 stat.saveGame();
             }
         } else {
-            hud.render(batch, player, screenWidth, screenHeight, isGameOver);
+            hud.render(batch, player, VIRTUAL_WIDTH, VIRTUAL_HEIGHT, isGameOver, hudViewport);
         }
     }
 
@@ -244,10 +256,8 @@ public class GameScreen extends ScreenAdapter {
     @Override
     public void hide() {
         super.hide();
-        Gdx.app.log("GameScreen", "Stopping gameplay music");
         game.getSoundManager().stopMusic("gameplay");
     }
-
 
     @Override
     public void show() {
@@ -265,6 +275,12 @@ public class GameScreen extends ScreenAdapter {
         enemyManager.getEnemies().clear();
         enemyManager.setupFloorEnemies();
         isGameOver = false;
+    }
+
+    @Override
+    public void resize(int width, int height) {
+        gameViewport.update(width, height);
+        hudViewport.update(width, height, true);
     }
 
     @Override

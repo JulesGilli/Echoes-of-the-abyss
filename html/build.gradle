@@ -1,0 +1,60 @@
+apply plugin: "gwt"
+apply plugin: "war"
+
+gwt {
+  gwtVersion = "2.10.0"
+  maxHeapSize = "1G"
+  minHeapSize = "1G"
+
+  src = files(file("src/main/java"))
+  modules 'io.github.maingame.GdxDefinition'
+  devModules 'io.github.maingame.GdxDefinitionSuperdev'
+  compiler.strict = true
+  compiler.disableCastChecking = true
+}
+
+dependencies {
+  implementation project(':core')
+  implementation "com.badlogicgames.gdx:gdx:$gdxVersion:sources"
+  implementation "com.badlogicgames.gdx:gdx-backend-gwt:$gdxVersion"
+  implementation "com.badlogicgames.gdx:gdx-backend-gwt:$gdxVersion:sources"
+  implementation "com.badlogicgames.gdx:gdx-box2d:$gdxVersion:sources"
+  implementation "com.badlogicgames.gdx:gdx-box2d-gwt:$gdxVersion"
+  implementation "com.badlogicgames.gdx:gdx-box2d-gwt:$gdxVersion:sources"
+}
+
+sourceSets.main.java.srcDirs = ["src/main/java/"]
+
+eclipse.project.name = appName + "-html"
+
+task addSource {
+  doLast {
+    sourceSets.main.compileClasspath += files(project(':core').sourceSets.main.allJava.srcDirs)
+  }
+}
+
+task dist(dependsOn: [clean, compileGwt]) {
+  doLast {
+    file("build/dist").mkdirs()
+    copy {
+      from "build/gwt/out"
+      into "build/dist"
+    }
+    copy {
+      from "webapp"
+      into "build/dist"
+    }
+    copy {
+      from "war/assets"
+      into "build/dist/assets"
+    }
+  }
+}
+
+task distZip(type: Zip, dependsOn: dist) {
+  from "build/dist"
+  archiveFileName = "${appName}-html.zip"
+}
+
+tasks.compileGwt.dependsOn(addSource)
+tasks.draftCompileGwt.dependsOn(addSource)

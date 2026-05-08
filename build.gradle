@@ -9,7 +9,7 @@ buildscript {
     maven { url 'https://s01.oss.sonatype.org/content/repositories/snapshots/' }
   }
   dependencies {
-    // Ajoutez des dépendances ici si nécessaire
+    classpath "org.wisepersist:gwt-gradle-plugin:1.1.16"
   }
 }
 

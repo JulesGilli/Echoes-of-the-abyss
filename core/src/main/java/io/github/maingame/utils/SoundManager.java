@@ -19,23 +19,21 @@ public class SoundManager {
     }
 
     public void initialize() {
-        // Musiques
-        loadMusic("menu", "assets/Music/music_mainMenu.mp3");
-        loadMusic("fight", "assets/Music/music_fightMusic.mp3");
+        loadMusic("menu", "Music/music_mainMenu.mp3");
+        loadMusic("fight", "Music/music_fightMusic.mp3");
 
-        // Sons
-        loadSound("select", "assets/Sound/sound_select.wav");
-        loadSound("buy", "assets/Sound/sound_gold.wav");
-        loadSound("sound_playerScream1", "assets/Sound/sound_playerScream1.wav");
-        loadSound("sound_playerScream2", "assets/Sound/sound_playerScream2.wav");
-        loadSound("sound_playerScream3", "assets/Sound/sound_playerScream3.wav");
-        loadSound("sound_playerScream4", "assets/Sound/sound_playerScream4.wav");
-        loadSound("sound_hitSword1", "assets/Sound/sound_hitSword1.wav");
-        loadSound("sound_hitSword2", "assets/Sound/sound_hitSword2.wav");
-        loadSound("sound_hitSword3", "assets/Sound/sound_hitSword3.wav");
-        loadSound("sound_hitSword4", "assets/Sound/sound_hitSword4.wav");
-        loadSound("enemy_spawn", "assets/Sound/sound_monsterScream.wav");
-        loadSound("passWave", "assets/Sound/sound_wavePassed.wav");
+        loadSound("select", "Sound/sound_select.wav");
+        loadSound("buy", "Sound/sound_gold.wav");
+        loadSound("sound_playerScream1", "Sound/sound_playerScream1.wav");
+        loadSound("sound_playerScream2", "Sound/sound_playerScream2.wav");
+        loadSound("sound_playerScream3", "Sound/sound_playerScream3.wav");
+        loadSound("sound_playerScream4", "Sound/sound_playerScream4.wav");
+        loadSound("sound_hitSword1", "Sound/sound_hitSword1.wav");
+        loadSound("sound_hitSword2", "Sound/sound_hitSword2.wav");
+        loadSound("sound_hitSword3", "Sound/sound_hitSword3.wav");
+        loadSound("sound_hitSword4", "Sound/sound_hitSword4.wav");
+        loadSound("enemy_spawn", "Sound/sound_monsterScream.wav");
+        loadSound("passWave", "Sound/sound_wavePassed.wav");
     }
 
     // Charger un son
@@ -75,7 +73,7 @@ public class SoundManager {
             music.setVolume(volume);
             music.play();
         } else {
-            System.out.println("Music not found: " + name);
+            com.badlogic.gdx.Gdx.app.log("SoundManager", "Music not found: " + name);
         }
     }
 
@@ -84,7 +82,7 @@ public class SoundManager {
         if (sounds.containsKey(name)) {
             sounds.get(name).play();
         } else {
-            System.out.println("Sound not found: " + name);
+            com.badlogic.gdx.Gdx.app.log("SoundManager", "Sound not found: " + name);
         }
     }
 

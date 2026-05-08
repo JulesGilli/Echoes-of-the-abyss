@@ -60,28 +60,37 @@ public class Inventory {
             if (item instanceof Gear) {
                 item.resetItem(entity);
             }
-            items.remove(item);
+        }
+        items.clear();
+    }
+
+    private Consumable activeConsumable = null;
+    private float consumableTimer = 0f;
+    private Player consumableTarget = null;
+
+    public void applyConsumable(Player target) {
+        if (activeConsumable != null) return;
+
+        for (Item item : items) {
+            if (item instanceof Consumable) {
+                activeConsumable = (Consumable) item;
+                consumableTarget = target;
+                consumableTimer = activeConsumable.getTimeDuration();
+                activeConsumable.applyItem(target);
+                removeItem(activeConsumable);
+                break;
+            }
         }
     }
 
-    public void applyConsumable(Player target) {
-        for (Item item : items) {
-            if (item instanceof Consumable) {
-                Consumable consumable = (Consumable) item;
-                consumable.applyItem(target);
-                removeItem(consumable);
+    public void updateConsumableTimer(float delta) {
+        if (activeConsumable == null) return;
 
-                new Thread(() -> {
-                    try {
-                        Thread.sleep(consumable.getTimeDuration() * 1000L);
-                        consumable.resetItem(target);
-                        removeItem(consumable);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }).start();
-                break;
-            }
+        consumableTimer -= delta;
+        if (consumableTimer <= 0) {
+            activeConsumable.resetItem(consumableTarget);
+            activeConsumable = null;
+            consumableTarget = null;
         }
     }
 

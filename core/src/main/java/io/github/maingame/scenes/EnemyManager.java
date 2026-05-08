@@ -43,7 +43,6 @@ public class EnemyManager {
             enemy.updateStats(stat);
             enemy.setScaleFactor(3f);
             spawnList.add(enemy);
-            System.out.println("Enemy added: " + enemy);
         }
 
         spawnDelay = Math.max(1.0f, spawnDelay * 0.95f);

@@ -21,13 +21,11 @@ public class SpeedPotion extends Consumable {
     public void applyItem(Entity targetEntity) {
         setIncreaseValue(targetEntity.getSpeed() * 0.6f);
         targetEntity.setSpeedBonus(getIncreaseValue());
-        System.out.println("Speed Potion give you : " + targetEntity.getSpeedBonus() + " for " + timeDuration);
     }
 
     @Override
     public void resetItem(Entity targetEntity) {
         targetEntity.setSpeedBonus(0);
-        System.out.println("Speed Potion reset, current speedBonus: " + targetEntity.getSpeedBonus());
     }
 
     @Override

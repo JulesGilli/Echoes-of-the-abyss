@@ -144,8 +144,6 @@ public abstract class Enemy extends Entity {
 
     @Override
     public void render(SpriteBatch batch) {
-        super.render(batch);
-
         TextureRegion currentFrame = getCurrentFrame();
         batch.draw(
             currentFrame,

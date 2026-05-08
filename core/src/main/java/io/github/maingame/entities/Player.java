@@ -27,7 +27,7 @@ public class Player extends Entity {
 
     private SoundManager soundManager;
 
-    private final String[] playerScreams = {"sound_playerScream1", "sound_playerScream2", "sound_playerScream3", "sound_playerScream4", "sound_playerScream5"};
+    private final String[] playerScreams = {"sound_playerScream1", "sound_playerScream2", "sound_playerScream3", "sound_playerScream4"};
     private final String[] hitSwords = {"sound_hitSword1", "sound_hitSword2", "sound_hitSword3", "sound_hitSword4"};
 
 
@@ -90,6 +90,7 @@ public class Player extends Entity {
         }
 
         regenerateStamina(delta);
+        inventory.updateConsumableTimer(delta);
     }
 
     private void handleDeath() {

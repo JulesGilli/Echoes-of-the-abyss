@@ -7,15 +7,19 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 import io.github.maingame.core.GameStat;
 import io.github.maingame.core.Main;
 import io.github.maingame.entities.Player;
+import io.github.maingame.utils.FontManager;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import static io.github.maingame.core.Main.VIRTUAL_HEIGHT;
+import static io.github.maingame.core.Main.VIRTUAL_WIDTH;
 
 public class HUD {
     private final Main game;
@@ -49,22 +53,14 @@ public class HUD {
         this.stat = stat;
         this.player = player;
 
-        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("assets/fonts/Jacquard12-Regular.ttf"));
-        FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
-        parameter.size = 64;
+        goldFont = FontManager.getFont(64);
+        goldFont.setColor(new Color(255 / 255f, 204 / 255f, 101 / 255f, 1));
 
-        goldFont = generator.generateFont(parameter);
-        Color goldColor = new Color(255 / 255f, 204 / 255f, 101 / 255f, 1);
-        goldFont.setColor(goldColor);
-
-        menuFont = generator.generateFont(parameter);
+        menuFont = FontManager.getFont(64);
         menuFont.setColor(Color.BROWN);
 
-        headerFont = generator.generateFont(parameter);
-        Color lightGreen = new Color(0 / 255f, 153 / 255f, 76 / 255f, 1);
-        headerFont.setColor(lightGreen);
-
-        generator.dispose();
+        headerFont = FontManager.getFont(64);
+        headerFont.setColor(new Color(0 / 255f, 153 / 255f, 76 / 255f, 1));
 
         potionTextures.put("StrengthPotion", new Texture(Gdx.files.internal("icons/items/potion/icon_potionStrength.png")));
         potionTextures.put("SpeedPotion", new Texture(Gdx.files.internal("icons/items/potion/icon_potionSpeed.png")));
@@ -77,35 +73,30 @@ public class HUD {
         healthBar = new Texture(Gdx.files.internal("GUI/sprite_healthBar.png"));
 
         headerTuto = new Texture(Gdx.files.internal("GUI/sprite_header_tuto.png"));
-        backgroundTexture = new Texture(Gdx.files.internal("assets/backgrounds/background_menuscreen.png"));
+        backgroundTexture = new Texture(Gdx.files.internal("backgrounds/background_menuscreen.png"));
 
         buttonMenu = new Texture(Gdx.files.internal("GUI/button_basic.png"));
         backgroundGUI = new Texture(Gdx.files.internal("backgrounds/background_gamescreen_GUI.png"));
         goldIcon = new Texture(Gdx.files.internal("icons/icon_gold.png"));
         headerGUI = new Texture(Gdx.files.internal("GUI/header_floors.png"));
 
-
         layout = new GlyphLayout();
 
-        float screenWidth = Gdx.graphics.getWidth();
-        float screenHeight = Gdx.graphics.getHeight();
         float buttonWidth = 450;
         float buttonHeight = 200;
 
-        resumeButtonBounds = new Rectangle(screenWidth / 2 - buttonWidth / 2, screenHeight / 2 + 120, buttonWidth, buttonHeight);
-        mainMenuButtonBounds = new Rectangle(screenWidth / 2 - buttonWidth / 2, screenHeight / 2, buttonWidth, buttonHeight);
-        quitButtonBounds = new Rectangle(screenWidth / 2 - buttonWidth / 2, screenHeight / 2 - 240, buttonWidth, buttonHeight);
-        shopButtonBounds = new Rectangle(screenWidth / 2 - buttonWidth / 2, screenHeight / 2 - 120, buttonWidth, buttonHeight);
-
-        System.out.println("Game HUD screen");
+        resumeButtonBounds = new Rectangle(VIRTUAL_WIDTH / 2 - buttonWidth / 2, VIRTUAL_HEIGHT / 2 + 120, buttonWidth, buttonHeight);
+        mainMenuButtonBounds = new Rectangle(VIRTUAL_WIDTH / 2 - buttonWidth / 2, VIRTUAL_HEIGHT / 2, buttonWidth, buttonHeight);
+        quitButtonBounds = new Rectangle(VIRTUAL_WIDTH / 2 - buttonWidth / 2, VIRTUAL_HEIGHT / 2 - 240, buttonWidth, buttonHeight);
+        shopButtonBounds = new Rectangle(VIRTUAL_WIDTH / 2 - buttonWidth / 2, VIRTUAL_HEIGHT / 2 - 120, buttonWidth, buttonHeight);
     }
 
-    private void drawPotion(SpriteBatch batch, Player player, float screenWidth, float screenHeight) {
+    private void drawPotion(SpriteBatch batch, Player player) {
         String potionType = player.getInventory().getPotionTexture();
         if (potionType != null && potionTextures.containsKey(potionType)) {
             Texture potionTexture = potionTextures.get(potionType);
             float potionX = 100;
-            float potionY = screenHeight - 210;
+            float potionY = VIRTUAL_HEIGHT - 210;
             float potionSize = 80;
             batch.draw(potionTexture, potionX, potionY, potionSize, potionSize);
         }
@@ -115,19 +106,16 @@ public class HUD {
         menuFont.getData().setScale(0.6f, 0.6f);
         menuFont.draw(batch, "attack: " + player.getAttack(), mainMenuButtonBounds.x + 40, mainMenuButtonBounds.y + 30);
         menuFont.draw(batch, "speed: " + player.getSpeed(), mainMenuButtonBounds.x + 40, mainMenuButtonBounds.y - 10);
-        menuFont.draw(batch, "health: " + player.getHealth(), mainMenuButtonBounds.x + 40, mainMenuButtonBounds.y + -50);
+        menuFont.draw(batch, "health: " + player.getHealth(), mainMenuButtonBounds.x + 40, mainMenuButtonBounds.y - 50);
         menuFont.getData().setScale(1, 1);
     }
 
-    public void renderPauseMenu(SpriteBatch batch) {
-        float screenWidth = Gdx.graphics.getWidth();
-        float screenHeight = Gdx.graphics.getHeight();
+    public void renderPauseMenu(SpriteBatch batch, FitViewport viewport) {
+        batch.draw(backgroundTexture, 0, 0, VIRTUAL_WIDTH, VIRTUAL_HEIGHT);
+        batch.draw(backgroundGUI, VIRTUAL_WIDTH / 2 - backgroundGUI.getWidth() / 1.4f, VIRTUAL_HEIGHT / 2 - backgroundGUI.getHeight() / 1.4f, 600, 800);
 
-        batch.draw(backgroundGUI, screenWidth / 2 - backgroundGUI.getWidth() / 1.4f, screenHeight / 2 - backgroundGUI.getHeight() / 1.4f, 600, 800);
+        menuFont.draw(batch, "Options", VIRTUAL_WIDTH / 2 - 100, VIRTUAL_HEIGHT - 200);
 
-        menuFont.draw(batch, "Options", screenWidth / 2 - 100, screenHeight - 200);
-
-        batch.draw(backgroundTexture, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         batch.draw(buttonMenu, resumeButtonBounds.x, resumeButtonBounds.y, resumeButtonBounds.width, resumeButtonBounds.height);
         batch.draw(buttonMenu, mainMenuButtonBounds.x, mainMenuButtonBounds.y, mainMenuButtonBounds.width, mainMenuButtonBounds.height);
         batch.draw(buttonMenu, quitButtonBounds.x, quitButtonBounds.y, quitButtonBounds.width, quitButtonBounds.height);
@@ -138,12 +126,12 @@ public class HUD {
 
         showStats(batch, player);
 
-        handlePauseMenuInput();
+        handlePauseMenuInput(viewport);
     }
 
-    private void handlePauseMenuInput() {
+    private void handlePauseMenuInput(FitViewport viewport) {
         if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
-            Vector2 clickPosition = new Vector2(Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY());
+            Vector2 clickPosition = viewport.unproject(new Vector2(Gdx.input.getX(), Gdx.input.getY()));
 
             if (resumeButtonBounds.contains(clickPosition)) {
                 game.getSoundManager().playSound("select");
@@ -160,49 +148,35 @@ public class HUD {
     }
 
     public void renderFirstGameInstructions(SpriteBatch batch, int leftKey, int rightKey, int jumpKey, int attackKey, int rollKey, int potionKey) {
-        float screenWidth = Gdx.graphics.getWidth();
-        float screenHeight = Gdx.graphics.getHeight();
+        float instructionsX = VIRTUAL_WIDTH / 2 - 300;
+        float instructionsY = VIRTUAL_HEIGHT - 200;
 
-        float instructionsX = screenWidth / 2 - 300;
-        float instructionsY = screenHeight - 200;
+        String instructionsMovement = "To move :\nLeft: " + Input.Keys.toString(leftKey)
+            + "\nRight: " + Input.Keys.toString(rightKey)
+            + "\nJump: " + Input.Keys.toString(jumpKey);
 
-        String instructionsMovement = String.format(
-            "To move :\nLeft: %s\nRight: %s\nJump: %s",
-            Input.Keys.toString(leftKey),
-            Input.Keys.toString(rightKey),
-            Input.Keys.toString(jumpKey)
-        );
-
-        String instructionsAction = String.format(
-            "For capacity :\nAttack: %s\nRoll: %s\nPotion: %s",
-            Input.Keys.toString(attackKey),
-            Input.Keys.toString(rollKey),
-            Input.Keys.toString(potionKey)
-
-        );
-
+        String instructionsAction = "For capacity :\nAttack: " + Input.Keys.toString(attackKey)
+            + "\nRoll: " + Input.Keys.toString(rollKey)
+            + "\nPotion: " + Input.Keys.toString(potionKey);
 
         headerFont.setColor(Color.BROWN);
 
-
         float headerSize = 1.8f;
         batch.draw(backgroundGUI,
-            screenWidth / 2 - backgroundGUI.getWidth() * headerSize / 2f,
-            screenHeight / 2 - backgroundGUI.getHeight() * headerSize / 2f,
+            VIRTUAL_WIDTH / 2 - backgroundGUI.getWidth() * headerSize / 2f,
+            VIRTUAL_HEIGHT / 2 - backgroundGUI.getHeight() * headerSize / 2f,
             backgroundGUI.getWidth() * headerSize,
             backgroundGUI.getHeight() * headerSize);
 
         headerSize = 2;
-
         batch.draw(headerTuto,
-            screenWidth / 2 - headerTuto.getWidth() * headerSize / 2f,
-            screenHeight / 2 + 200,
+            VIRTUAL_WIDTH / 2 - headerTuto.getWidth() * headerSize / 2f,
+            VIRTUAL_HEIGHT / 2 + 200,
             headerTuto.getWidth() * headerSize,
-            headerTuto.getHeight() * headerSize
-        );
+            headerTuto.getHeight() * headerSize);
 
         headerFont.getData().setScale(1.5f);
-        headerFont.draw(batch, "Tutorial", screenWidth / 2 - 150, screenHeight - 70);
+        headerFont.draw(batch, "Tutorial", VIRTUAL_WIDTH / 2 - 150, VIRTUAL_HEIGHT - 70);
 
         headerFont.getData().setScale(1f);
         headerFont.draw(batch, instructionsMovement, instructionsX + 130, instructionsY - 80);
@@ -212,34 +186,29 @@ public class HUD {
         headerFont.setColor(0 / 255f, 153 / 255f, 76 / 255f, 1);
     }
 
-
     public void renderWaveTransition(SpriteBatch batch, int waveNumber, float alpha) {
-        float screenWidth = Gdx.graphics.getWidth();
-        float screenHeight = Gdx.graphics.getHeight();
-
         String waveText = "Floor " + waveNumber;
 
         headerFont.setColor(0 / 255f, 153 / 255f, 76 / 255f, alpha);
         headerFont.getData().setScale(2.0f);
 
         layout.setText(headerFont, waveText);
-        headerFont.draw(batch, waveText, screenWidth / 2f - layout.width / 2, screenHeight / 2f + layout.height / 2);
+        headerFont.draw(batch, waveText, VIRTUAL_WIDTH / 2f - layout.width / 2, VIRTUAL_HEIGHT / 2f + layout.height / 2);
 
         headerFont.getData().setScale(1.0f);
         headerFont.setColor(0 / 255f, 153 / 255f, 76 / 255f, 1);
     }
 
-
-    public void render(SpriteBatch batch, Player player, float screenWidth, float screenHeight, boolean isGameOver) {
+    public void render(SpriteBatch batch, Player player, float screenWidth, float screenHeight, boolean isGameOver, FitViewport viewport) {
         drawHealthBar(batch, player, screenHeight);
         drawStaminaBar(batch, player, screenHeight);
         drawGold(batch, player, screenWidth, screenHeight);
         drawFloor(batch, screenWidth, screenHeight);
-        drawPotion(batch, player, screenWidth, screenHeight);
+        drawPotion(batch, player);
 
         if (isGameOver) {
             displayGameOverMenu(batch, screenWidth, screenHeight);
-            handleGameOverInput();
+            handleGameOverInput(viewport);
         }
     }
 
@@ -257,7 +226,6 @@ public class HUD {
         }
     }
 
-
     private void drawHealthBar(SpriteBatch batch, Player player, float screenHeight) {
         float offset = 70;
         float sizeHealthBar = 2;
@@ -271,7 +239,6 @@ public class HUD {
     private void drawStaminaBar(SpriteBatch batch, Player player, float screenHeight) {
         float offset = 120;
         float sizeStaminaBar = 2;
-
         batch.draw(staminaFrame, 70, screenHeight - offset, staminaFrame.getWidth() * sizeStaminaBar, staminaFrame.getHeight() * sizeStaminaBar);
 
         float staminaPercentage = player.getStamina() / player.getMaxStamina();
@@ -279,20 +246,15 @@ public class HUD {
         batch.draw(staminaBar, 82, screenHeight - offset + 12, staminaBarWidth * sizeStaminaBar, staminaBar.getHeight() * sizeStaminaBar);
     }
 
-
     private void drawGold(SpriteBatch batch, Player player, float screenWidth, float screenHeight) {
         String goldText = "" + stat.getGolds();
         layout.setText(goldFont, goldText);
         goldFont.draw(batch, goldText, screenWidth - 200, screenHeight - 40);
         batch.draw(goldIcon, screenWidth - 270, screenHeight - 90, goldIcon.getWidth() * 3, goldIcon.getHeight() * 3);
-
     }
 
     private void displayGameOverMenu(SpriteBatch batch, float screenWidth, float screenHeight) {
-        Gdx.app.log("GameHUD", "Entering displayGameOverMenu");
-
         batch.draw(backgroundGUI, screenWidth / 2 - backgroundGUI.getWidth() / 1.4f, screenHeight / 2 - backgroundGUI.getHeight() / 1.4f, 600, 800);
-
 
         String gameOverText = "Game Over";
         layout.setText(menuFont, gameOverText);
@@ -305,12 +267,11 @@ public class HUD {
         menuFont.draw(batch, "Main Menu", mainMenuButtonBounds.x + 100, mainMenuButtonBounds.y + 125);
         menuFont.draw(batch, "Quit", quitButtonBounds.x + 160, quitButtonBounds.y + 125);
         menuFont.draw(batch, "Shop", shopButtonBounds.x + 160, shopButtonBounds.y + 125);
-
     }
 
-    private void handleGameOverInput() {
+    private void handleGameOverInput(FitViewport viewport) {
         if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
-            Vector2 clickPosition = new Vector2(Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY());
+            Vector2 clickPosition = viewport.unproject(new Vector2(Gdx.input.getX(), Gdx.input.getY()));
 
             if (mainMenuButtonBounds.contains(clickPosition)) {
                 game.getSoundManager().stopMusic("fight");
@@ -333,13 +294,16 @@ public class HUD {
 
         if (goldFont != null) goldFont.dispose();
         if (menuFont != null) menuFont.dispose();
+        if (headerFont != null) headerFont.dispose();
         if (healthFrame != null) healthFrame.dispose();
         if (healthBar != null) healthBar.dispose();
+        if (staminaFrame != null) staminaFrame.dispose();
+        if (staminaBar != null) staminaBar.dispose();
         if (buttonMenu != null) buttonMenu.dispose();
         if (backgroundGUI != null) backgroundGUI.dispose();
         if (goldIcon != null) goldIcon.dispose();
         if (headerGUI != null) headerGUI.dispose();
+        if (headerTuto != null) headerTuto.dispose();
+        if (backgroundTexture != null) backgroundTexture.dispose();
     }
-
-
 }

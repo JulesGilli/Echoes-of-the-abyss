@@ -1,8 +1,7 @@
 package io.github.maingame.core;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.utils.Json;
-import com.badlogic.gdx.utils.JsonWriter;
+import com.badlogic.gdx.Preferences;
 
 public class GameStat {
     private int golds;
@@ -15,6 +14,8 @@ public class GameStat {
     private boolean gameOver;
     private int speedPotionUse;
     private boolean isFirstGame = true;
+
+    private static final String PREFS_NAME = "echoes_of_the_abyss_save";
 
     public GameStat() {
         this.golds = 0;
@@ -35,24 +36,29 @@ public class GameStat {
     }
 
     public void saveGame() {
-        Json json = new Json();
-        json.setOutputType(JsonWriter.OutputType.json);
-        String saveData = json.toJson(this);
-        Gdx.files.local("saveData.json").writeString(saveData, false);
+        Preferences prefs = Gdx.app.getPreferences(PREFS_NAME);
+        prefs.putInteger("golds", golds);
+        prefs.putInteger("kills", kills);
+        prefs.putInteger("waves", waves);
+        prefs.putInteger("deaths", deaths);
+        prefs.putInteger("maxFloors", maxFloors);
+        prefs.putInteger("speedPotionUse", speedPotionUse);
+        prefs.putBoolean("gameOver", gameOver);
+        prefs.putBoolean("isFirstGame", isFirstGame);
+        prefs.flush();
     }
 
     public void loadGame() {
-        if (Gdx.files.local("saveData.json").exists()) {
-            Json json = new Json();
-            GameStat loadedData = json.fromJson(GameStat.class, Gdx.files.local("saveData.json").readString());
-            this.golds = loadedData.golds;
-            this.kills = loadedData.kills;
-            this.waves = loadedData.waves;
-            this.deaths = loadedData.deaths;
-            this.maxFloors = loadedData.maxFloors;
-            this.gameOver = loadedData.gameOver;
-            this.speedPotionUse = loadedData.speedPotionUse;
-            this.isFirstGame = loadedData.isFirstGame;
+        Preferences prefs = Gdx.app.getPreferences(PREFS_NAME);
+        if (prefs.contains("golds")) {
+            this.golds = prefs.getInteger("golds", 0);
+            this.kills = prefs.getInteger("kills", 0);
+            this.waves = prefs.getInteger("waves", 0);
+            this.deaths = prefs.getInteger("deaths", 0);
+            this.maxFloors = prefs.getInteger("maxFloors", 0);
+            this.speedPotionUse = prefs.getInteger("speedPotionUse", 0);
+            this.gameOver = prefs.getBoolean("gameOver", false);
+            this.isFirstGame = prefs.getBoolean("isFirstGame", true);
         }
     }
 

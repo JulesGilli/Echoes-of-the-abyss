@@ -18,14 +18,11 @@ public class ArmorPotion extends Consumable {
     public void applyItem(Entity targetEntity) {
         setIncreaseValue(10 * stat.getFloors());
         targetEntity.setArmor(targetEntity.getArmor() + getIncreaseValue());
-        System.out.println("applying Armor potion, current armor: " + targetEntity.getArmor());
-        System.out.println("time duration : " + timeDuration);
     }
 
     @Override
     public void resetItem(Entity targetEntity) {
         targetEntity.setArmor(0);
-        System.out.println("reset Armor potion, current armor : " + targetEntity.getArmor());
     }
 
     @Override

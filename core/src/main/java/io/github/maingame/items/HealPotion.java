@@ -19,7 +19,6 @@ public class HealPotion extends Consumable {
         setIncreaseValue(50 + 10 * stat.getFloors());
         targetEntity.setMaxHealth(targetEntity.getHealth() + getIncreaseValue());
         targetEntity.setHealth(targetEntity.getMaxHealth());
-        System.out.println("heal potion give you : " + getIncreaseValue() + " for " + timeDuration);
     }
 
     @Override
@@ -27,7 +26,6 @@ public class HealPotion extends Consumable {
         if (targetEntity.getHealth() > targetEntity.getMaxHealth() - getIncreaseValue()) {
             targetEntity.setMaxHealth(targetEntity.getHealth() - getIncreaseValue());
             targetEntity.setHealth(targetEntity.getMaxHealth());
-            System.out.println("HealPotion is actually reset");
         }
     }
 

@@ -21,13 +21,11 @@ public class Weapon extends Gear {
     public void applyItem(Entity targetEntity) {
         setIncreaseValue(attackIncrease + 10 * lvl);
         targetEntity.setAttackDamage(targetEntity.getAttack() + (this).getIncreaseValue());
-        System.out.println("applying weapon gear, currentAttack : " + targetEntity.getAttack());
     }
 
     @Override
     public void resetItem(Entity targetEntity) {
         targetEntity.setAttackDamage(targetEntity.getAttack() - getIncreaseValue());
-        System.out.println("reset weapon gear, current attack : " + targetEntity.getAttack());
     }
 
     @Override

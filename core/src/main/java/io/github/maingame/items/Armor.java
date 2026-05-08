@@ -23,7 +23,6 @@ public class Armor extends Gear {
         targetEntity.setArmor(getIncreaseValue());
         targetEntity.setMaxHealth(targetEntity.getMaxHealth() + getIncreaseValue() * 10);
         targetEntity.setHealth(targetEntity.getMaxHealth());
-        System.out.println("applying armor gear, current damage reduction : " + targetEntity.getArmor());
     }
 
     @Override
@@ -31,8 +30,6 @@ public class Armor extends Gear {
         targetEntity.setArmor(0);
         targetEntity.setMaxHealth(targetEntity.getMaxHealth() - getIncreaseValue() * 10);
         targetEntity.setHealth(targetEntity.getMaxHealth());
-        System.out.println("reset health of armor, current health : " + targetEntity.getArmor());
-        System.out.println("reset armor gear, current damage reduction : " + targetEntity.getArmor());
     }
 
     @Override

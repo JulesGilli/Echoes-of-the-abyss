@@ -19,16 +19,12 @@ public class StrengthPotion extends Consumable {
     @Override
     public void applyItem(Entity targetEntity) {
         setIncreaseValue(10 * stat.getFloors());
-        System.out.println("applying strength potion, current attack bonus: " + getIncreaseValue());
-        System.out.println("time duration : " + timeDuration);
         targetEntity.setAttackBonus(getIncreaseValue());
-        System.out.println("Attack with bonus : " + targetEntity.getAttack());
     }
 
     @Override
     public void resetItem(Entity targetEntity) {
         targetEntity.setAttackBonus(0);
-        System.out.println("reset strength potion, reset bonus: " + targetEntity.getAttackBonus());
     }
 
     @Override
