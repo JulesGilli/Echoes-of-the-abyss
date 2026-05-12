@@ -5,7 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.StretchViewport;
 import io.github.maingame.scenes.MainMenuScreen;
 import io.github.maingame.utils.SoundManager;
 
@@ -16,7 +16,7 @@ public class Main extends Game {
 
     public SpriteBatch batch;
     public OrthographicCamera camera;
-    public FitViewport viewport;
+    public StretchViewport viewport;
     private SoundManager soundManager;
 
     @SuppressWarnings("deprecation")
@@ -29,7 +29,7 @@ public class Main extends Game {
         soundManager.initialize();
 
         camera = new OrthographicCamera();
-        viewport = new FitViewport(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, camera);
+        viewport = new StretchViewport(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, camera);
         viewport.apply(true);
 
         this.setScreen(new MainMenuScreen(this));

@@ -15,7 +15,7 @@ public class HtmlLauncher extends GwtApplication {
 
     @Override
     public GwtApplicationConfiguration getConfig() {
-        // Canvas matches itch.io iframe — FitViewport handles scaling to virtual 1920x1080
+        // Canvas matches itch.io iframe — StretchViewport scales to virtual 1920x1080
         GwtApplicationConfiguration config = new GwtApplicationConfiguration(960, 540);
         config.antialiasing = true;
         return config;

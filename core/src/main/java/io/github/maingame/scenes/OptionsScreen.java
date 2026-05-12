@@ -11,7 +11,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import io.github.maingame.utils.FontManager;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.StretchViewport;
 import io.github.maingame.core.Main;
 import io.github.maingame.input.InputManager;
 import io.github.maingame.utils.UIHelper;
@@ -36,7 +36,7 @@ public class OptionsScreen extends ScreenAdapter {
     private final Rectangle potionKeyBounds;
 
     private final OrthographicCamera camera;
-    private final FitViewport viewport;
+    private final StretchViewport viewport;
 
     private boolean waitingForNewKey = false;
     private String keyToRemap = "";
@@ -56,7 +56,7 @@ public class OptionsScreen extends ScreenAdapter {
         titleFont.setColor(Color.BROWN);
 
         camera = new OrthographicCamera();
-        viewport = new FitViewport(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, camera);
+        viewport = new StretchViewport(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, camera);
         viewport.apply(true);
 
         float buttonWidth = 450;

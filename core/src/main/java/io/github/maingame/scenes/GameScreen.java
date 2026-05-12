@@ -10,7 +10,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.StretchViewport;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,9 +35,9 @@ public class GameScreen extends ScreenAdapter {
     private final SpriteBatch batch;
     private final Texture background1, background2, background3, background4a, background4b;
     private final OrthographicCamera camera;
-    private final FitViewport gameViewport;
+    private final StretchViewport gameViewport;
     private final OrthographicCamera hudCamera;
-    private final FitViewport hudViewport;
+    private final StretchViewport hudViewport;
     private final GameStat stat;
     private final HUD hud;
     private final PlayerInputHandler playerInputHandler;
@@ -66,12 +66,12 @@ public class GameScreen extends ScreenAdapter {
 
         // Game camera — follows the player
         this.camera = new OrthographicCamera();
-        this.gameViewport = new FitViewport(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, camera);
+        this.gameViewport = new StretchViewport(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, camera);
         gameViewport.apply();
 
         // HUD camera — fixed overlay
         this.hudCamera = new OrthographicCamera();
-        this.hudViewport = new FitViewport(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, hudCamera);
+        this.hudViewport = new StretchViewport(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, hudCamera);
         hudViewport.apply(true);
 
         this.enemyManager = new EnemyManager(stat, player, camera, game.getSoundManager());
@@ -141,7 +141,7 @@ public class GameScreen extends ScreenAdapter {
         isPaused = false;
     }
 
-    public FitViewport getHudViewport() {
+    public StretchViewport getHudViewport() {
         return hudViewport;
     }
 

@@ -9,7 +9,7 @@ import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.StretchViewport;
 import io.github.maingame.core.GameStat;
 import io.github.maingame.core.Main;
 import io.github.maingame.entities.Player;
@@ -110,7 +110,7 @@ public class HUD {
         menuFont.getData().setScale(1, 1);
     }
 
-    public void renderPauseMenu(SpriteBatch batch, FitViewport viewport) {
+    public void renderPauseMenu(SpriteBatch batch, StretchViewport viewport) {
         Vector2 mousePos = viewport.unproject(new Vector2(Gdx.input.getX(), Gdx.input.getY()));
 
         batch.draw(backgroundTexture, 0, 0, VIRTUAL_WIDTH, VIRTUAL_HEIGHT);
@@ -131,7 +131,7 @@ public class HUD {
         handlePauseMenuInput(viewport);
     }
 
-    private void handlePauseMenuInput(FitViewport viewport) {
+    private void handlePauseMenuInput(StretchViewport viewport) {
         if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
             Vector2 clickPosition = viewport.unproject(new Vector2(Gdx.input.getX(), Gdx.input.getY()));
 
@@ -201,7 +201,7 @@ public class HUD {
         headerFont.setColor(0 / 255f, 153 / 255f, 76 / 255f, 1);
     }
 
-    public void render(SpriteBatch batch, Player player, float screenWidth, float screenHeight, boolean isGameOver, FitViewport viewport, ComboSystem comboSystem) {
+    public void render(SpriteBatch batch, Player player, float screenWidth, float screenHeight, boolean isGameOver, StretchViewport viewport, ComboSystem comboSystem) {
         drawHealthBar(batch, player, screenHeight);
         drawStaminaBar(batch, player, screenHeight);
         drawGold(batch, player, screenWidth, screenHeight);
@@ -273,7 +273,7 @@ public class HUD {
         goldFont.getData().setScale(1f);
     }
 
-    private void displayGameOverMenu(SpriteBatch batch, float screenWidth, float screenHeight, FitViewport viewport) {
+    private void displayGameOverMenu(SpriteBatch batch, float screenWidth, float screenHeight, StretchViewport viewport) {
         Vector2 mousePos = viewport.unproject(new Vector2(Gdx.input.getX(), Gdx.input.getY()));
 
         batch.draw(backgroundGUI, screenWidth / 2 - backgroundGUI.getWidth() / 1.4f, screenHeight / 2 - backgroundGUI.getHeight() / 1.4f, 600, 800);
@@ -292,7 +292,7 @@ public class HUD {
         menuFont.draw(batch, "Quit", quitButtonBounds.x + 160, quitButtonBounds.y + 125);
     }
 
-    private void handleGameOverInput(FitViewport viewport) {
+    private void handleGameOverInput(StretchViewport viewport) {
         if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
             Vector2 clickPosition = viewport.unproject(new Vector2(Gdx.input.getX(), Gdx.input.getY()));
 
