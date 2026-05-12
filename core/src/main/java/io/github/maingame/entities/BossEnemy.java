@@ -18,6 +18,9 @@ import java.util.List;
 
 public class BossEnemy extends Enemy {
     private static final float SLAM_DAMAGE_RADIUS = 400f;
+    private static final float SLAM_WINDUP_DURATION = 0.5f;
+    private static final float CHARGE_WINDUP_DURATION = 0.6f;
+    private static final float CHARGE_RANGE = 1400f;
 
     private boolean enraged = false;
     private float chargeTimer = 0f;
@@ -30,6 +33,10 @@ public class BossEnemy extends Enemy {
     private boolean isSlamming = false;
     private float slamTimer = 0f;
     private float slamTargetX = 0f;
+    private boolean isChargeWindingUp = false;
+    private float chargeWindupTimer = 0f;
+    private boolean isSlamWindingUp = false;
+    private float slamWindupTimer = 0f;
     private float telegraphSpawnTimer = 0f;
     private final List<DeathParticle> slamParticles = new ArrayList<>();
 
@@ -51,7 +58,7 @@ public class BossEnemy extends Enemy {
             ),
             200,
             200,
-            40,
+            22,
             300,
             2.0f
         );
@@ -108,6 +115,18 @@ public class BossEnemy extends Enemy {
         chargeCooldownTimer += delta;
         slamCooldownTimer += delta;
 
+        if (isChargeWindingUp) {
+            chargeWindupTimer += delta;
+            velocity.x = 0;
+            spawnChargeTelegraphParticles(delta);
+            if (chargeWindupTimer >= CHARGE_WINDUP_DURATION) {
+                isChargeWindingUp = false;
+                isCharging = true;
+                chargeTimer = 0f;
+            }
+            return;
+        }
+
         if (isCharging) {
             chargeTimer += delta;
             float chargeDir = isLookingRight ? 1f : -1f;
@@ -117,8 +136,23 @@ public class BossEnemy extends Enemy {
                 chargeTimer = 0f;
                 velocity.x = 0;
                 if (inRange()) {
-                    target.receiveDamage(attackDamage * 1.5f);
+                    target.receiveDamage(attackDamage * 1.25f);
                 }
+            }
+            return;
+        }
+
+        if (isSlamWindingUp) {
+            slamWindupTimer += delta;
+            velocity.x = 0;
+            velocity.y = 0;
+            spawnTelegraphParticles(delta);
+            if (slamWindupTimer >= SLAM_WINDUP_DURATION) {
+                isSlamWindingUp = false;
+                isSlamming = true;
+                slamTimer = 0f;
+                velocity.y = 800;
+                isJumping = true;
             }
             return;
         }
@@ -142,7 +176,7 @@ public class BossEnemy extends Enemy {
                 float targetCenterX = target.getPosition().x + 225;
                 float dist = Math.abs(targetCenterX - slamTargetX);
                 if (dist < SLAM_DAMAGE_RADIUS) {
-                    target.receiveDamage(attackDamage * 2f);
+                    target.receiveDamage(attackDamage * 1.5f);
                 }
             }
             return;
@@ -150,19 +184,18 @@ public class BossEnemy extends Enemy {
 
         if (chargeCooldownTimer >= chargeCooldown && !inRange()) {
             isLookingRight = target.getPosition().x + 225 > getCenterX();
-            isCharging = true;
-            chargeTimer = 0f;
+            isChargeWindingUp = true;
+            chargeWindupTimer = 0f;
             chargeCooldownTimer = 0f;
+            telegraphSpawnTimer = 0f;
             return;
         }
 
         if (slamCooldownTimer >= slamCooldown && inRange()) {
-            isSlamming = true;
-            slamTimer = 0f;
+            isSlamWindingUp = true;
+            slamWindupTimer = 0f;
             slamCooldownTimer = 0f;
             velocity.x = 0;
-            velocity.y = 800;
-            isJumping = true;
             slamTargetX = getCenterX();
             telegraphSpawnTimer = 0f;
             return;
@@ -203,6 +236,22 @@ public class BossEnemy extends Enemy {
         }
     }
 
+    private void spawnChargeTelegraphParticles(float delta) {
+        telegraphSpawnTimer += delta;
+        if (telegraphSpawnTimer >= 0.033f) {
+            telegraphSpawnTimer = 0f;
+            float dir = isLookingRight ? 1f : -1f;
+            float laneStart = getCenterX();
+            float offset = MathUtils.random(0f, CHARGE_RANGE);
+            float px = laneStart + dir * offset;
+            float py = MathUtils.random(0f, 60f);
+            Color warn = enraged
+                ? new Color(1f, 0.35f, 0.1f, 1f)
+                : new Color(1f, 0.85f, 0.2f, 1f);
+            slamParticles.addAll(DeathParticle.spawn(px, py, 1, warn));
+        }
+    }
+
     private void spawnImpactParticles() {
         Color impact = enraged
             ? new Color(1f, 0.3f, 0.05f, 1f)
@@ -217,6 +266,7 @@ public class BossEnemy extends Enemy {
     @Override
     public void render(SpriteBatch batch) {
         renderSlamDangerZone(batch);
+        renderChargeDangerZone(batch);
         TextureRegion currentFrame = getCurrentFrame();
 
         Color tint = enraged ? new Color(1f, 0.4f, 0.2f, 1f) : new Color(0.7f, 0.5f, 1f, 1f);
@@ -247,18 +297,35 @@ public class BossEnemy extends Enemy {
     }
 
     private void renderSlamDangerZone(SpriteBatch batch) {
-        if (!isSlamming) return;
+        if (!isSlamming && !isSlamWindingUp) return;
         Texture pixel = TextureManager.getWhitePixel();
-        // Pulsing translucent strip on the ground marking the damage zone
-        float pulse = 0.25f + 0.15f * MathUtils.sin(slamTimer * 18f);
+        float t = isSlamWindingUp ? slamWindupTimer : (SLAM_WINDUP_DURATION + slamTimer);
+        float pulse = 0.25f + 0.15f * MathUtils.sin(t * 18f);
         Color zone = enraged
             ? new Color(1f, 0.2f, 0.1f, pulse)
             : new Color(1f, 0.7f, 0.1f, pulse);
         batch.setColor(zone);
         batch.draw(pixel, slamTargetX - SLAM_DAMAGE_RADIUS, 0f, SLAM_DAMAGE_RADIUS * 2f, 30f);
-        // Bright outline
         batch.setColor(zone.r, zone.g, zone.b, Math.min(1f, pulse * 2f));
         batch.draw(pixel, slamTargetX - SLAM_DAMAGE_RADIUS, 30f, SLAM_DAMAGE_RADIUS * 2f, 3f);
+        batch.setColor(1f, 1f, 1f, 1f);
+    }
+
+    private void renderChargeDangerZone(SpriteBatch batch) {
+        if (!isChargeWindingUp) return;
+        Texture pixel = TextureManager.getWhitePixel();
+        float pulse = 0.25f + 0.15f * MathUtils.sin(chargeWindupTimer * 18f);
+        Color zone = enraged
+            ? new Color(1f, 0.2f, 0.1f, pulse)
+            : new Color(1f, 0.7f, 0.1f, pulse);
+        float dir = isLookingRight ? 1f : -1f;
+        float laneStart = getCenterX();
+        float laneX = dir > 0 ? laneStart : laneStart - CHARGE_RANGE;
+        float laneHeight = 80f;
+        batch.setColor(zone);
+        batch.draw(pixel, laneX, 0f, CHARGE_RANGE, laneHeight);
+        batch.setColor(zone.r, zone.g, zone.b, Math.min(1f, pulse * 2f));
+        batch.draw(pixel, laneX, laneHeight, CHARGE_RANGE, 3f);
         batch.setColor(1f, 1f, 1f, 1f);
     }
 
@@ -305,7 +372,7 @@ public class BossEnemy extends Enemy {
 
     @Override
     protected void checkOnPlatform() {
-        if (isSlamming) return;
+        if (isSlamming || isSlamWindingUp) return;
         super.checkOnPlatform();
     }
 
