@@ -6,7 +6,7 @@ import io.github.maingame.core.GameStat;
 
 public class HealPotion extends Consumable {
     public HealPotion(GameStat stat) {
-        super(80, 30,
+        super(50, 30,
             "icons/items/potion/icon_potionHealth.png",
             "icons/items/potion/icon_potionHealth_bought.png",
             "icons/items/potion/icon_potionHealth_lock.png",

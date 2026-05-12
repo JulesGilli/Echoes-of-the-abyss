@@ -6,7 +6,7 @@ import io.github.maingame.core.GameStat;
 
 public class SpeedPotion extends Consumable {
     public SpeedPotion(GameStat stat) {
-        super(50, 30,
+        super(30, 30,
             "icons/items/potion/icon_potionSpeed.png",
             "icons/items/potion/icon_potionSpeed_bought.png",
             "icons/items/potion/icon_potionSpeed_lock.png",

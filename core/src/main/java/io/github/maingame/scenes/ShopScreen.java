@@ -12,7 +12,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import io.github.maingame.utils.FontManager;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.StretchViewport;
 import io.github.maingame.core.GameStat;
 import io.github.maingame.core.Main;
 import io.github.maingame.entities.Player;
@@ -52,7 +52,7 @@ public class ShopScreen extends ScreenAdapter {
     private BitmapFont tooltipFont;
 
     private final OrthographicCamera camera;
-    private final FitViewport viewport;
+    private final StretchViewport viewport;
 
     private final Player player;
     private BitmapFont font;
@@ -68,7 +68,7 @@ public class ShopScreen extends ScreenAdapter {
         this.player.setInventory(new Inventory());
 
         camera = new OrthographicCamera();
-        viewport = new FitViewport(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, camera);
+        viewport = new StretchViewport(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, camera);
         viewport.apply(true);
 
         shopWidth = 0.76f * screenWidth;

@@ -9,12 +9,16 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import io.github.maingame.core.GameStat;
 import io.github.maingame.utils.AnimationManager;
+import io.github.maingame.utils.DeathParticle;
 import io.github.maingame.utils.Platform;
 import io.github.maingame.utils.TextureManager;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class BossEnemy extends Enemy {
+    private static final float SLAM_DAMAGE_RADIUS = 400f;
+
     private boolean enraged = false;
     private float chargeTimer = 0f;
     private boolean isCharging = false;
@@ -25,6 +29,9 @@ public class BossEnemy extends Enemy {
     private float slamCooldownTimer = 3f;
     private boolean isSlamming = false;
     private float slamTimer = 0f;
+    private float slamTargetX = 0f;
+    private float telegraphSpawnTimer = 0f;
+    private final List<DeathParticle> slamParticles = new ArrayList<>();
 
     public BossEnemy(Vector2 position, List<Platform> platforms, Player player, GameStat gameStat) {
         super(
@@ -121,6 +128,9 @@ public class BossEnemy extends Enemy {
             if (slamTimer >= 0.3f && position.y > 0) {
                 velocity.y = -1500;
             }
+
+            spawnTelegraphParticles(delta);
+
             if (position.y <= 0 && slamTimer >= 0.3f) {
                 isSlamming = false;
                 slamTimer = 0f;
@@ -128,10 +138,10 @@ public class BossEnemy extends Enemy {
                 velocity.y = 0;
                 position.y = 0;
                 isJumping = false;
-                float centerX = getCenterX();
+                spawnImpactParticles();
                 float targetCenterX = target.getPosition().x + 225;
-                float dist = Math.abs(targetCenterX - centerX);
-                if (dist < 400) {
+                float dist = Math.abs(targetCenterX - slamTargetX);
+                if (dist < SLAM_DAMAGE_RADIUS) {
                     target.receiveDamage(attackDamage * 2f);
                 }
             }
@@ -153,6 +163,8 @@ public class BossEnemy extends Enemy {
             velocity.x = 0;
             velocity.y = 800;
             isJumping = true;
+            slamTargetX = getCenterX();
+            telegraphSpawnTimer = 0f;
             return;
         }
 
@@ -175,8 +187,36 @@ public class BossEnemy extends Enemy {
         }
     }
 
+    private void spawnTelegraphParticles(float delta) {
+        telegraphSpawnTimer += delta;
+        // ~30 particles per second along the ground in the damage zone
+        if (telegraphSpawnTimer >= 0.033f) {
+            telegraphSpawnTimer = 0f;
+            float offset = MathUtils.random(-SLAM_DAMAGE_RADIUS, SLAM_DAMAGE_RADIUS);
+            float px = slamTargetX + offset;
+            float py = MathUtils.random(0f, 30f);
+            Color warn = enraged
+                ? new Color(1f, 0.35f, 0.1f, 1f)
+                : new Color(1f, 0.85f, 0.2f, 1f);
+            // Single low-velocity spark — reuse DeathParticle as a generic particle
+            slamParticles.addAll(DeathParticle.spawn(px, py, 1, warn));
+        }
+    }
+
+    private void spawnImpactParticles() {
+        Color impact = enraged
+            ? new Color(1f, 0.3f, 0.05f, 1f)
+            : new Color(1f, 0.6f, 0.1f, 1f);
+        // Burst at impact point along the ground
+        for (int i = 0; i < 6; i++) {
+            float offset = MathUtils.random(-SLAM_DAMAGE_RADIUS, SLAM_DAMAGE_RADIUS);
+            slamParticles.addAll(DeathParticle.spawn(slamTargetX + offset, 20f, 8, impact));
+        }
+    }
+
     @Override
     public void render(SpriteBatch batch) {
+        renderSlamDangerZone(batch);
         TextureRegion currentFrame = getCurrentFrame();
 
         Color tint = enraged ? new Color(1f, 0.4f, 0.2f, 1f) : new Color(0.7f, 0.5f, 1f, 1f);
@@ -197,6 +237,29 @@ public class BossEnemy extends Enemy {
         }
 
         renderTexts(batch);
+
+        DeathParticle.updateAndRender(
+            slamParticles,
+            com.badlogic.gdx.Gdx.graphics.getDeltaTime(),
+            batch,
+            TextureManager.getWhitePixel()
+        );
+    }
+
+    private void renderSlamDangerZone(SpriteBatch batch) {
+        if (!isSlamming) return;
+        Texture pixel = TextureManager.getWhitePixel();
+        // Pulsing translucent strip on the ground marking the damage zone
+        float pulse = 0.25f + 0.15f * MathUtils.sin(slamTimer * 18f);
+        Color zone = enraged
+            ? new Color(1f, 0.2f, 0.1f, pulse)
+            : new Color(1f, 0.7f, 0.1f, pulse);
+        batch.setColor(zone);
+        batch.draw(pixel, slamTargetX - SLAM_DAMAGE_RADIUS, 0f, SLAM_DAMAGE_RADIUS * 2f, 30f);
+        // Bright outline
+        batch.setColor(zone.r, zone.g, zone.b, Math.min(1f, pulse * 2f));
+        batch.draw(pixel, slamTargetX - SLAM_DAMAGE_RADIUS, 30f, SLAM_DAMAGE_RADIUS * 2f, 3f);
+        batch.setColor(1f, 1f, 1f, 1f);
     }
 
     private void renderTexts(SpriteBatch batch) {

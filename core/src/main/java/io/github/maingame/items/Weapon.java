@@ -8,7 +8,7 @@ public class Weapon extends Gear {
     protected int attackIncrease;
 
     public Weapon(int lvl) {
-        super((int) (200 * Math.pow(2, lvl - 1)),
+        super((int) (100 * Math.pow(2, lvl - 1)),
             "icons/items/weapon/icon_weapon" + lvl + ".png",
             "icons/items/weapon/icon_weapon" + lvl + "_bought.png",
             "icons/items/weapon/icon_weapon" + lvl + "_lock.png",
